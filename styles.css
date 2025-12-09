@@ -265,6 +265,112 @@ a {
     transition: var(--transition);
 }
 
+.language-switcher {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.language-switcher .lang-current {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(0,0,0,0.08);
+    background: var(--white);
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    transition: var(--transition);
+}
+
+.language-switcher .lang-current:hover {
+    box-shadow: var(--shadow-soft);
+}
+
+.language-switcher .flag {
+    font-size: 1rem;
+}
+
+.language-switcher .lang-dropdown {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    min-width: 210px;
+    background: var(--white);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-soft);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 20;
+}
+
+.language-switcher .lang-dropdown.open {
+    display: flex;
+}
+
+.language-switcher .lang-dropdown button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.9rem;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.language-switcher .lang-dropdown button:hover {
+    background: var(--bg-light);
+}
+
+.rtl {
+    direction: rtl;
+    text-align: right;
+}
+
+.rtl .header-content,
+.rtl .hero-content,
+.rtl .sustainability-content,
+.rtl .contact-content,
+.rtl .stats-container,
+.rtl .products-grid,
+.rtl .usage-grid,
+.rtl .why-grid {
+    direction: rtl;
+}
+
+.rtl .nav,
+.rtl .header-actions,
+.rtl .footer-nav,
+.rtl .footer-top,
+.rtl .footer-bottom,
+.rtl .badge-group,
+.rtl .hero-buttons {
+    flex-direction: row-reverse;
+}
+
+.rtl .section-header,
+.rtl .testimonial-card,
+.rtl .cta-strip,
+.rtl .contact-info-block,
+.rtl .contact-form label,
+.rtl .contact-info-title,
+.rtl .contact-info-text {
+    text-align: right;
+}
+
+.rtl .lang-dropdown {
+    right: auto;
+    left: 0;
+}
+
 /* ========================================
    Hero Section
    ======================================== */
