@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 60" width="400" height="60">
+  <!-- Abstract layered plywood/forest icon -->
+  <g id="icon">
+    <!-- Base layer (darkest green) -->
+    <rect x="0" y="20" width="12" height="20" rx="2" fill="#0F3D2E"/>
+    <rect x="14" y="15" width="12" height="25" rx="2" fill="#0F3D2E"/>
+    <rect x="28" y="18" width="12" height="22" rx="2" fill="#0F3D2E"/>
+    
+    <!-- Middle layer (medium green) -->
+    <rect x="2" y="22" width="10" height="16" rx="1.5" fill="#145943"/>
+    <rect x="16" y="17" width="10" height="21" rx="1.5" fill="#145943"/>
+    <rect x="30" y="20" width="10" height="18" rx="1.5" fill="#145943"/>
+    
+    <!-- Top layer (accent wood tone) -->
+    <rect x="4" y="24" width="8" height="12" rx="1" fill="#D9B48F" opacity="0.8"/>
+    <rect x="18" y="19" width="8" height="17" rx="1" fill="#D9B48F" opacity="0.8"/>
+    <rect x="32" y="22" width="8" height="14" rx="1" fill="#D9B48F" opacity="0.8"/>
+    
+    <!-- Subtle lines suggesting wood grain -->
+    <line x1="6" y1="26" x2="10" y2="26" stroke="#0F3D2E" stroke-width="0.5" opacity="0.3"/>
+    <line x1="6" y1="30" x2="10" y2="30" stroke="#0F3D2E" stroke-width="0.5" opacity="0.3"/>
+    <line x1="20" y1="21" x2="24" y2="21" stroke="#0F3D2E" stroke-width="0.5" opacity="0.3"/>
+    <line x1="20" y1="25" x2="24" y2="25" stroke="#0F3D2E" stroke-width="0.5" opacity="0.3"/>
+    <line x1="34" y1="24" x2="38" y2="24" stroke="#0F3D2E" stroke-width="0.5" opacity="0.3"/>
+    <line x1="34" y1="28" x2="38" y2="28" stroke="#0F3D2E" stroke-width="0.5" opacity="0.3"/>
+  </g>
+  
+  <!-- Text: TEVER -->
+  <text x="50" y="35" font-family="Poppins, sans-serif" font-size="28" font-weight="700" fill="#0F3D2E" text-transform="uppercase" letter-spacing="1">TEVER</text>
+  
+  <!-- Text: FOREST PRODUCTS -->
+  <text x="50" y="50" font-family="Poppins, sans-serif" font-size="10" font-weight="500" fill="#666666" text-transform="uppercase" letter-spacing="2">FOREST PRODUCTS</text>
+</svg>
+
