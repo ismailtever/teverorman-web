@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tever Sanat | Wood Art & Sculpture (Ahşap Sanatı)</title>
+
+    <meta name="description"
+        content="Tever Sanat: Supporting Wood Art (Ahşap Sanatı) and Sculpture. Bridging industrial plywood expertise with creative expression.">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Tever Sanat: From Raw Material to Art">
+    <meta property="og:description"
+        content="Supporting wood art and sculpture. A cultural initiative by Tever Forest Products.">
+    <meta property="og:image" content="https://teverorman.com/assets/images/art-gallery.png">
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Flag Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
+    <style>
+        body {
+            background-color: var(--color-surface-museum);
+        }
+
+        .nav-link.active::after {
+            background-color: var(--color-primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="site-header" style="background-color: var(--color-surface-museum);">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo">TEVER</a>
+            <button class="mobile-menu-toggle">
+                <div class="hamburger-icon"></div>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link" data-i18n="nav.home">Main Site</a></li>
+                <li><a href="teversanat.html" class="nav-link active" data-i18n="nav.sanat">Sanat Hub</a></li>
+                <li><a href="teversanat-gallery.html" class="nav-link">Gallery</a></li>
+                <li><a href="teversanat-apply.html" class="nav-link">Apply</a></li>
+
+                <!-- Flag Based Language Selector -->
+                <li class="language-selector">
+                    <button class="lang-btn" id="langBtn">
+                        <span class="fi fi-gb"></span>
+                        <span style="font-size:0.8rem; font-weight:600;">EN</span>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <!-- Populated by JS -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="section">
+        <div class="container text-center" style="max-width: 900px;">
+            <span class="hero-subtitle">Est. 2024</span>
+            <h1 class="text-hero mb-md">From Raw Material<br>to Artistic Language.</h1>
+            <p class="text-lead mb-xl">
+                Tever Sanat is the cultural division of Tever Forest Products.
+                We exist to support sculptors, curate exceptional wood art, and build a bridge between industrial
+                expertise and creative expression.
+            </p>
+        </div>
+
+        <div class="container">
+            <div
+                style="background-color: #e5e5e5; aspect-ratio: 16/9; width: 100%; margin-bottom: var(--spacing-lg); overflow: hidden; border-radius: var(--radius-md);">
+                <!-- Large Environmental Art Image -->
+                <img src="assets/images/art-gallery.png" alt="Tever Sanat Gallery Installation"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <div class="grid grid-3">
+                <div class="product-card" style="padding: 2rem; background: white; border: none;">
+                    <h3 class="text-h3 mb-sm">For Artists</h3>
+                    <p class="text-body mb-sm text-muted">
+                        We provide high-quality veneer and plywood materials to selected artists, enabling them to push
+                        the boundaries of their craft.
+                    </p>
+                    <a href="teversanat-apply.html" class="btn btn-outline" style="width: 100%;">Artist Program</a>
+                </div>
+                <div class="product-card" style="padding: 2rem; background: white; border: none;">
+                    <h3 class="text-h3 mb-sm">For Collectors</h3>
+                    <p class="text-body mb-sm text-muted">
+                        A curated selection of wood sculptures and mixed-media works available for acquisition through
+                        our platform.
+                    </p>
+                    <a href="teversanat-gallery.html" class="btn btn-primary" style="width: 100%;">View Collection</a>
+                </div>
+                <div class="product-card" style="padding: 2rem; background: white; border: none;">
+                    <h3 class="text-h3 mb-sm">For Institutions</h3>
+                    <p class="text-body mb-sm text-muted">
+                        We collaborate with museums and galleries on exhibitions, providing material sponsorship and
+                        curatorial support.
+                    </p>
+                    <a href="contact.html?type=gallery" class="btn btn-outline" style="width: 100%;">Partner With Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="brand-logo mb-md" style="display: block;">TEVER</a>
+                    <p class="text-small text-muted">
+                        <strong data-i18n="contact.legal_title">Tever Orman Mamülleri</strong><br>
+                        <span data-i18n="contact.legal_suffix">Sanayi ve Ticaret A.Ş.</span>
+                    </p>
+                    <p class="text-small text-muted" style="margin-top: 1rem;">
+                        Nato Yolu Caddesi, Narin Sokak No: 3/4,<br>
+                        İstanbul, Türkiye
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.products">Products</h4>
+                    <ul>
+                        <li><a href="products.html" data-i18n="footer.plywood">Plywood</a></li>
+                        <li><a href="products.html#veneer" data-i18n="footer.veneer">Veneer (Papel)</a></li>
+                        <li><a href="products.html#lumber" data-i18n="footer.lumber_link">Lumber (Kereste)</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.culture">Culture</h4>
+                    <ul>
+                        <li><a href="teversanat.html" data-i18n="nav.sanat">Tever Sanat</a></li>
+                        <li><a href="teversanat-gallery.html" data-i18n="footer.art_collection">Art Collection</a></li>
+                        <li><a href="teversanat-apply.html" data-i18n="footer.for_artists">For Artists</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.connect">Connect</h4>
+                    <ul>
+                        <li><a href="mailto:m.eymen@teverorman.com">m.eymen@teverorman.com</a></li>
+                        <li><a href="mailto:info@teverorman.com">info@teverorman.com</a></li>
+                        <li><a href="https://wa.me/905344141224">+90 534 414 12 24</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="margin-top: 4rem; padding-top: 2rem; text-align: center; font-size: 0.875rem; color: var(--color-text-muted); border-top: 1px solid var(--color-border);">
+                &copy;
+                <script>document.write(new Date().getFullYear())</script> Tever Orman Mamülleri A.Ş. | Global Trade &
+                Art.
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

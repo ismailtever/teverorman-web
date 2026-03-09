@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Heritage | 100 Years of Timber | Tever Orman</title>
+
+    <meta name="description"
+        content="Since the 1900s, the Tever family has been defined by wood. From the first water-powered sawmill in Kanlıçay to a global modern trade network.">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="The Tever Merchant Heritage">
+    <meta property="og:description" content="A story of resilience, craftsmanship, and trade starting from the 1920s.">
+    <meta property="og:image" content="https://teverorman.com/assets/images/history-sawmill-1920.png">
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Flag Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
+
+    <!-- Yandex.Metrica counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(106571280, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/106571280" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    <!-- /Yandex.Metrica counter -->
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo">TEVER</a>
+            <button class="mobile-menu-toggle">
+                <div class="hamburger-icon"></div>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+                <li><a href="products.html" class="nav-link" data-i18n="nav.products">Products</a></li>
+                <li><a href="about.html" class="nav-link" data-i18n="nav.about">Our Heritage</a></li>
+                <li><a href="teversanat.html" class="nav-link" data-i18n="nav.sanat">Tever Sanat</a></li>
+                <li><a href="contact.html" class="nav-link" data-i18n="nav.contact">Contact</a></li>
+
+                <!-- Flag Based Language Selector -->
+                <li class="language-selector">
+                    <button class="lang-btn" id="langBtn">
+                        <span class="fi fi-gb"></span>
+                        <span style="font-size:0.8rem; font-weight:600;">EN</span>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <!-- Populated by JS -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="section">
+        <div class="container">
+            <div class="hero-inner" style="max-width: 900px;">
+                <span class="hero-subtitle">Est. 1918 — Akyazı, Sakarya</span>
+                <h1 class="text-hero mb-md" data-i18n="about.hero.title">A Merchant Tradition Since the 1900s</h1>
+                <p class="text-lead mb-lg" data-i18n="about.hero.text">
+                    The Tever family entered the trade in the early 20th century when Yahya Tever established one of
+                    the region's first water-powered lumber workshops in Kanlıçay village. Harnessing the hydraulic
+                    force of Anatolia's rivers, this workshop laid the foundation for a century of commerce.
+                </p>
+            </div>
+
+            <div
+                style="background-color: #eee; height: 500px; width: 100%; border-radius: var(--radius-md); margin-bottom: var(--spacing-lg);">
+                <img src="assets/images/history-sawmill-1920.png" alt="Historical Water-Powered Sawmill c. 1920"
+                    loading="lazy"
+                    style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-md); filter: sepia(0.3);">
+            </div>
+
+            <div class="grid grid-2">
+                <div>
+                    <h3 class="text-h2 mb-md" data-i18n="about.custom.title">Global Reliability</h3>
+                    <p class="text-body mb-md" data-i18n="about.custom.text">
+                        We started as manufacturers in the early 1900s. Today, we use that deep production know-how to
+                        source only the best materials for our partners. We don't just buy and sell; we audit the
+                        quality like producers.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-h2 mb-md" data-i18n="about.heritage.title">Our Legacy</h3>
+                    <p class="text-body mb-md" data-i18n="about.heritage.text">
+                        Our heritage is built on a fundamental understanding of wood as a material. Operating at the
+                        intersection of industry, trade, and culture, we view our long-standing presence not just as
+                        history, but as a responsibility.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Brand Values Section -->
+            <div class="grid grid-3 mt-lg" style="border-top: 1px solid var(--color-border); padding-top: 2rem;">
+                <div>
+                    <h4 class="text-h4 mb-sm" data-i18n="value.reliability">Supply Stability</h4>
+                    <p class="text-small text-muted" data-i18n="value.reliability.desc">Consistent delivery for global
+                        B2B operations.</p>
+                </div>
+                <div>
+                    <h4 class="text-h4 mb-sm" data-i18n="value.expertise">Material Stewardship</h4>
+                    <p class="text-small text-muted" data-i18n="value.expertise.desc">100+ years of technical wood
+                        knowledge.</p>
+                </div>
+                <div>
+                    <h4 class="text-h4 mb-sm" data-i18n="value.culture">Cultural Connection</h4>
+                    <p class="text-small text-muted" data-i18n="value.culture.desc">Supporting art through Tever Sanat.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="brand-logo mb-md" style="display: block;">TEVER</a>
+                    <p class="text-small text-muted">
+                        <strong data-i18n="contact.legal_title">Tever Orman Mamülleri</strong><br>
+                        <span data-i18n="contact.legal_suffix">Sanayi ve Ticaret A.Ş.</span>
+                    </p>
+                    <p class="text-small text-muted" style="margin-top: 1rem;">
+                        Nato Yolu Caddesi, Narin Sokak No: 3/4,<br>
+                        İstanbul, Türkiye
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.products">Products</h4>
+                    <ul>
+                        <li><a href="products.html" data-i18n="footer.plywood">Plywood</a></li>
+                        <li><a href="products.html#veneer" data-i18n="footer.veneer">Veneer (Papel)</a></li>
+                        <li><a href="products.html#lumber" data-i18n="footer.lumber_link">Lumber (Kereste)</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.culture">Culture</h4>
+                    <ul>
+                        <li><a href="teversanat.html" data-i18n="nav.sanat">Tever Sanat</a></li>
+                        <li><a href="teversanat-gallery.html" data-i18n="footer.art_collection">Art Collection</a></li>
+                        <li><a href="teversanat-apply.html" data-i18n="footer.for_artists">For Artists</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.connect">Connect</h4>
+                    <ul>
+                        <li><a href="mailto:m.eymen@teverorman.com">m.eymen@teverorman.com</a></li>
+                        <li><a href="mailto:info@teverorman.com">info@teverorman.com</a></li>
+                        <li><a href="https://wa.me/905344141224">+90 534 414 12 24</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="margin-top: 4rem; padding-top: 2rem; text-align: center; font-size: 0.875rem; color: var(--color-text-muted); border-top: 1px solid var(--color-border);">
+                &copy;
+                <script>document.write(new Date().getFullYear())</script> Tever Orman Mamülleri A.Ş. | Global Trade &
+                Art.
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

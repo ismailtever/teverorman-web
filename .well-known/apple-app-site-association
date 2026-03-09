@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAMID.com.tevertechnology.mentra",
+        "paths": [
+          "*",
+          "/routine/*",
+          "/game/*"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wood & Art Initiative | Tever</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Specific Styles for Art Page to feel distinct/gallery-like */
+        body {
+            background-color: #ffffff;
+        }
+
+        .art-header {
+            padding-top: 120px;
+            padding-bottom: 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo">TEVER</a>
+            <button class="mobile-menu-toggle">
+                <div class="hamburger-icon"></div>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link">Products</a></li>
+                <li><a href="about.html" class="nav-link">Our Heritage</a></li>
+                <li><a href="art.html" class="nav-link">Art Initiative</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="art-header">
+        <div class="container" style="max-width: 800px;">
+            <span class="hero-subtitle">Curated Gallery</span>
+            <h1 class="text-headings text-h1 mb-md">Crafted by Nature.<br>Shaped by Artists.</h1>
+            <p class="text-lead">
+                We bridge the gap between industrial material and artistic expression.
+                Discover curated wood sculptures from emerging and established artists.
+            </p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="art-grid">
+                <!-- Gallery Item 1 -->
+                <div class="art-card">
+                    <div class="art-image" style="background-color: #f0f0f0;"></div>
+                    <div class="art-overlay">
+                        <h3>'Organic Flow'</h3>
+                        <p>Artist: Elena Wood</p>
+                        <p class="text-small">Walnut Root</p>
+                    </div>
+                </div>
+                <!-- Gallery Item 2 -->
+                <div class="art-card">
+                    <div class="art-image" style="background-color: #e5e5e5;"></div>
+                    <div class="art-overlay">
+                        <h3>'Structural Balance'</h3>
+                        <p>Artist: Marco Rossi</p>
+                        <p class="text-small">Reclaimed Oak</p>
+                    </div>
+                </div>
+                <!-- Gallery Item 3 -->
+                <div class="art-card">
+                    <div class="art-image" style="background-color: #dcdcdc;"></div>
+                    <div class="art-overlay">
+                        <h3>'The Vessel'</h3>
+                        <p>Artist: Sarah Chen</p>
+                        <p class="text-small">Birch Plywood Layering</p>
+                    </div>
+                </div>
+                <!-- Gallery Item 4 -->
+                <div class="art-card">
+                    <div class="art-image" style="background-color: #d1d1d1;"></div>
+                    <div class="art-overlay">
+                        <h3>'Timeless'</h3>
+                        <p>Artist: John Doe</p>
+                        <p class="text-small">Olive Wood</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-alt text-center">
+        <div class="container" style="max-width: 700px;">
+            <h2 class="text-h2 mb-md">For Artists</h2>
+            <p class="text-body mb-md">
+                We select a limited number of artists each quarter to feature in our international exhibition and sales
+                network.
+                Selected works are sold through our platform with a commission model transparent to the artist.
+            </p>
+            <a href="contact.html?subject=artist" class="btn btn-outline">Submit Portfolio</a>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="brand-logo mb-md" style="display: block;">TEVER</a>
+                    <p class="text-small text-muted">
+                        <strong data-i18n="contact.legal_title">Tever Orman Mamülleri</strong><br>
+                        <span data-i18n="contact.legal_suffix">Sanayi ve Ticaret A.Ş.</span>
+                    </p>
+                    <p class="text-small text-muted" style="margin-top: 1rem;">
+                        Nato Yolu Caddesi, Narin Sokak No: 3/4,<br>
+                        İstanbul, Türkiye
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.products">Products</h4>
+                    <ul>
+                        <li><a href="products.html" data-i18n="footer.plywood">Plywood</a></li>
+                        <li><a href="products.html#veneer" data-i18n="footer.veneer">Veneer (Papel)</a></li>
+                        <li><a href="products.html#lumber" data-i18n="footer.lumber_link">Lumber (Kereste)</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.culture">Culture</h4>
+                    <ul>
+                        <li><a href="teversanat.html" data-i18n="nav.sanat">Tever Sanat</a></li>
+                        <li><a href="teversanat-gallery.html" data-i18n="footer.art_collection">Art Collection</a></li>
+                        <li><a href="teversanat-apply.html" data-i18n="footer.for_artists">For Artists</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.connect">Connect</h4>
+                    <ul>
+                        <li><a href="mailto:m.eymen@teverorman.com">m.eymen@teverorman.com</a></li>
+                        <li><a href="mailto:info@teverorman.com">info@teverorman.com</a></li>
+                        <li><a href="https://wa.me/905344141224">+90 534 414 12 24</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="margin-top: 4rem; padding-top: 2rem; text-align: center; font-size: 0.875rem; color: var(--color-text-muted); border-top: 1px solid var(--color-border);">
+                &copy;
+                <script>document.write(new Date().getFullYear())</script> Tever Orman Mamülleri A.Ş. | Global Trade &
+                Art.
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

@@ -1,2136 +1,299 @@
 <!DOCTYPE html>
-<html lang="tr" dir="ltr">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Tever Orman Mamulleri A.Ş. - Kontraplak, filmli kontraplak, OSB, MDF ve orman mamulleri üretimi. İnşaat, mobilya, treyler ve endüstriyel uygulamalar için kaliteli çözümler. 1978'den bugüne sektör deneyimi.">
-    
-    <!-- Open Graph / Facebook -->
+    <title>Tever Orman | Plywood & Lumber Supplier (Kontraplak ve Kereste)</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Tever Forest Products: Global supplier of Birch Plywood (Huş), Lumber (Kereste), OSB, MDF, and Veneer. Sourcing the wood industry with 100+ years of heritage.">
+    <meta name="keywords"
+        content="Plywood, Kereste, Kontrplak, Veneer, Papel, OSB, MDF, Marine Plywood, Su Kontrası, H20 Beams, Yonga Levha, Tever Orman">
+    <meta name="author" content="Tever Orman A.Ş.">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.teverorman.com/">
-    <meta property="og:title" content="Tever Orman Mamulleri | Kontraplak & Forest Products">
-    <meta property="og:description" content="Projeleriniz için doğru kontraplak tedarik ortağınız. İnşaat, mobilya, treyler ve endüstriyel uygulamalar için kaliteli orman mamulleri.">
-    <meta property="og:site_name" content="Tever Forest Products">
-    
-    <!-- Google Fonts -->
+    <meta property="og:url" content="https://teverorman.com/">
+    <meta property="og:title" content="Tever Forest Products | Global Trade & Art">
+
+    <!-- Global SEO: Hreflang Tags to tell Google about languages -->
+    <link rel="alternate" hreflang="en" href="https://teverorman.com/?lang=en" />
+    <link rel="alternate" hreflang="tr" href="https://teverorman.com/?lang=tr" />
+    <link rel="alternate" hreflang="de" href="https://teverorman.com/?lang=de" />
+    <link rel="alternate" hreflang="ar" href="https://teverorman.com/?lang=ar-gcc" />
+    <link rel="alternate" hreflang="x-default" href="https://teverorman.com/" />
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+    <!-- PWA & Mobile -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a3323">
+    <meta name="msapplication-config" content="browserconfig.xml">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WYW7Y84KZF"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-WYW7Y84KZF');
+    </script>
+
+    <!-- Yandex.Metrica counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(106571280, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/106571280" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    <!-- /Yandex.Metrica counter -->
+
+    <!-- Google Structured Data (JSON-LD) for Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "Tever Forest Products",
+          "legalName": "Tever Orman Mamülleri San. ve Tic. A.Ş.",
+          "url": "https://teverorman.com",
+          "logo": "https://teverorman.com/assets/images/logo.png",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+90-534-414-1224",
+            "contactType": "sales",
+            "availableLanguage": ["English", "Turkish"]
+          }
+        },
+        {
+          "@type": "ItemList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Birch Plywood (Huş Kontrplak)",
+              "url": "https://teverorman.com/products.html#birch"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Lumber (Kereste)",
+              "url": "https://teverorman.com/products.html#lumber"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Natural Veneer (Kaplama)",
+              "url": "https://teverorman.com/products.html#veneer"
+            },
+            {
+               "@type": "ListItem",
+               "position": 4,
+               "name": "OSB & MDF",
+               "url": "https://teverorman.com/products.html#structural"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <meta property="og:description"
+        content="100+ years of timber expertise. Supplying Plywood & Lumber globally, supporting Art locally.">
+    <meta property="og:image" content="https://teverorman.com/assets/images/history-sawmill-1920.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://teverorman.com/">
+    <meta property="twitter:title" content="Tever Forest Products">
+    <meta property="twitter:description" content="Engineered Wood for Industry. Material Knowledge for Culture.">
+    <meta property="twitter:image" content="https://teverorman.com/assets/images/history-sawmill-1920.png">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="styles.css">
-    <title>Tever Orman Mamulleri | Kontraplak & Forest Products</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css?v=2.1">
+    <!-- Flag Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
 </head>
+
 <body>
-    <!-- Sticky Header -->
-    <header class="header" id="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo-wrapper">
-                    <img src="logo.svg" alt="Tever Forest Products Logo" class="logo">
-                </div>
-                
-                <nav class="nav" id="nav">
-                    <a href="#urunler" class="nav-link" data-i18n="nav.products">Ürünler</a>
-                    <a href="#kullanim" class="nav-link" data-i18n="nav.usage">Kullanım Alanları</a>
-                    <a href="#neden" class="nav-link" data-i18n="nav.why">Neden Tever?</a>
-                    <a href="#surdurulebilirlik" class="nav-link" data-i18n="nav.sustainability">Sürdürülebilirlik</a>
-                    <a href="#iletisim" class="nav-link" data-i18n="nav.contact">İletişim</a>
-                </nav>
-                
-                <div class="header-actions">
-                    <div class="language-switcher" id="languageSwitcher">
-                        <button class="lang-current" aria-label="Dil seçici">
-                            <span class="flag">🇹🇷</span>
-                            <span class="lang-label" data-i18n="lang.current">TR</span>
-                        </button>
-                        <div class="lang-dropdown">
-                            <button data-lang="tr"><span class="flag">🇹🇷</span> Türkçe</button>
-                            <button data-lang="en"><span class="flag">🇬🇧</span> English</button>
-                            <button data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
-                            <button data-lang="fr"><span class="flag">🇫🇷</span> Français</button>
-                            <button data-lang="es"><span class="flag">🇪🇸</span> Español</button>
-                            <button data-lang="it"><span class="flag">🇮🇹</span> Italiano</button>
-                            <button data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
-                            <button data-lang="ms"><span class="flag">🇲🇾</span> Melayu</button>
-                            <button data-lang="zh"><span class="flag">🇨🇳</span> 中文</button>
-                            <button data-lang="ja"><span class="flag">🇯🇵</span> 日本語</button>
-                        </div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo">TEVER</a>
+            <button class="mobile-menu-toggle" aria-expanded="false" aria-label="Toggle navigation">
+                <div class="hamburger-icon"></div>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+                <li><a href="products.html" class="nav-link" data-i18n="nav.products">Products</a></li>
+                <li><a href="about.html" class="nav-link" data-i18n="nav.about">About</a></li>
+                <li><a href="teversanat.html" class="nav-link" style="color: var(--color-primary); font-weight: 600;"
+                        data-i18n="nav.sanat">Tever Sanat</a></li>
+                <li><a href="contact.html" class="nav-link" data-i18n="nav.contact">Contact</a></li>
+
+                <!-- Flag Based Language Selector -->
+                <li class="language-selector">
+                    <button class="lang-btn" id="langBtn">
+                        <span class="fi fi-gb"></span>
+                        <span style="font-size:0.8rem; font-weight:600;">EN</span>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <!-- Populated by JS -->
                     </div>
-                    <a href="#iletisim" class="btn btn-outline" data-i18n="header.contact">İletişime Geç</a>
-                    <a href="#iletisim" class="btn btn-primary" data-i18n="header.cta">Teklif Al</a>
-                </div>
-                
-                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
+                </li>
+            </ul>
         </div>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-left">
-                    <p class="eyebrow" data-i18n="hero.eyebrow">Orman Mamulleri & Kontraplak</p>
-                    <h1 class="hero-title" data-i18n="hero.title">Projeleriniz için doğru kontraplak tedarik ortağınız.</h1>
-                    <p class="hero-description" data-i18n="hero.desc">
-                        Tever Orman Mamulleri A.Ş., 1978'den bu yana kontraplak, filmli kontraplak, OSB, MDF ve orman mamulleri üretiminde sektörün güvenilir çözüm ortağıdır. İnşaat, mobilya, treyler ve endüstriyel uygulamalar için yüksek kaliteli ürünler sunuyoruz.
-                    </p>
-                    <div class="badge-group">
-                        <span class="badge" data-i18n="hero.badge1">1978'den bugüne deneyim</span>
-                        <span class="badge" data-i18n="hero.badge2">İhracata uygun kalite</span>
-                        <span class="badge" data-i18n="hero.badge3">30+ ülkeye ihracat</span>
-                    </div>
-                    <div class="hero-buttons">
-                        <a href="#iletisim" class="btn btn-primary btn-large" data-i18n="hero.btnPrimary">Projeniz için Teklif Al</a>
-                        <a href="#urunler" class="btn btn-secondary btn-large" data-i18n="hero.btnSecondary">Ürün Kataloğunu Gör</a>
-                    </div>
-                    <p class="hero-footnote" data-i18n="hero.footnote">Mobilya • İnşaat • Treyler • Endüstriyel Uygulamalar • İhracat</p>
-                </div>
-                
-                <div class="hero-right">
-                    <div class="hero-card">
-                        <div class="product-mini-grid">
-                            <div class="product-mini-card">
-                                <div class="product-mini-icon">📦</div>
-                                <h4 data-i18n="hero.card1.title">Kontraplak</h4>
-                                <p data-i18n="hero.card1.desc">Standart kalıp</p>
-                            </div>
-                            <div class="product-mini-card">
-                                <div class="product-mini-icon">🎯</div>
-                                <h4 data-i18n="hero.card2.title">Filmli Kontraplak</h4>
-                                <p data-i18n="hero.card2.desc">Kalıp uygulamaları</p>
-                            </div>
-                            <div class="product-mini-card">
-                                <div class="product-mini-icon">🏗️</div>
-                                <h4 data-i18n="hero.card3.title">OSB / MDF</h4>
-                                <p data-i18n="hero.card3.desc">Endüstriyel</p>
-                            </div>
-                            <div class="product-mini-card">
-                                <div class="product-mini-icon">✂️</div>
-                                <h4 data-i18n="hero.card4.title">Özel Kesim</h4>
-                                <p data-i18n="hero.card4.desc">Proje bazlı</p>
-                            </div>
-                        </div>
-                        <div class="capacity-badge">
-                            <strong data-i18n="hero.capacityLabel">Yıllık Kapasite:</strong> <span data-i18n="hero.capacityValue">50,000+ m³</span>
-                        </div>
-                        <div class="gradient-bar"></div>
-                    </div>
+            <div class="hero-inner">
+                <span class="hero-subtitle" data-i18n="hero.subtitle">100+ Years of Material Expertise</span>
+                <h1 class="text-hero mb-md" data-i18n="hero.title">The Bridge Between Nature & Global
+                    Industry.<br>Doğayla Küresel Endüstri Arasındaki Köprü.</h1>
+                <p class="text-lead mb-md">
+                    Building on 100+ years of manufacturing roots, we determine the best global sources.
+                    Supplying Plywood, Lumber, OSB & Veneer worldwide.
+                </p>
+                <div class="hero-actions">
+                    <a href="products.html" class="btn btn-primary" data-i18n="btn.industrial">Industrial Products</a>
+                    <a href="teversanat.html" class="btn btn-outline" data-i18n="btn.sanat">Explore Tever Sanat</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Bar -->
-    <section class="stats-bar">
+    <!-- Global Stats Bar (Replaces Dual World) -->
+    <section class="section-stats">
         <div class="container">
-            <div class="stats-container">
+            <div class="stats-grid">
+                <!-- Stat 1: Global -->
                 <div class="stat-item">
-                    <div class="stat-number">30+</div>
-                    <div class="stat-label" data-i18n="stats.stat1">Ülkeye düzenli ihracat potansiyeli</div>
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" width="48" height="48">
+                            <path fill="currentColor"
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                        </svg>
+                    </div>
+                    <h3 class="stat-value" data-i18n="stats.export">50+ Countries</h3>
+                    <p class="stat-label" data-i18n="stats.export.desc">Global Export Network</p>
                 </div>
+
+                <!-- Stat 2: Sustainability -->
                 <div class="stat-item">
-                    <div class="stat-number">1978</div>
-                    <div class="stat-label" data-i18n="stats.stat2">Yılından bu yana sektör deneyimi</div>
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" width="48" height="48">
+                            <path fill="currentColor"
+                                d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66l.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
+                        </svg>
+                    </div>
+                    <h3 class="stat-value" data-i18n="stats.sustain">100% Sustainable</h3>
+                    <p class="stat-label" data-i18n="stats.sustain.desc">Certified Sources</p>
                 </div>
+
+                <!-- Stat 3: History -->
                 <div class="stat-item">
-                    <div class="stat-number">48</div>
-                    <div class="stat-label" data-i18n="stats.stat3">Saat içinde ön teklif</div>
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" width="48" height="48">
+                            <path fill="currentColor"
+                                d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z" />
+                        </svg>
+                    </div>
+                    <h3 class="stat-value" data-i18n="stats.history">Est. 1918</h3>
+                    <p class="stat-label" data-i18n="stats.history.desc">More than 100 Years</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Products Section -->
-    <section class="section products-section" id="urunler">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title" data-i18n="products.title">Ürünlerimiz</h2>
-                <p class="section-subtitle" data-i18n="products.subtitle">İnşaat, mobilya, treyler ve endüstriyel uygulamalar için geniş ürün yelpazesi</p>
-            </div>
-            
-            <div class="products-grid">
-                <div class="product-card">
-                    <h3 class="product-name" data-i18n="product1.name">Mobilya Kontraplak</h3>
-                    <p class="product-description" data-i18n="product1.desc">Yüksek kaliteli, düzgün yüzeyli kontraplak mobilya üretimi için ideal.</p>
-                    <div class="product-tags">
-                        <span class="tag" data-i18n="product1.tag1">Kalınlık: 3-25mm</span>
-                        <span class="tag" data-i18n="product1.tag2">Yapıştırıcı: E0/E1</span>
-                        <span class="tag" data-i18n="product1.tag3">Kullanım: İç mekan</span>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <h3 class="product-name" data-i18n="product2.name">Filmli Kalıp Kontraplak</h3>
-                    <p class="product-description" data-i18n="product2.desc">Beton kalıp uygulamaları için özel kaplamalı, dayanıklı kontraplak.</p>
-                    <div class="product-tags">
-                        <span class="tag" data-i18n="product2.tag1">Kalınlık: 12-21mm</span>
-                        <span class="tag" data-i18n="product2.tag2">Film: Melamin/Phenolic</span>
-                        <span class="tag" data-i18n="product2.tag3">Kullanım: Kalıp</span>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <h3 class="product-name" data-i18n="product3.name">OSB Paneller</h3>
-                    <p class="product-description" data-i18n="product3.desc">Yönlendirilmiş yonga levha, yapısal uygulamalar için güçlü çözüm.</p>
-                    <div class="product-tags">
-                        <span class="tag" data-i18n="product3.tag1">Kalınlık: 9-22mm</span>
-                        <span class="tag" data-i18n="product3.tag2">Sınıf: OSB-3/OSB-4</span>
-                        <span class="tag" data-i18n="product3.tag3">Kullanım: Yapısal</span>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <h3 class="product-name" data-i18n="product4.name">MDF Levhalar</h3>
-                    <p class="product-description" data-i18n="product4.desc">Düzgün yüzeyli, işlenebilir MDF mobilya ve dekorasyon için.</p>
-                    <div class="product-tags">
-                        <span class="tag" data-i18n="product4.tag1">Kalınlık: 3-30mm</span>
-                        <span class="tag" data-i18n="product4.tag2">Yoğunluk: 700-850 kg/m³</span>
-                        <span class="tag" data-i18n="product4.tag3">Kullanım: İç mekan</span>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <h3 class="product-name" data-i18n="product5.name">Treyler Zemin Kontraplak</h3>
-                    <p class="product-description" data-i18n="product5.desc">Ağır yük taşımacılığı için yüksek dayanımlı kontraplak zemin.</p>
-                    <div class="product-tags">
-                        <span class="tag" data-i18n="product5.tag1">Kalınlık: 18-30mm</span>
-                        <span class="tag" data-i18n="product5.tag2">Dayanım: Yüksek</span>
-                        <span class="tag" data-i18n="product5.tag3">Kullanım: Taşımacılık</span>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <h3 class="product-name" data-i18n="product6.name">Özel Kesim & Proje Bazlı</h3>
-                    <p class="product-description" data-i18n="product6.desc">Projenize özel boyut, kalınlık ve özelliklerde üretim hizmeti.</p>
-                    <div class="product-tags">
-                        <span class="tag" data-i18n="product6.tag1">Özel boyutlar</span>
-                        <span class="tag" data-i18n="product6.tag2">Proje bazlı</span>
-                        <span class="tag" data-i18n="product6.tag3">Minimum sipariş: Müzakere edilebilir</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Usage Areas Section -->
-    <section class="section usage-section" id="kullanim">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title" data-i18n="usage.title">Kullanım Alanları</h2>
-                <p class="section-subtitle" data-i18n="usage.subtitle">Ürünlerimiz geniş bir yelpazede uygulama alanı bulmaktadır</p>
-            </div>
-            
-            <div class="usage-grid">
-                <div class="usage-card">
-                    <div class="usage-icon">🏗️</div>
-                    <h3 class="usage-title" data-i18n="usage.card1.title">İnşaat & Kalıp</h3>
-                    <p class="usage-description" data-i18n="usage.card1.desc">Beton kalıp uygulamaları, geçici yapılar ve inşaat projeleri için dayanıklı çözümler.</p>
-                </div>
-                
-                <div class="usage-card">
-                    <div class="usage-icon">🪑</div>
-                    <h3 class="usage-title" data-i18n="usage.card2.title">Mobilya & Dekorasyon</h3>
-                    <p class="usage-description" data-i18n="usage.card2.desc">Mobilya üretimi, iç mimari projeler ve dekoratif uygulamalar için kaliteli malzemeler.</p>
-                </div>
-                
-                <div class="usage-card">
-                    <div class="usage-icon">🚛</div>
-                    <h3 class="usage-title" data-i18n="usage.card3.title">Treyler & Taşımacılık</h3>
-                    <p class="usage-description" data-i18n="usage.card3.desc">Ağır yük taşımacılığı için güçlü zemin ve yan duvar uygulamaları.</p>
-                </div>
-                
-                <div class="usage-card">
-                    <div class="usage-icon">🏢</div>
-                    <h3 class="usage-title" data-i18n="usage.card4.title">Endüstriyel Uygulamalar</h3>
-                    <p class="usage-description" data-i18n="usage.card4.desc">Endüstriyel projeler, makine tabanları ve özel uygulamalar için çözümler.</p>
-                </div>
-                
-                <div class="usage-card">
-                    <div class="usage-icon">🏠</div>
-                    <h3 class="usage-title" data-i18n="usage.card5.title">İç Mimari & Proje</h3>
-                    <p class="usage-description" data-i18n="usage.card5.desc">Mimari projeler, özel tasarımlar ve yaratıcı uygulamalar için esnek çözümler.</p>
-                </div>
-                
-                <div class="usage-card">
-                    <div class="usage-icon">🌍</div>
-                    <h3 class="usage-title" data-i18n="usage.card6.title">İhracat Projeleri</h3>
-                    <p class="usage-description" data-i18n="usage.card6.desc">Uluslararası standartlara uygun, ihracata hazır paketleme ve lojistik desteği.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Why Tever Section -->
-    <section class="section why-section" id="neden">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title" data-i18n="why.title">Neden Tever?</h2>
-                <p class="section-subtitle" data-i18n="why.subtitle">Sadece ürün değil, kapsamlı tedarik stratejisi sunuyoruz</p>
-            </div>
-            
-            <div class="why-grid">
-                <div class="why-card">
-                    <div class="why-label" data-i18n="why.card1.label">Uzun Vadeli Planlama</div>
-                    <h3 class="why-title" data-i18n="why.card1.title">Tedarik Stratejisi</h3>
-                    <p class="why-description" data-i18n="why.card1.desc">Projelerinizin ihtiyaçlarına göre uzun vadeli tedarik planlaması yapıyoruz. Stok yönetimi, zamanında teslimat ve süreklilik garantisi sunuyoruz.</p>
-                </div>
-                
-                <div class="why-card">
-                    <div class="why-label" data-i18n="why.card2.label">Kalite Standartları</div>
-                    <h3 class="why-title" data-i18n="why.card2.title">Standardize Kalite Seviyeleri</h3>
-                    <p class="why-description" data-i18n="why.card2.desc">Tüm ürünlerimiz uluslararası kalite standartlarına uygundur. Her parti kalite kontrolünden geçer ve sertifikalandırılır.</p>
-                </div>
-                
-                <div class="why-card">
-                    <div class="why-label" data-i18n="why.card3.label">Lojistik & Paketleme</div>
-                    <h3 class="why-title" data-i18n="why.card3.title">İhracata Hazır Paketleme</h3>
-                    <p class="why-description" data-i18n="why.card3.desc">İhracat projeleriniz için uygun paketleme, belgelendirme ve lojistik desteği sağlıyoruz. Deneyimli ekibimiz tüm süreçleri yönetir.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Sustainability Section -->
-    <section class="section sustainability-section" id="surdurulebilirlik">
-        <div class="container">
-            <div class="sustainability-content">
-                <div class="sustainability-left">
-                    <h2 class="section-title" data-i18n="sustain.title">Sürdürülebilirlik</h2>
-                    <p class="sustainability-text" data-i18n="sustain.text1">
-                        Tever Orman Mamulleri olarak, sürdürülebilir orman yönetimi ve çevre dostu üretim prensiplerine bağlıyız. Tüm hammaddelerimiz yasal ve sürdürülebilir kaynaklardan temin edilmektedir.
-                    </p>
-                    <p class="sustainability-text" data-i18n="sustain.text2">
-                        Üretim süreçlerimizde çevreye saygılı uygulamalar benimsiyor, atık yönetimi ve enerji verimliliği konularında sürekli iyileştirme çalışmaları yürütüyoruz.
-                    </p>
-                    <div class="cert-badges">
-                        <span class="cert-badge" data-i18n="sustain.badge1">FSC Sertifikalı Kaynaklar</span>
-                        <span class="cert-badge" data-i18n="sustain.badge2">PEFC Uyumlu</span>
-                        <span class="cert-badge" data-i18n="sustain.badge3">Belgelendirme Hazır</span>
-                        <span class="cert-badge" data-i18n="sustain.badge4">İzlenebilirlik</span>
-                    </div>
-                </div>
-                
-                <div class="sustainability-right">
-                    <div class="supply-chain-card">
-                        <h3 class="supply-chain-title" data-i18n="sustain.cardTitle">Tedarik Zinciri Yaklaşımı</h3>
-                        <ul class="supply-chain-list">
-                            <li data-i18n="sustain.list1">✓ Sürdürülebilir orman kaynakları</li>
-                            <li data-i18n="sustain.list2">✓ Yasal uyumluluk ve belgelendirme</li>
-                            <li data-i18n="sustain.list3">✓ Kalite kontrol ve test süreçleri</li>
-                            <li data-i18n="sustain.list4">✓ Çevre dostu üretim teknolojileri</li>
-                            <li data-i18n="sustain.list5">✓ Atık minimizasyonu ve geri dönüşüm</li>
-                            <li data-i18n="sustain.list6">✓ Enerji verimliliği optimizasyonu</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonial & CTA Section -->
-    <section class="section testimonial-section">
-        <div class="container">
-            <div class="testimonial-card">
-                <div class="testimonial-content">
-                    <p class="testimonial-quote" data-i18n="testimonial.quote">
-                        "Tever Orman Mamulleri ile çalışmaya başladığımızdan beri, projelerimizde kalite ve zamanında teslimat konusunda hiç sorun yaşamadık. Özellikle filmli kontraplak ürünlerinin kalitesi ve müşteri hizmetleri ekibinin profesyonelliği bizi çok etkiledi."
-                    </p>
-                    <div class="testimonial-author">
-                        <strong data-i18n="testimonial.author">Ahmet Yılmaz</strong>
-                        <span data-i18n="testimonial.role">Genel Müdür, Yılmaz İnşaat A.Ş.</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="cta-strip">
-                <div class="cta-content">
-                    <h2 class="cta-title" data-i18n="cta.title">Projeniz için doğru kontraplak kombinasyonunu seçmenize yardımcı oluyoruz</h2>
-                    <p class="cta-text" data-i18n="cta.text">Uzman ekibimiz, ihtiyaçlarınıza en uygun ürün ve çözümü belirlemek için sizinle birlikte çalışır.</p>
-                    <a href="#iletisim" class="btn btn-primary btn-large" data-i18n="cta.button">Hemen Teklif Talep Et</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="section contact-section" id="iletisim">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title" data-i18n="contact.title">İletişim</h2>
-                <p class="section-subtitle" data-i18n="contact.subtitle">Teklif, numune talebi ve iş birliği için bizimle iletişime geçin</p>
-            </div>
-            
-            <div class="contact-content">
-                <div class="contact-form-wrapper">
-                    <form class="contact-form" id="contactForm">
-                        <div class="form-group">
-                            <label for="name" data-i18n="form.name">İsim Soyisim <span class="required">*</span></label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="company" data-i18n="form.company">Firma Adı <span class="required">*</span></label>
-                            <input type="text" id="company" name="company" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email" data-i18n="form.email">E-posta <span class="required">*</span></label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="phone" data-i18n="form.phone">Telefon</label>
-                            <input type="tel" id="phone" name="phone">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="requestType" data-i18n="form.requestType">Talep Türü</label>
-                            <input type="text" id="requestType" name="requestType" placeholder="Örn: Filmli kontraplak teklifi">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="message" data-i18n="form.message">Mesaj</label>
-                            <textarea id="message" name="message" rows="5"></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-large" data-i18n="form.submit">Teklif Talep Et</button>
-                    </form>
-                </div>
-                
-                <div class="contact-info">
-                    <div class="contact-info-block">
-                        <h3 class="contact-info-title" data-i18n="contact.info.title">Tever Orman Mamulleri A.Ş.</h3>
-                        <p class="contact-info-text" data-i18n="contact.info.address">
-                            [Şirket Adresi]<br>
-                            [İlçe, İl] [Posta Kodu]<br>
-                            Türkiye
-                        </p>
-                    </div>
-                    
-                    <div class="contact-info-block">
-                        <h3 class="contact-info-title" data-i18n="contact.info.emailTitle">E-posta</h3>
-                        <p class="contact-info-text">
-                            <a href="mailto:info@teverorman.com">info@teverorman.com</a>
-                        </p>
-                    </div>
-                    
-                    <div class="contact-info-block">
-                        <h3 class="contact-info-title" data-i18n="contact.info.phoneTitle">Telefon</h3>
-                        <p class="contact-info-text">
-                            <a href="tel:+90XXXXXXXXXX">+90 (___) ___ __ __</a>
-                        </p>
-                    </div>
-                    
-                    <div class="contact-info-block">
-                        <h3 class="contact-info-title" data-i18n="contact.info.whatsappTitle">WhatsApp</h3>
-                        <p class="contact-info-text" data-i18n="contact.info.whatsappText">
-                            Hızlı iletişim için WhatsApp üzerinden ulaşabilirsiniz.
-                        </p>
-                    </div>
-                    
-                    <div class="contact-info-block">
-                        <h3 class="contact-info-title" data-i18n="contact.info.hoursTitle">Çalışma Saatleri</h3>
-                        <p class="contact-info-text" data-i18n="contact.info.hoursText">
-                            Pazartesi - Cuma: 09:00 - 18:00<br>
-                            Cumartesi: 09:00 - 13:00<br>
-                            Pazar: Kapalı
-                        </p>
-                    </div>
-                </div>
-            </div>
+    <!-- Brief About -->
+    <section class="section">
+        <div class="container text-center" style="max-width: 800px;">
+            <span class="hero-subtitle">One Brand, Two Worlds</span>
+            <h2 class="text-h2 mb-md">Connected by Material Knowledge</h2>
+            <p class="text-lead">
+                For more than a century, our family has worked with wood. This deep expertise allows us to understand
+                the material's structural limits for industry, and its expressive potential for art.
+            </p>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="site-footer">
         <div class="container">
-            <div class="footer-top">
-                <div class="footer-copyright">
-                    <p data-i18n="footer.copy">© <span id="currentYear">2024</span> Tever Orman Mamulleri A.Ş. – Tüm hakları saklıdır.</p>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="brand-logo mb-md" style="display: block;">TEVER</a>
+                    <p class="text-small text-muted">
+                        <strong data-i18n="contact.legal_title">Tever Orman Mamülleri</strong><br>
+                        <span data-i18n="contact.legal_suffix">Sanayi ve Ticaret A.Ş.</span>
+                    </p>
+                    <p class="text-small text-muted" style="margin-top: 1rem;">
+                        Nato Yolu Caddesi, Narin Sokak No: 3/4,<br>
+                        İstanbul, Türkiye
+                    </p>
                 </div>
-                <nav class="footer-nav">
-                    <a href="#urunler" data-i18n="nav.products">Ürünler</a>
-                    <a href="#kullanim" data-i18n="nav.usage">Kullanım Alanları</a>
-                    <a href="#neden" data-i18n="nav.why">Neden Tever?</a>
-                    <a href="#surdurulebilirlik" data-i18n="nav.sustainability">Sürdürülebilirlik</a>
-                    <a href="#iletisim" data-i18n="nav.contact">İletişim</a>
-                </nav>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.products">Products</h4>
+                    <ul>
+                        <li><a href="products.html" data-i18n="footer.plywood">Birch Plywood (Kontrplak)</a></li>
+                        <li><a href="products.html#veneer" data-i18n="footer.veneer">Veneer (Papel)</a></li>
+                        <li><a href="products.html#lumber" data-i18n="footer.lumber_link">Lumber (Kereste)</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.culture">Culture</h4>
+                    <ul>
+                        <li><a href="teversanat.html" data-i18n="nav.sanat">Tever Sanat</a></li>
+                        <li><a href="teversanat-gallery.html" data-i18n="footer.art_collection">Art Collection</a></li>
+                        <li><a href="teversanat-apply.html" data-i18n="footer.for_artists">For Artists</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.connect">Connect</h4>
+                    <ul>
+                        <li><a href="mailto:m.eymen@teverorman.com">m.eymen@teverorman.com</a></li>
+                        <li><a href="mailto:info@teverorman.com">info@teverorman.com</a></li>
+                        <li><a href="https://wa.me/905344141224">+90 534 414 12 24</a></li>
+                        <li style="margin-top: 1rem;"><a href="contact.html" class="btn-text"
+                                style="color: var(--color-accent); font-weight: 600;">➔ Partner with Us</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="footer-bottom">
-                <p class="footer-text" data-i18n="footer.kvkk">KVKK kapsamında kişisel verileriniz korunmaktadır.</p>
-                <p class="footer-text" data-i18n="footer.credit">Web tasarım: Tever Orman Mamulleri A.Ş.</p>
+            <div
+                style="margin-top: 4rem; padding-top: 2rem; text-align: center; font-size: 0.875rem; color: var(--color-text-muted); border-top: 1px solid var(--color-border);">
+                &copy;
+                <script>document.write(new Date().getFullYear())</script> Tever Orman Mamülleri A.Ş. | Global Trade &
+                Art.
             </div>
         </div>
     </footer>
 
-    <!-- Minimal JavaScript -->
-    <script>
-        // Translation dictionary
-        const translations = {
-            tr: {
-                'lang.current': 'TR',
-                'nav.products': 'Ürünler',
-                'nav.usage': 'Kullanım Alanları',
-                'nav.why': 'Neden Tever?',
-                'nav.sustainability': 'Sürdürülebilirlik',
-                'nav.contact': 'İletişim',
-                'header.contact': 'İletişime Geç',
-                'header.cta': 'Teklif Al',
-                'hero.eyebrow': 'Orman Mamulleri & Kontraplak',
-                'hero.title': 'Projeleriniz için doğru kontraplak tedarik ortağınız.',
-                'hero.desc': "Tever Orman Mamulleri A.Ş., 1978'den bu yana kontraplak, filmli kontraplak, OSB, MDF ve orman mamulleri üretiminde sektörün güvenilir çözüm ortağıdır. İnşaat, mobilya, treyler ve endüstriyel uygulamalar için yüksek kaliteli ürünler sunuyoruz.",
-                'hero.badge1': "1978'den bugüne deneyim",
-                'hero.badge2': 'İhracata uygun kalite',
-                'hero.badge3': '30+ ülkeye ihracat',
-                'hero.btnPrimary': 'Projeniz için Teklif Al',
-                'hero.btnSecondary': 'Ürün Kataloğunu Gör',
-                'hero.footnote': 'Mobilya • İnşaat • Treyler • Endüstriyel Uygulamalar • İhracat',
-                'hero.card1.title': 'Kontraplak',
-                'hero.card1.desc': 'Standart kalıp',
-                'hero.card2.title': 'Filmli Kontraplak',
-                'hero.card2.desc': 'Kalıp uygulamaları',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': 'Endüstriyel',
-                'hero.card4.title': 'Özel Kesim',
-                'hero.card4.desc': 'Proje bazlı',
-                'hero.capacityLabel': 'Yıllık Kapasite:',
-                'hero.capacityValue': '50,000+ m³',
-                'stats.stat1': 'Ülkeye düzenli ihracat potansiyeli',
-                'stats.stat2': 'Yılından bu yana sektör deneyimi',
-                'stats.stat3': 'Saat içinde ön teklif',
-                'products.title': 'Ürünlerimiz',
-                'products.subtitle': 'İnşaat, mobilya, treyler ve endüstriyel uygulamalar için geniş ürün yelpazesi',
-                'product1.name': 'Mobilya Kontraplak',
-                'product1.desc': 'Yüksek kaliteli, düzgün yüzeyli kontraplak mobilya üretimi için ideal.',
-                'product1.tag1': 'Kalınlık: 3-25mm',
-                'product1.tag2': 'Yapıştırıcı: E0/E1',
-                'product1.tag3': 'Kullanım: İç mekan',
-                'product2.name': 'Filmli Kalıp Kontraplak',
-                'product2.desc': 'Beton kalıp uygulamaları için özel kaplamalı, dayanıklı kontraplak.',
-                'product2.tag1': 'Kalınlık: 12-21mm',
-                'product2.tag2': 'Film: Melamin/Phenolic',
-                'product2.tag3': 'Kullanım: Kalıp',
-                'product3.name': 'OSB Paneller',
-                'product3.desc': 'Yönlendirilmiş yonga levha, yapısal uygulamalar için güçlü çözüm.',
-                'product3.tag1': 'Kalınlık: 9-22mm',
-                'product3.tag2': 'Sınıf: OSB-3/OSB-4',
-                'product3.tag3': 'Kullanım: Yapısal',
-                'product4.name': 'MDF Levhalar',
-                'product4.desc': 'Düzgün yüzeyli, işlenebilir MDF mobilya ve dekorasyon için.',
-                'product4.tag1': 'Kalınlık: 3-30mm',
-                'product4.tag2': 'Yoğunluk: 700-850 kg/m³',
-                'product4.tag3': 'Kullanım: İç mekan',
-                'product5.name': 'Treyler Zemin Kontraplak',
-                'product5.desc': 'Ağır yük taşımacılığı için yüksek dayanımlı kontraplak zemin.',
-                'product5.tag1': 'Kalınlık: 18-30mm',
-                'product5.tag2': 'Dayanım: Yüksek',
-                'product5.tag3': 'Kullanım: Taşımacılık',
-                'product6.name': 'Özel Kesim & Proje Bazlı',
-                'product6.desc': 'Projenize özel boyut, kalınlık ve özelliklerde üretim hizmeti.',
-                'product6.tag1': 'Özel boyutlar',
-                'product6.tag2': 'Proje bazlı',
-                'product6.tag3': 'Minimum sipariş: Müzakere edilebilir',
-                'usage.title': 'Kullanım Alanları',
-                'usage.subtitle': 'Ürünlerimiz geniş bir yelpazede uygulama alanı bulmaktadır',
-                'usage.card1.title': 'İnşaat & Kalıp',
-                'usage.card1.desc': 'Beton kalıp uygulamaları, geçici yapılar ve inşaat projeleri için dayanıklı çözümler.',
-                'usage.card2.title': 'Mobilya & Dekorasyon',
-                'usage.card2.desc': 'Mobilya üretimi, iç mimari projeler ve dekoratif uygulamalar için kaliteli malzemeler.',
-                'usage.card3.title': 'Treyler & Taşımacılık',
-                'usage.card3.desc': 'Ağır yük taşımacılığı için güçlü zemin ve yan duvar uygulamaları.',
-                'usage.card4.title': 'Endüstriyel Uygulamalar',
-                'usage.card4.desc': 'Endüstriyel projeler, makine tabanları ve özel uygulamalar için çözümler.',
-                'usage.card5.title': 'İç Mimari & Proje',
-                'usage.card5.desc': 'Mimari projeler, özel tasarımlar ve yaratıcı uygulamalar için esnek çözümler.',
-                'usage.card6.title': 'İhracat Projeleri',
-                'usage.card6.desc': 'Uluslararası standartlara uygun, ihracata hazır paketleme ve lojistik desteği.',
-                'why.title': 'Neden Tever?',
-                'why.subtitle': 'Sadece ürün değil, kapsamlı tedarik stratejisi sunuyoruz',
-                'why.card1.label': 'Uzun Vadeli Planlama',
-                'why.card1.title': 'Tedarik Stratejisi',
-                'why.card1.desc': 'Projelerinizin ihtiyaçlarına göre uzun vadeli tedarik planlaması yapıyoruz. Stok yönetimi, zamanında teslimat ve süreklilik garantisi sunuyoruz.',
-                'why.card2.label': 'Kalite Standartları',
-                'why.card2.title': 'Standardize Kalite Seviyeleri',
-                'why.card2.desc': 'Tüm ürünlerimiz uluslararası kalite standartlarına uygundur. Her parti kalite kontrolünden geçer ve sertifikalandırılır.',
-                'why.card3.label': 'Lojistik & Paketleme',
-                'why.card3.title': 'İhracata Hazır Paketleme',
-                'why.card3.desc': 'İhracat projeleriniz için uygun paketleme, belgelendirme ve lojistik desteği sağlıyoruz. Deneyimli ekibimiz tüm süreçleri yönetir.',
-                'sustain.title': 'Sürdürülebilirlik',
-                'sustain.text1': 'Tever Orman Mamulleri olarak, sürdürülebilir orman yönetimi ve çevre dostu üretim prensiplerine bağlıyız. Tüm hammaddelerimiz yasal ve sürdürülebilir kaynaklardan temin edilmektedir.',
-                'sustain.text2': 'Üretim süreçlerimizde çevreye saygılı uygulamalar benimsiyor, atık yönetimi ve enerji verimliliği konularında sürekli iyileştirme çalışmaları yürütüyoruz.',
-                'sustain.badge1': 'FSC Sertifikalı Kaynaklar',
-                'sustain.badge2': 'PEFC Uyumlu',
-                'sustain.badge3': 'Belgelendirme Hazır',
-                'sustain.badge4': 'İzlenebilirlik',
-                'sustain.cardTitle': 'Tedarik Zinciri Yaklaşımı',
-                'sustain.list1': '✓ Sürdürülebilir orman kaynakları',
-                'sustain.list2': '✓ Yasal uyumluluk ve belgelendirme',
-                'sustain.list3': '✓ Kalite kontrol ve test süreçleri',
-                'sustain.list4': '✓ Çevre dostu üretim teknolojileri',
-                'sustain.list5': '✓ Atık minimizasyonu ve geri dönüşüm',
-                'sustain.list6': '✓ Enerji verimliliği optimizasyonu',
-                'testimonial.quote': 'Tever Orman Mamulleri ile çalışmaya başladığımızdan beri, projelerimizde kalite ve zamanında teslimat konusunda hiç sorun yaşamadık. Özellikle filmli kontraplak ürünlerinin kalitesi ve müşteri hizmetleri ekibinin profesyonelliği bizi çok etkiledi.',
-                'testimonial.author': 'Ahmet Yılmaz',
-                'testimonial.role': 'Genel Müdür, Yılmaz İnşaat A.Ş.',
-                'cta.title': 'Projeniz için doğru kontraplak kombinasyonunu seçmenize yardımcı oluyoruz',
-                'cta.text': 'Uzman ekibimiz, ihtiyaçlarınıza en uygun ürün ve çözümü belirlemek için sizinle birlikte çalışır.',
-                'cta.button': 'Hemen Teklif Talep Et',
-                'contact.title': 'İletişim',
-                'contact.subtitle': 'Teklif, numune talebi ve iş birliği için bizimle iletişime geçin',
-                'form.name': 'İsim Soyisim *',
-                'form.company': 'Firma Adı *',
-                'form.email': 'E-posta *',
-                'form.phone': 'Telefon',
-                'form.requestType': 'Talep Türü',
-                'form.message': 'Mesaj',
-                'form.submit': 'Teklif Talep Et',
-                'contact.info.title': 'Tever Orman Mamulleri A.Ş.',
-                'contact.info.address': '[Şirket Adresi]\\n[İlçe, İl] [Posta Kodu]\\nTürkiye',
-                'contact.info.emailTitle': 'E-posta',
-                'contact.info.phoneTitle': 'Telefon',
-                'contact.info.whatsappTitle': 'WhatsApp',
-                'contact.info.whatsappText': 'Hızlı iletişim için WhatsApp üzerinden ulaşabilirsiniz.',
-                'contact.info.hoursTitle': 'Çalışma Saatleri',
-                'contact.info.hoursText': 'Pazartesi - Cuma: 09:00 - 18:00\\nCumartesi: 09:00 - 13:00\\nPazar: Kapalı',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Orman Mamulleri A.Ş. – Tüm hakları saklıdır.',
-                'footer.kvkk': 'KVKK kapsamında kişisel verileriniz korunmaktadır.',
-                'footer.credit': 'Web tasarım: Tever Orman Mamulleri A.Ş.'
-            },
-            en: {
-                'lang.current': 'EN',
-                'nav.products': 'Products',
-                'nav.usage': 'Applications',
-                'nav.why': 'Why Tever?',
-                'nav.sustainability': 'Sustainability',
-                'nav.contact': 'Contact',
-                'header.contact': 'Contact Us',
-                'header.cta': 'Get a Quote',
-                'hero.eyebrow': 'Forest Products & Plywood',
-                'hero.title': 'Your reliable plywood supply partner for every project.',
-                'hero.desc': 'Since 1978, Tever Forest Products supplies plywood, film-faced plywood, OSB, MDF and forest products for construction, furniture, trailer and industrial needs.',
-                'hero.badge1': 'Since 1978 experience',
-                'hero.badge2': 'Export-grade quality',
-                'hero.badge3': 'Exports to 30+ countries',
-                'hero.btnPrimary': 'Request a Quote',
-                'hero.btnSecondary': 'View Product Catalog',
-                'hero.footnote': 'Furniture • Construction • Trailer • Industrial • Export',
-                'hero.card1.title': 'Plywood',
-                'hero.card1.desc': 'Standard formwork',
-                'hero.card2.title': 'Film-Faced Plywood',
-                'hero.card2.desc': 'Formwork uses',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': 'Industrial',
-                'hero.card4.title': 'Custom Cut',
-                'hero.card4.desc': 'Project-based',
-                'hero.capacityLabel': 'Annual Capacity:',
-                'hero.capacityValue': '50,000+ m³',
-                'stats.stat1': 'Regular export potential to 30+ countries',
-                'stats.stat2': 'Experience since 1978',
-                'stats.stat3': 'Pre-quote within 48 hours',
-                'products.title': 'Our Products',
-                'products.subtitle': 'Wide range for construction, furniture, trailer and industrial needs',
-                'product1.name': 'Furniture Plywood',
-                'product1.desc': 'High-quality smooth plywood ideal for furniture production.',
-                'product1.tag1': 'Thickness: 3-25mm',
-                'product1.tag2': 'Glue: E0/E1',
-                'product1.tag3': 'Use: Interior',
-                'product2.name': 'Film-Faced Formwork Plywood',
-                'product2.desc': 'Durable, coated plywood for concrete formwork.',
-                'product2.tag1': 'Thickness: 12-21mm',
-                'product2.tag2': 'Film: Melamine/Phenolic',
-                'product2.tag3': 'Use: Formwork',
-                'product3.name': 'OSB Panels',
-                'product3.desc': 'Oriented strand board for structural applications.',
-                'product3.tag1': 'Thickness: 9-22mm',
-                'product3.tag2': 'Class: OSB-3/OSB-4',
-                'product3.tag3': 'Use: Structural',
-                'product4.name': 'MDF Boards',
-                'product4.desc': 'Smooth, workable MDF for furniture and decoration.',
-                'product4.tag1': 'Thickness: 3-30mm',
-                'product4.tag2': 'Density: 700-850 kg/m³',
-                'product4.tag3': 'Use: Interior',
-                'product5.name': 'Trailer Flooring Plywood',
-                'product5.desc': 'High-strength plywood flooring for heavy transport.',
-                'product5.tag1': 'Thickness: 18-30mm',
-                'product5.tag2': 'Strength: High',
-                'product5.tag3': 'Use: Transport',
-                'product6.name': 'Custom Cut & Project-Based',
-                'product6.desc': 'Custom size, thickness and specs tailored to your project.',
-                'product6.tag1': 'Custom dimensions',
-                'product6.tag2': 'Project-based',
-                'product6.tag3': 'MOQ: Negotiable',
-                'usage.title': 'Applications',
-                'usage.subtitle': 'Our products serve a broad range of use cases',
-                'usage.card1.title': 'Construction & Formwork',
-                'usage.card1.desc': 'Durable solutions for concrete formwork and temporary structures.',
-                'usage.card2.title': 'Furniture & Decoration',
-                'usage.card2.desc': 'Quality materials for furniture production and interior projects.',
-                'usage.card3.title': 'Trailer & Transport',
-                'usage.card3.desc': 'Strong flooring and side panels for heavy transport.',
-                'usage.card4.title': 'Industrial Applications',
-                'usage.card4.desc': 'Solutions for industrial projects and machinery bases.',
-                'usage.card5.title': 'Interior Architecture',
-                'usage.card5.desc': 'Flexible solutions for architectural and bespoke designs.',
-                'usage.card6.title': 'Export Projects',
-                'usage.card6.desc': 'Export-ready packaging and logistics support.',
-                'why.title': 'Why Tever?',
-                'why.subtitle': 'We deliver a supply strategy, not just products',
-                'why.card1.label': 'Long-Term Planning',
-                'why.card1.title': 'Supply Strategy',
-                'why.card1.desc': 'We plan long-term supply aligned to your project needs with stock continuity and on-time deliveries.',
-                'why.card2.label': 'Quality Standards',
-                'why.card2.title': 'Standardized Quality Levels',
-                'why.card2.desc': 'Every batch meets international standards and passes quality checks.',
-                'why.card3.label': 'Logistics & Packaging',
-                'why.card3.title': 'Export-Ready Packaging',
-                'why.card3.desc': 'Packaging, documentation and logistics tailored for your export projects.',
-                'sustain.title': 'Sustainability',
-                'sustain.text1': 'We commit to sustainable forestry and responsible sourcing. All raw materials come from legal, sustainable sources.',
-                'sustain.text2': 'We improve waste management and energy efficiency continuously while using eco-friendly production practices.',
-                'sustain.badge1': 'FSC Certified Sources',
-                'sustain.badge2': 'PEFC Aligned',
-                'sustain.badge3': 'Certification Ready',
-                'sustain.badge4': 'Traceability',
-                'sustain.cardTitle': 'Supply Chain Approach',
-                'sustain.list1': '✓ Sustainable forest resources',
-                'sustain.list2': '✓ Legal compliance & documentation',
-                'sustain.list3': '✓ Quality control & testing',
-                'sustain.list4': '✓ Eco-friendly production tech',
-                'sustain.list5': '✓ Waste minimization & recycling',
-                'sustain.list6': '✓ Energy efficiency optimization',
-                'testimonial.quote': 'Working with Tever has removed quality and delivery risks from our projects. Film-faced plywood quality and their support team impressed us.',
-                'testimonial.author': 'Ahmet Yılmaz',
-                'testimonial.role': 'General Manager, Yılmaz Construction',
-                'cta.title': 'We help you choose the right plywood combination',
-                'cta.text': 'Our experts work with you to define the best fit for your project.',
-                'cta.button': 'Request a Quote Now',
-                'contact.title': 'Contact',
-                'contact.subtitle': 'Reach us for quotations, samples, and collaborations',
-                'form.name': 'Full Name *',
-                'form.company': 'Company *',
-                'form.email': 'Email *',
-                'form.phone': 'Phone',
-                'form.requestType': 'Request Type',
-                'form.message': 'Message',
-                'form.submit': 'Request Quote',
-                'contact.info.title': 'Tever Forest Products',
-                'contact.info.address': '[Company Address]\\n[District, City] [ZIP]\\nTürkiye',
-                'contact.info.emailTitle': 'Email',
-                'contact.info.phoneTitle': 'Phone',
-                'contact.info.whatsappTitle': 'WhatsApp',
-                'contact.info.whatsappText': 'Reach us quickly via WhatsApp.',
-                'contact.info.hoursTitle': 'Working Hours',
-                'contact.info.hoursText': 'Mon - Fri: 09:00 - 18:00\\nSat: 09:00 - 13:00\\nSun: Closed',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Forest Products – All rights reserved.',
-                'footer.kvkk': 'Personal data is protected under KVKK / GDPR.',
-                'footer.credit': 'Web design: Tever Forest Products'
-            },
-            de: {
-                'lang.current': 'DE',
-                'nav.products': 'Produkte',
-                'nav.usage': 'Einsatzbereiche',
-                'nav.why': 'Warum Tever?',
-                'nav.sustainability': 'Nachhaltigkeit',
-                'nav.contact': 'Kontakt',
-                'header.contact': 'Kontakt aufnehmen',
-                'header.cta': 'Angebot anfordern',
-                'hero.eyebrow': 'Holzprodukte & Sperrholz',
-                'hero.title': 'Ihr verlässlicher Sperrholz-Partner für jedes Projekt.',
-                'hero.desc': 'Seit 1978 liefert Tever Forest Products Sperrholz, filmkaschiertes Sperrholz, OSB und MDF für Bau, Möbel, Trailer und Industrie.',
-                'hero.badge1': 'Erfahrung seit 1978',
-                'hero.badge2': 'Exportqualität',
-                'hero.badge3': 'Export in 30+ Länder',
-                'hero.btnPrimary': 'Angebot anfordern',
-                'hero.btnSecondary': 'Produktkatalog ansehen',
-                'hero.footnote': 'Möbel • Bau • Trailer • Industrie • Export',
-                'hero.card1.title': 'Sperrholz',
-                'hero.card1.desc': 'Standard Schalung',
-                'hero.card2.title': 'Film-Sperrholz',
-                'hero.card2.desc': 'Für Schalungen',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': 'Industriell',
-                'hero.card4.title': 'Sonderzuschnitt',
-                'hero.card4.desc': 'Projektbasiert',
-                'hero.capacityLabel': 'Jährliche Kapazität:',
-                'hero.capacityValue': '50.000+ m³',
-                'stats.stat1': 'Regelmäßiges Exportpotenzial in 30+ Länder',
-                'stats.stat2': 'Branchenerfahrung seit 1978',
-                'stats.stat3': 'Vorab-Angebot in 48 Stunden',
-                'products.title': 'Unsere Produkte',
-                'products.subtitle': 'Breite Palette für Bau, Möbel, Trailer und Industrie',
-                'product1.name': 'Möbel-Sperrholz',
-                'product1.desc': 'Hochwertiges, glattes Sperrholz für Möbelproduktion.',
-                'product1.tag1': 'Dicke: 3-25mm',
-                'product1.tag2': 'Kleber: E0/E1',
-                'product1.tag3': 'Einsatz: Innen',
-                'product2.name': 'Film-Schalungs-Sperrholz',
-                'product2.desc': 'Beschichtetes, langlebiges Sperrholz für Betonschalungen.',
-                'product2.tag1': 'Dicke: 12-21mm',
-                'product2.tag2': 'Film: Melamin/Phenol',
-                'product2.tag3': 'Einsatz: Schalung',
-                'product3.name': 'OSB Platten',
-                'product3.desc': 'OSB für strukturelle Anwendungen.',
-                'product3.tag1': 'Dicke: 9-22mm',
-                'product3.tag2': 'Klasse: OSB-3/OSB-4',
-                'product3.tag3': 'Einsatz: Strukturell',
-                'product4.name': 'MDF Platten',
-                'product4.desc': 'Glatte, gut bearbeitbare MDF für Möbel & Dekor.',
-                'product4.tag1': 'Dicke: 3-30mm',
-                'product4.tag2': 'Dichte: 700-850 kg/m³',
-                'product4.tag3': 'Einsatz: Innen',
-                'product5.name': 'Trailer-Boden Sperrholz',
-                'product5.desc': 'Hochfestes Sperrholz für schweren Transport.',
-                'product5.tag1': 'Dicke: 18-30mm',
-                'product5.tag2': 'Festigkeit: Hoch',
-                'product5.tag3': 'Einsatz: Transport',
-                'product6.name': 'Sonderzuschnitt & Projekte',
-                'product6.desc': 'Individuelle Maße und Spezifikationen für Ihr Projekt.',
-                'product6.tag1': 'Sondermaße',
-                'product6.tag2': 'Projektbasiert',
-                'product6.tag3': 'Mindestmenge: Verhandelbar',
-                'usage.title': 'Einsatzbereiche',
-                'usage.subtitle': 'Unsere Produkte decken vielfältige Anwendungen ab',
-                'usage.card1.title': 'Bau & Schalung',
-                'usage.card1.desc': 'Robuste Lösungen für Betonschalungen und temporäre Bauten.',
-                'usage.card2.title': 'Möbel & Dekor',
-                'usage.card2.desc': 'Qualitätsmaterialien für Möbelbau und Innenarchitektur.',
-                'usage.card3.title': 'Trailer & Transport',
-                'usage.card3.desc': 'Starker Boden und Seiten für Schwertransport.',
-                'usage.card4.title': 'Industrielle Anwendungen',
-                'usage.card4.desc': 'Lösungen für Industrieprojekte und Maschinenbasen.',
-                'usage.card5.title': 'Innenarchitektur',
-                'usage.card5.desc': 'Flexible Lösungen für architektonische Projekte.',
-                'usage.card6.title': 'Exportprojekte',
-                'usage.card6.desc': 'Exportfertige Verpackung und Logistik.',
-                'why.title': 'Warum Tever?',
-                'why.subtitle': 'Wir liefern eine Beschaffungsstrategie, nicht nur Produkte',
-                'why.card1.label': 'Langfristige Planung',
-                'why.card1.title': 'Beschaffungsstrategie',
-                'why.card1.desc': 'Langfristige Planung mit Bestands- und Lieferkontinuität.',
-                'why.card2.label': 'Qualitätsstandards',
-                'why.card2.title': 'Standardisierte Qualitätsstufen',
-                'why.card2.desc': 'Jede Charge erfüllt internationale Standards und Prüfungen.',
-                'why.card3.label': 'Logistik & Verpackung',
-                'why.card3.title': 'Exportfertige Verpackung',
-                'why.card3.desc': 'Verpackung, Dokumentation und Logistik für Ihre Exporte.',
-                'sustain.title': 'Nachhaltigkeit',
-                'sustain.text1': 'Wir verpflichten uns zu nachhaltiger Forstwirtschaft und verantwortlicher Beschaffung aus legalen Quellen.',
-                'sustain.text2': 'Kontinuierliche Verbesserung bei Abfallmanagement und Energieeffizienz mit umweltfreundlichen Verfahren.',
-                'sustain.badge1': 'FSC-zertifizierte Quellen',
-                'sustain.badge2': 'PEFC-konform',
-                'sustain.badge3': 'Zertifizierung bereit',
-                'sustain.badge4': 'Rückverfolgbarkeit',
-                'sustain.cardTitle': 'Supply-Chain-Ansatz',
-                'sustain.list1': '✓ Nachhaltige Forstquellen',
-                'sustain.list2': '✓ Rechtliche Konformität & Dokumentation',
-                'sustain.list3': '✓ Qualitätskontrolle & Tests',
-                'sustain.list4': '✓ Umweltfreundliche Produktion',
-                'sustain.list5': '✓ Abfallminimierung & Recycling',
-                'sustain.list6': '✓ Energieeffizienzoptimierung',
-                'testimonial.quote': 'Mit Tever haben wir keine Qualitäts- oder Lieferprobleme mehr. Die Film-Sperrholzqualität und der Support überzeugen.',
-                'testimonial.author': 'Ahmet Yılmaz',
-                'testimonial.role': 'Geschäftsführer, Yılmaz Bau',
-                'cta.title': 'Wir helfen, die richtige Sperrholz-Kombination zu wählen',
-                'cta.text': 'Unsere Experten definieren mit Ihnen die beste Lösung.',
-                'cta.button': 'Jetzt Angebot anfordern',
-                'contact.title': 'Kontakt',
-                'contact.subtitle': 'Kontakt für Angebote, Muster und Kooperationen',
-                'form.name': 'Vollständiger Name *',
-                'form.company': 'Firma *',
-                'form.email': 'E-Mail *',
-                'form.phone': 'Telefon',
-                'form.requestType': 'Anfragetyp',
-                'form.message': 'Nachricht',
-                'form.submit': 'Angebot anfordern',
-                'contact.info.title': 'Tever Forest Products',
-                'contact.info.address': '[Firmenadresse]\\n[Bezirk, Stadt] [PLZ]\\nTürkiye',
-                'contact.info.emailTitle': 'E-Mail',
-                'contact.info.phoneTitle': 'Telefon',
-                'contact.info.whatsappTitle': 'WhatsApp',
-                'contact.info.whatsappText': 'Schnell über WhatsApp erreichbar.',
-                'contact.info.hoursTitle': 'Arbeitszeiten',
-                'contact.info.hoursText': 'Mo-Fr: 09:00 - 18:00\\nSa: 09:00 - 13:00\\nSo: Geschlossen',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Forest Products – Alle Rechte vorbehalten.',
-                'footer.kvkk': 'Personenbezogene Daten werden geschützt.',
-                'footer.credit': 'Webdesign: Tever Forest Products'
-            },
-            fr: {
-                'lang.current': 'FR',
-                'nav.products': 'Produits',
-                'nav.usage': 'Applications',
-                'nav.why': 'Pourquoi Tever ?',
-                'nav.sustainability': 'Durabilité',
-                'nav.contact': 'Contact',
-                'header.contact': 'Nous contacter',
-                'header.cta': 'Demander un devis',
-                'hero.eyebrow': 'Produits forestiers & contreplaqué',
-                'hero.title': 'Votre partenaire fiable en contreplaqué pour chaque projet.',
-                'hero.desc': "Depuis 1978, Tever fournit du contreplaqué, contreplaqué filmé, OSB et MDF pour la construction, le mobilier, les remorques et l'industrie.",
-                'hero.badge1': 'Expérience depuis 1978',
-                'hero.badge2': 'Qualité export',
-                'hero.badge3': 'Export vers 30+ pays',
-                'hero.btnPrimary': 'Obtenir un devis',
-                'hero.btnSecondary': 'Voir le catalogue',
-                'hero.footnote': 'Mobilier • Construction • Remorque • Industriel • Export',
-                'hero.card1.title': 'Contreplaqué',
-                'hero.card1.desc': 'Coffrage standard',
-                'hero.card2.title': 'Contreplaqué filmé',
-                'hero.card2.desc': 'Pour coffrage',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': 'Industriel',
-                'hero.card4.title': 'Découpe spéciale',
-                'hero.card4.desc': 'Selon projet',
-                'hero.capacityLabel': 'Capacité annuelle :',
-                'hero.capacityValue': '50 000+ m³',
-                'stats.stat1': 'Potentiel d’export régulier vers 30+ pays',
-                'stats.stat2': 'Expérience depuis 1978',
-                'stats.stat3': 'Pré-devis en 48h',
-                'products.title': 'Nos produits',
-                'products.subtitle': 'Large gamme pour construction, mobilier, remorque et industrie',
-                'product1.name': 'Contreplaqué mobilier',
-                'product1.desc': 'Contreplaqué lisse de haute qualité pour le mobilier.',
-                'product1.tag1': 'Épaisseur : 3-25mm',
-                'product1.tag2': 'Colle : E0/E1',
-                'product1.tag3': 'Usage : Intérieur',
-                'product2.name': 'Contreplaqué filmé coffrage',
-                'product2.desc': 'Contreplaqué revêtu et durable pour coffrage béton.',
-                'product2.tag1': 'Épaisseur : 12-21mm',
-                'product2.tag2': 'Film : Mélamine/Phénolique',
-                'product2.tag3': 'Usage : Coffrage',
-                'product3.name': 'Panneaux OSB',
-                'product3.desc': 'OSB pour applications structurelles.',
-                'product3.tag1': 'Épaisseur : 9-22mm',
-                'product3.tag2': 'Classe : OSB-3/OSB-4',
-                'product3.tag3': 'Usage : Structurel',
-                'product4.name': 'Panneaux MDF',
-                'product4.desc': 'MDF lisse et usinable pour mobilier et déco.',
-                'product4.tag1': 'Épaisseur : 3-30mm',
-                'product4.tag2': 'Densité : 700-850 kg/m³',
-                'product4.tag3': 'Usage : Intérieur',
-                'product5.name': 'Contreplaqué plancher remorque',
-                'product5.desc': 'Contreplaqué haute résistance pour transport lourd.',
-                'product5.tag1': 'Épaisseur : 18-30mm',
-                'product5.tag2': 'Résistance : Élevée',
-                'product5.tag3': 'Usage : Transport',
-                'product6.name': 'Découpe & projet sur mesure',
-                'product6.desc': 'Dimensions et spécifications adaptées à votre projet.',
-                'product6.tag1': 'Dimensions sur mesure',
-                'product6.tag2': 'Projet dédié',
-                'product6.tag3': 'MOQ : Négociable',
-                'usage.title': 'Applications',
-                'usage.subtitle': 'Nos produits couvrent de nombreux cas d’usage',
-                'usage.card1.title': 'Construction & Coffrage',
-                'usage.card1.desc': 'Solutions durables pour coffrage béton et structures temporaires.',
-                'usage.card2.title': 'Mobilier & Décoration',
-                'usage.card2.desc': 'Matériaux de qualité pour mobilier et intérieurs.',
-                'usage.card3.title': 'Remorque & Transport',
-                'usage.card3.desc': 'Planchers et parois robustes pour transport lourd.',
-                'usage.card4.title': 'Applications industrielles',
-                'usage.card4.desc': 'Solutions pour projets industriels et bases machines.',
-                'usage.card5.title': 'Architecture intérieure',
-                'usage.card5.desc': 'Solutions flexibles pour projets architecturaux.',
-                'usage.card6.title': 'Projets export',
-                'usage.card6.desc': 'Emballage prêt à l’export et support logistique.',
-                'why.title': 'Pourquoi Tever ?',
-                'why.subtitle': 'Nous offrons une stratégie d’approvisionnement, pas seulement des produits',
-                'why.card1.label': 'Planification long terme',
-                'why.card1.title': 'Stratégie d’approvisionnement',
-                'why.card1.desc': 'Planification à long terme avec gestion des stocks et livraisons ponctuelles.',
-                'why.card2.label': 'Standards qualité',
-                'why.card2.title': 'Niveaux de qualité standardisés',
-                'why.card2.desc': 'Chaque lot respecte les normes internationales et les contrôles qualité.',
-                'why.card3.label': 'Logistique & Emballage',
-                'why.card3.title': 'Emballage prêt à l’export',
-                'why.card3.desc': 'Emballage, documents et logistique adaptés à vos exports.',
-                'sustain.title': 'Durabilité',
-                'sustain.text1': 'Engagés pour une gestion forestière durable et des sources légales.',
-                'sustain.text2': 'Amélioration continue des déchets et de l’efficacité énergétique avec des procédés écologiques.',
-                'sustain.badge1': 'Sources certifiées FSC',
-                'sustain.badge2': 'Aligné PEFC',
-                'sustain.badge3': 'Prêt pour certification',
-                'sustain.badge4': 'Traçabilité',
-                'sustain.cardTitle': 'Approche chaîne logistique',
-                'sustain.list1': '✓ Forêts durables',
-                'sustain.list2': '✓ Conformité légale & documents',
-                'sustain.list3': '✓ Contrôle qualité & tests',
-                'sustain.list4': '✓ Production éco-responsable',
-                'sustain.list5': '✓ Réduction des déchets & recyclage',
-                'sustain.list6': '✓ Optimisation énergétique',
-                'testimonial.quote': 'Avec Tever, plus de risques sur la qualité ou les délais. Le filmé et leur support nous ont convaincus.',
-                'testimonial.author': 'Ahmet Yılmaz',
-                'testimonial.role': 'DG, Yılmaz Construction',
-                'cta.title': 'Nous vous aidons à choisir la bonne combinaison de contreplaqué',
-                'cta.text': 'Nos experts définissent avec vous la meilleure solution.',
-                'cta.button': 'Demander un devis',
-                'contact.title': 'Contact',
-                'contact.subtitle': 'Contactez-nous pour devis, échantillons et partenariats',
-                'form.name': 'Nom complet *',
-                'form.company': 'Société *',
-                'form.email': 'Email *',
-                'form.phone': 'Téléphone',
-                'form.requestType': 'Type de demande',
-                'form.message': 'Message',
-                'form.submit': 'Demander un devis',
-                'contact.info.title': 'Tever Forest Products',
-                'contact.info.address': '[Adresse société]\\n[Arrondissement, Ville] [CP]\\nTürkiye',
-                'contact.info.emailTitle': 'Email',
-                'contact.info.phoneTitle': 'Téléphone',
-                'contact.info.whatsappTitle': 'WhatsApp',
-                'contact.info.whatsappText': 'Contact rapide via WhatsApp.',
-                'contact.info.hoursTitle': 'Horaires',
-                'contact.info.hoursText': 'Lun-Ven : 09:00 - 18:00\\nSam : 09:00 - 13:00\\nDim : Fermé',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Forest Products – Tous droits réservés.',
-                'footer.kvkk': 'Les données personnelles sont protégées.',
-                'footer.credit': 'Web design : Tever Forest Products'
-            },
-            it: {
-                'lang.current': 'IT',
-                'nav.products': 'Prodotti',
-                'nav.usage': 'Applicazioni',
-                'nav.why': 'Perché Tever?',
-                'nav.sustainability': 'Sostenibilità',
-                'nav.contact': 'Contatti',
-                'header.contact': 'Contattaci',
-                'header.cta': 'Richiedi Preventivo',
-                'hero.eyebrow': 'Prodotti forestali & compensato',
-                'hero.title': 'Il partner affidabile per il compensato dei tuoi progetti.',
-                'hero.desc': 'Dal 1978 Tever fornisce compensato, filmato, OSB e MDF per edilizia, arredo, trailer e industria.',
-                'hero.badge1': 'Esperienza dal 1978',
-                'hero.badge2': 'Qualità per export',
-                'hero.badge3': 'Export verso 30+ paesi',
-                'hero.btnPrimary': 'Richiedi Preventivo',
-                'hero.btnSecondary': 'Vedi Catalogo',
-                'hero.footnote': 'Arredo • Edilizia • Trailer • Industriale • Export',
-                'hero.card1.title': 'Compensato',
-                'hero.card1.desc': 'Cassaforma standard',
-                'hero.card2.title': 'Compensato filmato',
-                'hero.card2.desc': 'Per casseforme',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': 'Industriale',
-                'hero.card4.title': 'Taglio su misura',
-                'hero.card4.desc': 'Su progetto',
-                'hero.capacityLabel': 'Capacità annua:',
-                'hero.capacityValue': '50.000+ m³',
-                'stats.stat1': 'Potenziale export regolare verso 30+ paesi',
-                'stats.stat2': 'Esperienza dal 1978',
-                'stats.stat3': 'Preventivo in 48 ore',
-                'products.title': 'I nostri prodotti',
-                'products.subtitle': 'Gamma completa per edilizia, arredo, trailer e industria',
-                'product1.name': 'Compensato per arredo',
-                'product1.desc': 'Compensato liscio di alta qualità ideale per mobili.',
-                'product1.tag1': 'Spessore: 3-25mm',
-                'product1.tag2': 'Colla: E0/E1',
-                'product1.tag3': 'Uso: Interno',
-                'product2.name': 'Compensato filmato per casseforme',
-                'product2.desc': 'Compensato rivestito e resistente per casseforme in calcestruzzo.',
-                'product2.tag1': 'Spessore: 12-21mm',
-                'product2.tag2': 'Film: Melamina/Fenolico',
-                'product2.tag3': 'Uso: Cassaforma',
-                'product3.name': 'Pannelli OSB',
-                'product3.desc': 'OSB per applicazioni strutturali.',
-                'product3.tag1': 'Spessore: 9-22mm',
-                'product3.tag2': 'Classe: OSB-3/OSB-4',
-                'product3.tag3': 'Uso: Strutturale',
-                'product4.name': 'Pannelli MDF',
-                'product4.desc': 'MDF liscio e lavorabile per arredo e decorazione.',
-                'product4.tag1': 'Spessore: 3-30mm',
-                'product4.tag2': 'Densità: 700-850 kg/m³',
-                'product4.tag3': 'Uso: Interno',
-                'product5.name': 'Compensato per pavimento trailer',
-                'product5.desc': 'Compensato ad alta resistenza per trasporto pesante.',
-                'product5.tag1': 'Spessore: 18-30mm',
-                'product5.tag2': 'Resistenza: Alta',
-                'product5.tag3': 'Uso: Trasporto',
-                'product6.name': 'Taglio su misura & progetti',
-                'product6.desc': 'Dimensioni e specifiche personalizzate per il tuo progetto.',
-                'product6.tag1': 'Dimensioni su misura',
-                'product6.tag2': 'Su progetto',
-                'product6.tag3': 'MOQ: Negozia bile',
-                'usage.title': 'Applicazioni',
-                'usage.subtitle': 'I nostri prodotti coprono molteplici usi',
-                'usage.card1.title': 'Edilizia & Cassaforma',
-                'usage.card1.desc': 'Soluzioni durevoli per casseforme e strutture temporanee.',
-                'usage.card2.title': 'Arredo & Decorazione',
-                'usage.card2.desc': 'Materiali di qualità per mobili e interni.',
-                'usage.card3.title': 'Trailer & Trasporto',
-                'usage.card3.desc': 'Pavimenti e pareti resistenti per trasporto pesante.',
-                'usage.card4.title': 'Applicazioni industriali',
-                'usage.card4.desc': 'Soluzioni per progetti industriali e basamenti macchina.',
-                'usage.card5.title': 'Architettura d’interni',
-                'usage.card5.desc': 'Soluzioni flessibili per progetti architettonici.',
-                'usage.card6.title': 'Progetti export',
-                'usage.card6.desc': 'Imballo pronto export e supporto logistico.',
-                'why.title': 'Perché Tever?',
-                'why.subtitle': 'Offriamo una strategia di fornitura, non solo prodotti',
-                'why.card1.label': 'Pianificazione a lungo termine',
-                'why.card1.title': 'Strategia di fornitura',
-                'why.card1.desc': 'Pianificazione con continuità di stock e consegne puntuali.',
-                'why.card2.label': 'Standard di qualità',
-                'why.card2.title': 'Livelli di qualità standardizzati',
-                'why.card2.desc': 'Ogni lotto rispetta gli standard internazionali e i controlli.',
-                'why.card3.label': 'Logistica & Imballo',
-                'why.card3.title': 'Imballo pronto export',
-                'why.card3.desc': 'Imballaggio, documentazione e logistica per i vostri export.',
-                'sustain.title': 'Sostenibilità',
-                'sustain.text1': 'Impegnati in fonti legali e gestione forestale sostenibile.',
-                'sustain.text2': 'Miglioriamo continuamente rifiuti ed efficienza energetica con processi eco.',
-                'sustain.badge1': 'Fonti certificate FSC',
-                'sustain.badge2': 'Allineato PEFC',
-                'sustain.badge3': 'Pronto per certificazione',
-                'sustain.badge4': 'Tracciabilità',
-                'sustain.cardTitle': 'Approccio supply chain',
-                'sustain.list1': '✓ Foreste sostenibili',
-                'sustain.list2': '✓ Conformità legale & documenti',
-                'sustain.list3': '✓ Controllo qualità & test',
-                'sustain.list4': '✓ Produzione eco-compatibile',
-                'sustain.list5': '✓ Riduzione rifiuti & riciclo',
-                'sustain.list6': '✓ Ottimizzazione energetica',
-                'testimonial.quote': 'Con Tever nessun problema di qualità o tempi. Il filmato e il supporto sono eccellenti.',
-                'testimonial.author': 'Ahmet Yılmaz',
-                'testimonial.role': 'Direttore Generale, Yılmaz Construction',
-                'cta.title': 'Ti aiutiamo a scegliere la combinazione di compensato ideale',
-                'cta.text': 'I nostri esperti definiscono con te la soluzione migliore.',
-                'cta.button': 'Richiedi ora',
-                'contact.title': 'Contatti',
-                'contact.subtitle': 'Contattaci per preventivi, campioni e partnership',
-                'form.name': 'Nome e cognome *',
-                'form.company': 'Azienda *',
-                'form.email': 'Email *',
-                'form.phone': 'Telefono',
-                'form.requestType': 'Tipo di richiesta',
-                'form.message': 'Messaggio',
-                'form.submit': 'Richiedi preventivo',
-                'contact.info.title': 'Tever Forest Products',
-                'contact.info.address': '[Indirizzo azienda]\\n[Distretto, Città] [CAP]\\nTürkiye',
-                'contact.info.emailTitle': 'Email',
-                'contact.info.phoneTitle': 'Telefono',
-                'contact.info.whatsappTitle': 'WhatsApp',
-                'contact.info.whatsappText': 'Contatto rapido via WhatsApp.',
-                'contact.info.hoursTitle': 'Orari',
-                'contact.info.hoursText': 'Lun-Ven: 09:00 - 18:00\\nSab: 09:00 - 13:00\\nDom: Chiuso',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Forest Products – Tutti i diritti riservati.',
-                'footer.kvkk': 'I dati personali sono protetti.',
-                'footer.credit': 'Web design: Tever Forest Products'
-            },
-            es: {
-                'lang.current': 'ES',
-                'nav.products': 'Productos',
-                'nav.usage': 'Aplicaciones',
-                'nav.why': '¿Por qué Tever?',
-                'nav.sustainability': 'Sostenibilidad',
-                'nav.contact': 'Contacto',
-                'header.contact': 'Contactar',
-                'header.cta': 'Solicitar cotización',
-                'hero.eyebrow': 'Productos forestales & contrachapado',
-                'hero.title': 'Su socio fiable en contrachapado para cada proyecto.',
-                'hero.desc': 'Desde 1978, Tever suministra contrachapado, filmado, OSB y MDF para construcción, muebles, remolques e industria.',
-                'hero.badge1': 'Experiencia desde 1978',
-                'hero.badge2': 'Calidad de exportación',
-                'hero.badge3': 'Exportamos a 30+ países',
-                'hero.btnPrimary': 'Solicitar cotización',
-                'hero.btnSecondary': 'Ver catálogo',
-                'hero.footnote': 'Muebles • Construcción • Remolque • Industrial • Export',
-                'hero.card1.title': 'Contrachapado',
-                'hero.card1.desc': 'Encofrado estándar',
-                'hero.card2.title': 'Contrachapado filmado',
-                'hero.card2.desc': 'Para encofrados',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': 'Industrial',
-                'hero.card4.title': 'Corte a medida',
-                'hero.card4.desc': 'Por proyecto',
-                'hero.capacityLabel': 'Capacidad anual:',
-                'hero.capacityValue': '50.000+ m³',
-                'stats.stat1': 'Potencial de exportación a 30+ países',
-                'stats.stat2': 'Experiencia desde 1978',
-                'stats.stat3': 'Pre-cotización en 48h',
-                'products.title': 'Nuestros productos',
-                'products.subtitle': 'Amplia gama para construcción, muebles, remolque e industria',
-                'product1.name': 'Contrachapado para muebles',
-                'product1.desc': 'Contrachapado liso de alta calidad para fabricación de muebles.',
-                'product1.tag1': 'Espesor: 3-25mm',
-                'product1.tag2': 'Adhesivo: E0/E1',
-                'product1.tag3': 'Uso: Interior',
-                'product2.name': 'Contrachapado filmado para encofrado',
-                'product2.desc': 'Contrachapado recubierto y resistente para encofrados de hormigón.',
-                'product2.tag1': 'Espesor: 12-21mm',
-                'product2.tag2': 'Film: Melamina/Fenólico',
-                'product2.tag3': 'Uso: Encofrado',
-                'product3.name': 'Paneles OSB',
-                'product3.desc': 'OSB para aplicaciones estructurales.',
-                'product3.tag1': 'Espesor: 9-22mm',
-                'product3.tag2': 'Clase: OSB-3/OSB-4',
-                'product3.tag3': 'Uso: Estructural',
-                'product4.name': 'Tableros MDF',
-                'product4.desc': 'MDF liso y trabajable para muebles y decoración.',
-                'product4.tag1': 'Espesor: 3-30mm',
-                'product4.tag2': 'Densidad: 700-850 kg/m³',
-                'product4.tag3': 'Uso: Interior',
-                'product5.name': 'Contrachapado para piso de remolque',
-                'product5.desc': 'Contrachapado de alta resistencia para transporte pesado.',
-                'product5.tag1': 'Espesor: 18-30mm',
-                'product5.tag2': 'Resistencia: Alta',
-                'product5.tag3': 'Uso: Transporte',
-                'product6.name': 'Corte a medida & proyectos',
-                'product6.desc': 'Dimensiones y especificaciones personalizadas para su proyecto.',
-                'product6.tag1': 'Dimensiones a medida',
-                'product6.tag2': 'Basado en proyecto',
-                'product6.tag3': 'MOQ: Negociable',
-                'usage.title': 'Aplicaciones',
-                'usage.subtitle': 'Nuestros productos cubren múltiples usos',
-                'usage.card1.title': 'Construcción & Encofrado',
-                'usage.card1.desc': 'Soluciones duraderas para encofrados y estructuras temporales.',
-                'usage.card2.title': 'Muebles & Decoración',
-                'usage.card2.desc': 'Materiales de calidad para muebles e interiores.',
-                'usage.card3.title': 'Remolque & Transporte',
-                'usage.card3.desc': 'Pisos y laterales fuertes para transporte pesado.',
-                'usage.card4.title': 'Aplicaciones industriales',
-                'usage.card4.desc': 'Soluciones para proyectos industriales y bases de maquinaria.',
-                'usage.card5.title': 'Arquitectura interior',
-                'usage.card5.desc': 'Soluciones flexibles para proyectos arquitectónicos.',
-                'usage.card6.title': 'Proyectos de exportación',
-                'usage.card6.desc': 'Embalaje listo para exportación y soporte logístico.',
-                'why.title': '¿Por qué Tever?',
-                'why.subtitle': 'Entregamos estrategia de suministro, no solo productos',
-                'why.card1.label': 'Planificación a largo plazo',
-                'why.card1.title': 'Estrategia de suministro',
-                'why.card1.desc': 'Planificación con continuidad de stock y entregas puntuales.',
-                'why.card2.label': 'Estándares de calidad',
-                'why.card2.title': 'Niveles de calidad estandarizados',
-                'why.card2.desc': 'Cada lote cumple normas internacionales y controles.',
-                'why.card3.label': 'Logística & Embalaje',
-                'why.card3.title': 'Embalaje listo para exportar',
-                'why.card3.desc': 'Embalaje, documentación y logística para exportaciones.',
-                'sustain.title': 'Sostenibilidad',
-                'sustain.text1': 'Compromiso con fuentes legales y gestión forestal sostenible.',
-                'sustain.text2': 'Mejora continua en residuos y eficiencia energética con procesos eco.',
-                'sustain.badge1': 'Fuentes certificadas FSC',
-                'sustain.badge2': 'Alineado PEFC',
-                'sustain.badge3': 'Listo para certificación',
-                'sustain.badge4': 'Trazabilidad',
-                'sustain.cardTitle': 'Enfoque de cadena de suministro',
-                'sustain.list1': '✓ Bosques sostenibles',
-                'sustain.list2': '✓ Cumplimiento legal & documentación',
-                'sustain.list3': '✓ Control de calidad & pruebas',
-                'sustain.list4': '✓ Producción eco-amigable',
-                'sustain.list5': '✓ Minimización de residuos & reciclaje',
-                'sustain.list6': '✓ Optimización energética',
-                'testimonial.quote': 'Con Tever no tenemos riesgos de calidad ni de entregas. El filmado y su soporte son excelentes.',
-                'testimonial.author': 'Ahmet Yılmaz',
-                'testimonial.role': 'Director General, Yılmaz Construction',
-                'cta.title': 'Le ayudamos a elegir la combinación correcta de contrachapado',
-                'cta.text': 'Nuestros expertos definen con usted la mejor solución.',
-                'cta.button': 'Pedir cotización',
-                'contact.title': 'Contacto',
-                'contact.subtitle': 'Escríbanos para cotizaciones, muestras y colaboraciones',
-                'form.name': 'Nombre completo *',
-                'form.company': 'Empresa *',
-                'form.email': 'Email *',
-                'form.phone': 'Teléfono',
-                'form.requestType': 'Tipo de solicitud',
-                'form.message': 'Mensaje',
-                'form.submit': 'Solicitar cotización',
-                'contact.info.title': 'Tever Forest Products',
-                'contact.info.address': '[Dirección]\\n[Distrito, Ciudad] [CP]\\nTürkiye',
-                'contact.info.emailTitle': 'Email',
-                'contact.info.phoneTitle': 'Teléfono',
-                'contact.info.whatsappTitle': 'WhatsApp',
-                'contact.info.whatsappText': 'Contacto rápido vía WhatsApp.',
-                'contact.info.hoursTitle': 'Horario',
-                'contact.info.hoursText': 'Lun-Vie: 09:00 - 18:00\\nSáb: 09:00 - 13:00\\nDom: Cerrado',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Forest Products – Todos los derechos reservados.',
-                'footer.kvkk': 'Los datos personales están protegidos.',
-                'footer.credit': 'Web design: Tever Forest Products'
-            },
-            hi: {
-                'lang.current': 'HI',
-                'nav.products': 'उत्पाद',
-                'nav.usage': 'उपयोग क्षेत्र',
-                'nav.why': 'क्यों Tever?',
-                'nav.sustainability': 'सततता',
-                'nav.contact': 'संपर्क',
-                'header.contact': 'संपर्क करें',
-                'header.cta': 'कोटेशन मांगें',
-                'hero.eyebrow': 'फॉरेस्ट प्रोडक्ट्स और कॉन्ट्राप्लाइ',
-                'hero.title': 'हर प्रोजेक्ट के लिए आपका भरोसेमंद कॉन्ट्राप्लाइ पार्टनर।',
-                'hero.desc': '1978 से Tever कॉन्ट्राप्लाइ, फिल्म फेस्ड कॉन्ट्राप्लाइ, OSB, MDF और फॉरेस्ट प्रोडक्ट्स निर्माण, फर्नीचर, ट्रेलर और औद्योगिक जरूरतों के लिए प्रदान करता है।',
-                'hero.badge1': '1978 से अनुभव',
-                'hero.badge2': 'निर्यात-ग्रेड गुणवत्ता',
-                'hero.badge3': '30+ देशों को निर्यात',
-                'hero.btnPrimary': 'कोटेशन मांगें',
-                'hero.btnSecondary': 'उत्पाद कैटलॉग देखें',
-                'hero.footnote': 'फर्नीचर • निर्माण • ट्रेलर • औद्योगिक • निर्यात',
-                'hero.card1.title': 'कॉन्ट्राप्लाइ',
-                'hero.card1.desc': 'स्टैंडर्ड फॉर्मवर्क',
-                'hero.card2.title': 'फिल्म फेस्ड कॉन्ट्राप्लाइ',
-                'hero.card2.desc': 'फॉर्मवर्क उपयोग',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': 'औद्योगिक',
-                'hero.card4.title': 'कस्टम कट',
-                'hero.card4.desc': 'प्रोजेक्ट आधारित',
-                'hero.capacityLabel': 'वार्षिक क्षमता:',
-                'hero.capacityValue': '50,000+ m³',
-                'stats.stat1': '30+ देशों में नियमित निर्यात क्षमता',
-                'stats.stat2': '1978 से अनुभव',
-                'stats.stat3': '48 घंटों में प्रारंभिक कोट',
-                'products.title': 'हमारे उत्पाद',
-                'products.subtitle': 'निर्माण, फर्नीचर, ट्रेलर और औद्योगिक जरूरतों के लिए विस्तृत रेंज',
-                'product1.name': 'फर्नीचर कॉन्ट्राप्लाइ',
-                'product1.desc': 'उच्च गुणवत्ता, चिकना कॉन्ट्राप्लाइ फर्नीचर निर्माण के लिए।',
-                'product1.tag1': 'मोटाई: 3-25mm',
-                'product1.tag2': 'गोंद: E0/E1',
-                'product1.tag3': 'उपयोग: इनडोर',
-                'product2.name': 'फिल्म फेस्ड फॉर्मवर्क कॉन्ट्राप्लाइ',
-                'product2.desc': 'कंक्रीट फॉर्मवर्क के लिए टिकाऊ, कोटेड कॉन्ट्राप्लाइ।',
-                'product2.tag1': 'मोटाई: 12-21mm',
-                'product2.tag2': 'फिल्म: मेलामाइन/फिनोलिक',
-                'product2.tag3': 'उपयोग: फॉर्मवर्क',
-                'product3.name': 'OSB पैनल',
-                'product3.desc': 'स्ट्रक्चरल एप्लीकेशन के लिए OSB।',
-                'product3.tag1': 'मोटाई: 9-22mm',
-                'product3.tag2': 'क्लास: OSB-3/OSB-4',
-                'product3.tag3': 'उपयोग: संरचनात्मक',
-                'product4.name': 'MDF बोर्ड',
-                'product4.desc': 'चिकना, आसानी से काम आने वाला MDF फर्नीचर व सजावट के लिए।',
-                'product4.tag1': 'मोटाई: 3-30mm',
-                'product4.tag2': 'घनत्व: 700-850 kg/m³',
-                'product4.tag3': 'उपयोग: इनडोर',
-                'product5.name': 'ट्रेलर फ्लोरिंग कॉन्ट्राप्लाइ',
-                'product5.desc': 'भारी परिवहन के लिए उच्च शक्ति वाला कॉन्ट्राप्लाइ।',
-                'product5.tag1': 'मोटाई: 18-30mm',
-                'product5.tag2': 'मजबूती: उच्च',
-                'product5.tag3': 'उपयोग: परिवहन',
-                'product6.name': 'कस्टम कट एवं प्रोजेक्ट आधारित',
-                'product6.desc': 'आपके प्रोजेक्ट के अनुरूप आकार और विशिष्टताएँ।',
-                'product6.tag1': 'कस्टम डाइमेंशन',
-                'product6.tag2': 'प्रोजेक्ट आधारित',
-                'product6.tag3': 'MOQ: वार्तालापयोग्य',
-                'usage.title': 'उपयोग क्षेत्र',
-                'usage.subtitle': 'हमारे उत्पाद व्यापक उपयोग मामलों की सेवा करते हैं',
-                'usage.card1.title': 'निर्माण & फॉर्मवर्क',
-                'usage.card1.desc': 'कंक्रीट फॉर्मवर्क और अस्थायी संरचनाओं के लिए टिकाऊ समाधान।',
-                'usage.card2.title': 'फर्नीचर & सजावट',
-                'usage.card2.desc': 'फर्नीचर निर्माण और इंटीरियर के लिए गुणवत्ता सामग्री।',
-                'usage.card3.title': 'ट्रेलर & परिवहन',
-                'usage.card3.desc': 'भारी परिवहन के लिए मजबूत फ्लोरिंग और साइड पैनल।',
-                'usage.card4.title': 'औद्योगिक उपयोग',
-                'usage.card4.desc': 'औद्योगिक परियोजनाओं और मशीन बेस के लिए समाधान।',
-                'usage.card5.title': 'आंतरिक वास्तुकला',
-                'usage.card5.desc': 'आर्किटेक्चरल और कस्टम डिजाइनों के लिए लचीले समाधान।',
-                'usage.card6.title': 'निर्यात परियोजनाएँ',
-                'usage.card6.desc': 'निर्यात-तैयार पैकेजिंग और लॉजिस्टिक समर्थन।',
-                'why.title': 'क्यों Tever?',
-                'why.subtitle': 'हम केवल उत्पाद नहीं, बल्कि सप्लाई रणनीति प्रदान करते हैं',
-                'why.card1.label': 'दीर्घकालिक योजना',
-                'why.card1.title': 'सप्लाई रणनीति',
-                'why.card1.desc': 'स्टॉक निरंतरता और समय पर डिलीवरी के साथ दीर्घकालिक योजना।',
-                'why.card2.label': 'गुणवत्ता मानक',
-                'why.card2.title': 'मानकीकृत गुणवत्ता स्तर',
-                'why.card2.desc': 'हर बैच अंतरराष्ट्रीय मानकों और गुणवत्ता जाँच से गुजरता है।',
-                'why.card3.label': 'लॉजिस्टिक & पैकेजिंग',
-                'why.card3.title': 'निर्यात-तैयार पैकेजिंग',
-                'why.card3.desc': 'निर्यात परियोजनाओं के लिए पैकेजिंग, दस्तावेज़ और लॉजिस्टिक।',
-                'sustain.title': 'सततता',
-                'sustain.text1': 'हम कानूनी और सतत स्रोतों से जिम्मेदार खरीद पर प्रतिबद्ध हैं।',
-                'sustain.text2': 'कचरा प्रबंधन और ऊर्जा दक्षता में निरंतर सुधार के साथ पर्यावरण-अनुकूल प्रक्रियाएँ।',
-                'sustain.badge1': 'FSC प्रमाणित स्रोत',
-                'sustain.badge2': 'PEFC संरेखित',
-                'sustain.badge3': 'प्रमाणीकरण के लिए तैयार',
-                'sustain.badge4': 'ट्रेसएबिलिटी',
-                'sustain.cardTitle': 'सप्लाई चेन दृष्टिकोण',
-                'sustain.list1': '✓ सतत वन संसाधन',
-                'sustain.list2': '✓ कानूनी अनुपालन और दस्तावेज़',
-                'sustain.list3': '✓ गुणवत्ता नियंत्रण और परीक्षण',
-                'sustain.list4': '✓ पर्यावरण-अनुकूल उत्पादन',
-                'sustain.list5': '✓ कचरा कमी और रीसाइक्लिंग',
-                'sustain.list6': '✓ ऊर्जा दक्षता अनुकूलन',
-                'testimonial.quote': 'Tever के साथ गुणवत्ता और डिलीवरी जोखिम नहीं रहे। फिल्म फेस्ड गुणवत्ता और उनका सपोर्ट शानदार है।',
-                'testimonial.author': 'Ahmet Yılmaz',
-                'testimonial.role': 'महाप्रबंधक, Yılmaz Construction',
-                'cta.title': 'हम सही कॉन्ट्राप्लाइ संयोजन चुनने में मदद करते हैं',
-                'cta.text': 'हमारे विशेषज्ञ आपके प्रोजेक्ट के लिए सर्वोत्तम समाधान तय करते हैं।',
-                'cta.button': 'अभी कोटेशन माँगें',
-                'contact.title': 'संपर्क',
-                'contact.subtitle': 'कोटेशन, सैंपल और सहयोग के लिए हमसे जुड़ें',
-                'form.name': 'पूरा नाम *',
-                'form.company': 'कंपनी *',
-                'form.email': 'ईमेल *',
-                'form.phone': 'फोन',
-                'form.requestType': 'अनुरोध प्रकार',
-                'form.message': 'संदेश',
-                'form.submit': 'कोटेशन मांगें',
-                'contact.info.title': 'Tever Forest Products',
-                'contact.info.address': '[कंपनी पता]\\n[जिला, शहर] [पिन]\\nTürkiye',
-                'contact.info.emailTitle': 'ईमेल',
-                'contact.info.phoneTitle': 'फोन',
-                'contact.info.whatsappTitle': 'WhatsApp',
-                'contact.info.whatsappText': 'तेज़ संपर्क के लिए WhatsApp।',
-                'contact.info.hoursTitle': 'कार्य समय',
-                'contact.info.hoursText': 'सोम-शुक्र: 09:00 - 18:00\\nशनि: 09:00 - 13:00\\nरवि: बंद',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Forest Products – सर्वाधिकार सुरक्षित.',
-                'footer.kvkk': 'व्यक्तिगत डेटा सुरक्षित है।',
-                'footer.credit': 'वेब डिजाइन: Tever Forest Products'
-            },
-            ar: {
-                'lang.current': 'AR',
-                'nav.products': 'المنتجات',
-                'nav.usage': 'مجالات الاستخدام',
-                'nav.why': 'لماذا تيڤر؟',
-                'nav.sustainability': 'الاستدامة',
-                'nav.contact': 'تواصل معنا',
-                'header.contact': 'تواصل معنا',
-                'header.cta': 'اطلب عرض سعر',
-                'hero.eyebrow': 'منتجات غابية وكونترا بلاي',
-                'hero.title': 'شريك موثوق لتوريد الكونترا بلاي لكل مشروع.',
-                'hero.desc': 'منذ 1978 تقدم Tever الكونترا بلاي، الكونترا بلاي المكسو، OSB وMDF لقطاعات البناء والأثاث والنقل والتطبيقات الصناعية.',
-                'hero.badge1': 'خبرة منذ 1978',
-                'hero.badge2': 'جودة مناسبة للتصدير',
-                'hero.badge3': 'تصدير إلى أكثر من 30 دولة',
-                'hero.btnPrimary': 'اطلب عرض سعر',
-                'hero.btnSecondary': 'عرض الكتالوج',
-                'hero.footnote': 'أثاث • بناء • مقطورات • صناعي • تصدير',
-                'hero.card1.title': 'كونترا بلاي',
-                'hero.card1.desc': 'قوالب قياسية',
-                'hero.card2.title': 'كونترا بلاي مكسو',
-                'hero.card2.desc': 'لأعمال القوالب',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': 'صناعي',
-                'hero.card4.title': 'قص خاص',
-                'hero.card4.desc': 'حسب المشروع',
-                'hero.capacityLabel': 'الطاقة السنوية:',
-                'hero.capacityValue': 'أكثر من 50,000 م³',
-                'stats.stat1': 'إمكانية تصدير منتظم إلى 30+ دولة',
-                'stats.stat2': 'خبرة منذ 1978',
-                'stats.stat3': 'عرض أولي خلال 48 ساعة',
-                'products.title': 'منتجاتنا',
-                'products.subtitle': 'مجموعة واسعة للبناء والأثاث والنقل والتطبيقات الصناعية',
-                'product1.name': 'كونترا بلاي للأثاث',
-                'product1.desc': 'كونترا بلاي عالي الجودة وسطح أملس لصناعة الأثاث.',
-                'product1.tag1': 'السماكة: 3-25 مم',
-                'product1.tag2': 'الغراء: E0/E1',
-                'product1.tag3': 'الاستخدام: داخلي',
-                'product2.name': 'كونترا بلاي مكسو للقوالب',
-                'product2.desc': 'كونترا بلاي مطلي ومتين لقوالب الخرسانة.',
-                'product2.tag1': 'السماكة: 12-21 مم',
-                'product2.tag2': 'الطلاء: ميلامين/فينولي',
-                'product2.tag3': 'الاستخدام: قوالب',
-                'product3.name': 'ألواح OSB',
-                'product3.desc': 'OSB للاستخدامات الإنشائية.',
-                'product3.tag1': 'السماكة: 9-22 مم',
-                'product3.tag2': 'الفئة: OSB-3/OSB-4',
-                'product3.tag3': 'الاستخدام: إنشائي',
-                'product4.name': 'ألواح MDF',
-                'product4.desc': 'MDF أملس وسهل التشغيل للأثاث والديكور.',
-                'product4.tag1': 'السماكة: 3-30 مم',
-                'product4.tag2': 'الكثافة: 700-850 كجم/م³',
-                'product4.tag3': 'الاستخدام: داخلي',
-                'product5.name': 'كونترا بلاي لأرضيات المقطورات',
-                'product5.desc': 'كونترا بلاي عالي التحمل للنقل الثقيل.',
-                'product5.tag1': 'السماكة: 18-30 مم',
-                'product5.tag2': 'القوة: عالية',
-                'product5.tag3': 'الاستخدام: نقل',
-                'product6.name': 'قص خاص ومشاريع',
-                'product6.desc': 'مقاسات ومواصفات مخصصة حسب مشروعك.',
-                'product6.tag1': 'أبعاد مخصصة',
-                'product6.tag2': 'حسب المشروع',
-                'product6.tag3': 'الحد الأدنى للطلب: قابل للتفاوض',
-                'usage.title': 'مجالات الاستخدام',
-                'usage.subtitle': 'منتجاتنا تغطي نطاقاً واسعاً من الاستخدامات',
-                'usage.card1.title': 'البناء والقوالب',
-                'usage.card1.desc': 'حلول متينة لقوالب الخرسانة والهياكل المؤقتة.',
-                'usage.card2.title': 'الأثاث والديكور',
-                'usage.card2.desc': 'مواد عالية الجودة لصناعة الأثاث والتصميم الداخلي.',
-                'usage.card3.title': 'المقطورات والنقل',
-                'usage.card3.desc': 'أرضيات وجوانب قوية للنقل الثقيل.',
-                'usage.card4.title': 'التطبيقات الصناعية',
-                'usage.card4.desc': 'حلول للمشاريع الصناعية وقواعد المعدات.',
-                'usage.card5.title': 'التصميم الداخلي',
-                'usage.card5.desc': 'حلول مرنة للتصاميم المعمارية الخاصة.',
-                'usage.card6.title': 'مشاريع التصدير',
-                'usage.card6.desc': 'تعبئة جاهزة للتصدير ودعم لوجستي.',
-                'why.title': 'لماذا تيڤر؟',
-                'why.subtitle': 'نقدم إستراتيجية توريد وليست منتجات فقط',
-                'why.card1.label': 'تخطيط طويل الأمد',
-                'why.card1.title': 'إستراتيجية التوريد',
-                'why.card1.desc': 'تخطيط طويل المدى بضمان المخزون والتسليم في الوقت المحدد.',
-                'why.card2.label': 'معايير الجودة',
-                'why.card2.title': 'مستويات جودة موحدة',
-                'why.card2.desc': 'كل دفعة تلبي المعايير الدولية وتخضع لفحوصات الجودة.',
-                'why.card3.label': 'اللوجستيات والتعبئة',
-                'why.card3.title': 'تعبئة جاهزة للتصدير',
-                'why.card3.desc': 'تعبئة ووثائق ولوجستيات مهيأة لمشاريع التصدير.',
-                'sustain.title': 'الاستدامة',
-                'sustain.text1': 'ملتزمون بمصادر قانونية وإدارة غابات مستدامة.',
-                'sustain.text2': 'تحسين مستمر لإدارة النفايات وكفاءة الطاقة مع ممارسات صديقة للبيئة.',
-                'sustain.badge1': 'مصادر معتمدة FSC',
-                'sustain.badge2': 'متوافق مع PEFC',
-                'sustain.badge3': 'جاهز للاعتماد',
-                'sustain.badge4': 'قابلية التتبع',
-                'sustain.cardTitle': 'نهج سلسلة التوريد',
-                'sustain.list1': '✓ موارد غابات مستدامة',
-                'sustain.list2': '✓ التزام قانوني ووثائق',
-                'sustain.list3': '✓ رقابة جودة واختبارات',
-                'sustain.list4': '✓ تقنيات إنتاج صديقة للبيئة',
-                'sustain.list5': '✓ تقليل النفايات وإعادة التدوير',
-                'sustain.list6': '✓ تحسين كفاءة الطاقة',
-                'testimonial.quote': 'مع Tever لا مشاكل جودة أو تأخير. جودة الفيلم وخدمة الدعم ممتازة.',
-                'testimonial.author': 'أحمد يلماظ',
-                'testimonial.role': 'المدير العام، يلماز للإنشاءات',
-                'cta.title': 'نساعدك على اختيار أفضل تشكيلة كونترا بلاي',
-                'cta.text': 'خبراؤنا يعملون معك لاختيار الأنسب لمشروعك.',
-                'cta.button': 'اطلب عرض سعر الآن',
-                'contact.title': 'تواصل معنا',
-                'contact.subtitle': 'للعروض والعيّنات والتعاون',
-                'form.name': 'الاسم الكامل *',
-                'form.company': 'الشركة *',
-                'form.email': 'البريد الإلكتروني *',
-                'form.phone': 'هاتف',
-                'form.requestType': 'نوع الطلب',
-                'form.message': 'رسالة',
-                'form.submit': 'اطلب عرض سعر',
-                'contact.info.title': 'Tever Forest Products',
-                'contact.info.address': '[عنوان الشركة]\\n[منطقة، مدينة] [رمز بريدي]\\nتركيا',
-                'contact.info.emailTitle': 'البريد الإلكتروني',
-                'contact.info.phoneTitle': 'الهاتف',
-                'contact.info.whatsappTitle': 'واتساب',
-                'contact.info.whatsappText': 'تواصل سريع عبر واتساب.',
-                'contact.info.hoursTitle': 'ساعات العمل',
-                'contact.info.hoursText': 'الاثنين-الجمعة: 09:00 - 18:00\\nالسبت: 09:00 - 13:00\\nالأحد: مغلق',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Forest Products – جميع الحقوق محفوظة.',
-                'footer.kvkk': 'البيانات الشخصية محمية.',
-                'footer.credit': 'تصميم الويب: Tever Forest Products'
-            },
-            ur: {
-                'lang.current': 'UR',
-                'nav.products': 'مصنوعات',
-                'nav.usage': 'استعمالات',
-                'nav.why': 'کیوں Tever؟',
-                'nav.sustainability': 'پائیداری',
-                'nav.contact': 'رابطہ',
-                'header.contact': 'ہم سے رابطہ کریں',
-                'header.cta': 'قیمت معلوم کریں',
-                'hero.eyebrow': 'فاریسٹ پراڈکٹس اور کنٹرا پَلائی',
-                'hero.title': 'ہر پروجیکٹ کے لیے آپ کا قابلِ اعتماد کنٹرا پلائی پارٹنر۔',
-                'hero.desc': '1978 سے Tever تعمیرات، فرنیچر، ٹریلر اور صنعتی ضروریات کے لیے کنٹرا پلائی، فلم فیسڈ، OSB اور MDF فراہم کر رہا ہے۔',
-                'hero.badge1': '1978 سے تجربہ',
-                'hero.badge2': 'ایکسپورٹ گریڈ معیار',
-                'hero.badge3': '30+ ممالک کو برآمد',
-                'hero.btnPrimary': 'قیمت معلوم کریں',
-                'hero.btnSecondary': 'پروڈکٹ کیٹلاگ دیکھیں',
-                'hero.footnote': 'فرنیچر • تعمیرات • ٹریلر • صنعتی • برآمد',
-                'hero.card1.title': 'کنٹرا پلائی',
-                'hero.card1.desc': 'معیاری فارم ورک',
-                'hero.card2.title': 'فلم فیسڈ پلائی',
-                'hero.card2.desc': 'فارم ورک کے لیے',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': 'صنعتی',
-                'hero.card4.title': 'کسٹم کٹ',
-                'hero.card4.desc': 'پروجیکٹ کی بنیاد پر',
-                'hero.capacityLabel': 'سالانہ صلاحیت:',
-                'hero.capacityValue': '50,000+ m³',
-                'stats.stat1': '30+ ممالک میں باقاعدہ برآمد کا امکان',
-                'stats.stat2': '1978 سے تجربہ',
-                'stats.stat3': '48 گھنٹوں میں ابتدائی آفر',
-                'products.title': 'ہماری مصنوعات',
-                'products.subtitle': 'تعمیرات، فرنیچر، ٹریلر اور صنعتی ضروریات کے لیے وسیع رینج',
-                'product1.name': 'فرنیچر کنٹرا پلائی',
-                'product1.desc': 'اعلیٰ معیار، ہموار کنٹرا پلائی فرنیچر کے لیے۔',
-                'product1.tag1': 'موٹائی: 3-25mm',
-                'product1.tag2': 'گلو: E0/E1',
-                'product1.tag3': 'استعمال: اندرونی',
-                'product2.name': 'فلم فیسڈ فارم ورک پلائی',
-                'product2.desc': 'کنکریٹ فارم ورک کے لیے مضبوط، لیپت کنٹرا پلائی۔',
-                'product2.tag1': 'موٹائی: 12-21mm',
-                'product2.tag2': 'فلم: میلامین/فینولک',
-                'product2.tag3': 'استعمال: فارم ورک',
-                'product3.name': 'OSB پینل',
-                'product3.desc': 'ساختی استعمال کے لیے OSB۔',
-                'product3.tag1': 'موٹائی: 9-22mm',
-                'product3.tag2': 'کلاس: OSB-3/OSB-4',
-                'product3.tag3': 'استعمال: ساختی',
-                'product4.name': 'MDF بورڈز',
-                'product4.desc': 'ہموار، قابلِ کام MDF فرنیچر اور ڈیکور کے لیے۔',
-                'product4.tag1': 'موٹائی: 3-30mm',
-                'product4.tag2': 'کثافت: 700-850 kg/m³',
-                'product4.tag3': 'استعمال: اندرونی',
-                'product5.name': 'ٹریلر فلورنگ پلائی',
-                'product5.desc': 'بھاری ٹرانسپورٹ کے لیے اعلیٰ طاقت والا کنٹرا پلائی۔',
-                'product5.tag1': 'موٹائی: 18-30mm',
-                'product5.tag2': 'طاقت: زیادہ',
-                'product5.tag3': 'استعمال: ٹرانسپورٹ',
-                'product6.name': 'کسٹم کٹ اور پروجیکٹ',
-                'product6.desc': 'آپ کے پروجیکٹ کے مطابق سائز اور خصوصیات۔',
-                'product6.tag1': 'کسٹم ڈائمینشن',
-                'product6.tag2': 'پروجیکٹ بیسڈ',
-                'product6.tag3': 'MOQ: قابلِ گفت و شنید',
-                'usage.title': 'استعمالات',
-                'usage.subtitle': 'ہماری مصنوعات مختلف استعمالات کو پورا کرتی ہیں',
-                'usage.card1.title': 'تعمیرات اور فارم ورک',
-                'usage.card1.desc': 'کنکریٹ فارم ورک اور عارضی ڈھانچوں کے لیے پائیدار حل۔',
-                'usage.card2.title': 'فرنیچر اور ڈیکور',
-                'usage.card2.desc': 'فرنیچر اور انٹیریئر کے لیے اعلیٰ معیار کی مواد۔',
-                'usage.card3.title': 'ٹریلر اور ٹرانسپورٹ',
-                'usage.card3.desc': 'بھاری ٹرانسپورٹ کے لیے مضبوط فرش اور سائیڈ پینلز۔',
-                'usage.card4.title': 'صنعتی استعمال',
-                'usage.card4.desc': 'صنعتی منصوبوں اور مشین بیسز کے لیے حل۔',
-                'usage.card5.title': 'انٹیریئر ڈیزائن',
-                'usage.card5.desc': 'معماری اور حسبِ ضرورت ڈیزائن کے لیے لچکدار حل۔',
-                'usage.card6.title': 'برآمدی منصوبے',
-                'usage.card6.desc': 'برآمد کے لیے تیار پیکجنگ اور لاجسٹک سپورٹ۔',
-                'why.title': 'کیوں Tever؟',
-                'why.subtitle': 'ہم صرف مصنوعات نہیں، سپلائی حکمتِ عملی فراہم کرتے ہیں',
-                'why.card1.label': 'طویل مدتی منصوبہ بندی',
-                'why.card1.title': 'سپلائی حکمتِ عملی',
-                'why.card1.desc': 'اسٹاک تسلسل اور بروقت ترسیل کے ساتھ طویل مدتی منصوبہ بندی۔',
-                'why.card2.label': 'معیار کے معیار',
-                'why.card2.title': 'معیاری سطحیں',
-                'why.card2.desc': 'ہر بیچ بین الاقوامی معیار اور چیکس سے گزرتا ہے۔',
-                'why.card3.label': 'لاجسٹکس اور پیکجنگ',
-                'why.card3.title': 'برآمد کے لیے تیار پیکجنگ',
-                'why.card3.desc': 'برآمدی منصوبوں کے لیے پیکجنگ، دستاویزات اور لاجسٹکس۔',
-                'sustain.title': 'پائیداری',
-                'sustain.text1': 'قانونی اور پائیدار ذرائع سے ذمہ دار خریداری پر عزم۔',
-                'sustain.text2': 'فضلہ مینجمنٹ اور توانائی کی کارکردگی میں مسلسل بہتری۔',
-                'sustain.badge1': 'FSC مصدقہ ذرائع',
-                'sustain.badge2': 'PEFC کے مطابق',
-                'sustain.badge3': 'تصدیق کے لیے تیار',
-                'sustain.badge4': 'ٹریس ایبلٹی',
-                'sustain.cardTitle': 'سپلائی چین نقطہ نظر',
-                'sustain.list1': '✓ پائیدار جنگلات کے وسائل',
-                'sustain.list2': '✓ قانونی تعمیل اور دستاویزات',
-                'sustain.list3': '✓ معیار کنٹرول اور ٹیسٹ',
-                'sustain.list4': '✓ ماحول دوست پیداوار',
-                'sustain.list5': '✓ فضلہ میں کمی اور ری سائیکلنگ',
-                'sustain.list6': '✓ توانائی کارکردگی کی بہتری',
-                'testimonial.quote': 'Tever کے ساتھ معیار یا ترسیل کا مسئلہ نہیں رہا۔ فلم فیسڈ معیار اور سپورٹ بہترین ہیں۔',
-                'testimonial.author': 'احمد یلماز',
-                'testimonial.role': 'جنرل منیجر، یلماز کنسٹرکشن',
-                'cta.title': 'ہم صحیح کنٹرا پلائی کومبینیشن چننے میں مدد کرتے ہیں',
-                'cta.text': 'ہمارے ماہرین آپ کے پروجیکٹ کے لیے بہترین حل طے کرتے ہیں۔',
-                'cta.button': 'ابھی قیمت لیں',
-                'contact.title': 'رابطہ',
-                'contact.subtitle': 'کوٹیشن، نمونوں اور تعاون کے لیے ہم سے رابطہ کریں',
-                'form.name': 'مکمل نام *',
-                'form.company': 'کمپنی *',
-                'form.email': 'ای میل *',
-                'form.phone': 'فون',
-                'form.requestType': 'درخواست کی قسم',
-                'form.message': 'پیغام',
-                'form.submit': 'قیمت معلوم کریں',
-                'contact.info.title': 'Tever Forest Products',
-                'contact.info.address': '[کمپنی کا پتہ]\\n[ضلع، شہر] [پوسٹ کوڈ]\\nTürkiye',
-                'contact.info.emailTitle': 'ای میل',
-                'contact.info.phoneTitle': 'فون',
-                'contact.info.whatsappTitle': 'WhatsApp',
-                'contact.info.whatsappText': 'فوری رابطہ کے لیے WhatsApp استعمال کریں۔',
-                'contact.info.hoursTitle': 'اوقات کار',
-                'contact.info.hoursText': 'پیر-جمعہ: 09:00 - 18:00\\nہفتہ: 09:00 - 13:00\\nاتوار: بند',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Forest Products – جملہ حقوق محفوظ ہیں۔',
-                'footer.kvkk': 'ذاتی ڈیٹا محفوظ ہے۔',
-                'footer.credit': 'ویب ڈیزائن: Tever Forest Products'
-            },
-            ms: {
-                'lang.current': 'MS',
-                'nav.products': 'Produk',
-                'nav.usage': 'Aplikasi',
-                'nav.why': 'Kenapa Tever?',
-                'nav.sustainability': 'Kelestarian',
-                'nav.contact': 'Hubungi',
-                'header.contact': 'Hubungi Kami',
-                'header.cta': 'Dapatkan Sebut Harga',
-                'hero.eyebrow': 'Produk Hutan & Papan Lapisan',
-                'hero.title': 'Rakan bekalan papan lapis yang boleh dipercayai untuk setiap projek.',
-                'hero.desc': 'Sejak 1978, Tever membekal papan lapis, film faced, OSB dan MDF untuk pembinaan, perabot, treler dan industri.',
-                'hero.badge1': 'Pengalaman sejak 1978',
-                'hero.badge2': 'Kualiti gred eksport',
-                'hero.badge3': 'Eksport ke 30+ negara',
-                'hero.btnPrimary': 'Dapatkan Sebut Harga',
-                'hero.btnSecondary': 'Lihat Katalog Produk',
-                'hero.footnote': 'Perabot • Pembinaan • Treler • Industri • Eksport',
-                'hero.card1.title': 'Papan Lapis',
-                'hero.card1.desc': 'Formwork standard',
-                'hero.card2.title': 'Papan Lapis Berfilem',
-                'hero.card2.desc': 'Untuk formwork',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': 'Industri',
-                'hero.card4.title': 'Potongan Khas',
-                'hero.card4.desc': 'Berasaskan projek',
-                'hero.capacityLabel': 'Kapasiti Tahunan:',
-                'hero.capacityValue': '50,000+ m³',
-                'stats.stat1': 'Potensi eksport berkala ke 30+ negara',
-                'stats.stat2': 'Pengalaman sejak 1978',
-                'stats.stat3': 'Sebut harga awal dalam 48 jam',
-                'products.title': 'Produk Kami',
-                'products.subtitle': 'Pilihan luas untuk pembinaan, perabot, treler dan industri',
-                'product1.name': 'Papan Lapis Perabot',
-                'product1.desc': 'Papan lapis licin berkualiti tinggi untuk perabot.',
-                'product1.tag1': 'Ketebalan: 3-25mm',
-                'product1.tag2': 'Gam: E0/E1',
-                'product1.tag3': 'Kegunaan: Dalaman',
-                'product2.name': 'Papan Lapis Formwork Berfilem',
-                'product2.desc': 'Papan lapis bersalut, tahan lama untuk formwork konkrit.',
-                'product2.tag1': 'Ketebalan: 12-21mm',
-                'product2.tag2': 'Filem: Melamin/Fenolik',
-                'product2.tag3': 'Kegunaan: Formwork',
-                'product3.name': 'Panel OSB',
-                'product3.desc': 'OSB untuk aplikasi struktur.',
-                'product3.tag1': 'Ketebalan: 9-22mm',
-                'product3.tag2': 'Kelas: OSB-3/OSB-4',
-                'product3.tag3': 'Kegunaan: Struktur',
-                'product4.name': 'Papan MDF',
-                'product4.desc': 'MDF licin dan mudah kerja untuk perabot dan dekorasi.',
-                'product4.tag1': 'Ketebalan: 3-30mm',
-                'product4.tag2': 'Kepadatan: 700-850 kg/m³',
-                'product4.tag3': 'Kegunaan: Dalaman',
-                'product5.name': 'Papan Lapis Lantai Treler',
-                'product5.desc': 'Papan lapis berkuatan tinggi untuk pengangkutan berat.',
-                'product5.tag1': 'Ketebalan: 18-30mm',
-                'product5.tag2': 'Kekuatan: Tinggi',
-                'product5.tag3': 'Kegunaan: Pengangkutan',
-                'product6.name': 'Potongan Khas & Projek',
-                'product6.desc': 'Saiz dan spesifikasi tersuai mengikut projek anda.',
-                'product6.tag1': 'Dimensi tersuai',
-                'product6.tag2': 'Berasaskan projek',
-                'product6.tag3': 'MOQ: Boleh dirunding',
-                'usage.title': 'Aplikasi',
-                'usage.subtitle': 'Produk kami menyokong pelbagai kegunaan',
-                'usage.card1.title': 'Pembinaan & Formwork',
-                'usage.card1.desc': 'Penyelesaian tahan lasak untuk formwork konkrit.',
-                'usage.card2.title': 'Perabot & Dekorasi',
-                'usage.card2.desc': 'Bahan berkualiti untuk perabot dan reka bentuk dalaman.',
-                'usage.card3.title': 'Treler & Pengangkutan',
-                'usage.card3.desc': 'Lantai dan sisi kuat untuk pengangkutan berat.',
-                'usage.card4.title': 'Aplikasi Industri',
-                'usage.card4.desc': 'Penyelesaian untuk projek industri dan tapak mesin.',
-                'usage.card5.title': 'Reka Bentuk Dalaman',
-                'usage.card5.desc': 'Penyelesaian fleksibel untuk projek seni bina.',
-                'usage.card6.title': 'Projek Eksport',
-                'usage.card6.desc': 'Pembungkusan siap eksport dan sokongan logistik.',
-                'why.title': 'Kenapa Tever?',
-                'why.subtitle': 'Kami beri strategi bekalan, bukan sekadar produk',
-                'why.card1.label': 'Perancangan Jangka Panjang',
-                'why.card1.title': 'Strategi Bekalan',
-                'why.card1.desc': 'Perancangan dengan kesinambungan stok dan penghantaran tepat masa.',
-                'why.card2.label': 'Standard Kualiti',
-                'why.card2.title': 'Tahap Kualiti Piawai',
-                'why.card2.desc': 'Setiap kelompok memenuhi piawaian antarabangsa dan pemeriksaan.',
-                'why.card3.label': 'Logistik & Pembungkusan',
-                'why.card3.title': 'Pembungkusan Sedia Eksport',
-                'why.card3.desc': 'Pembungkusan, dokumentasi dan logistik untuk eksport anda.',
-                'sustain.title': 'Kelestarian',
-                'sustain.text1': 'Komited kepada sumber sah dan pengurusan hutan lestari.',
-                'sustain.text2': 'Penambahbaikan berterusan dalam sisa dan kecekapan tenaga dengan proses mesra alam.',
-                'sustain.badge1': 'Sumber Disahkan FSC',
-                'sustain.badge2': 'Selaras PEFC',
-                'sustain.badge3': 'Sedia pensijilan',
-                'sustain.badge4': 'Kebolejejakkan',
-                'sustain.cardTitle': 'Pendekatan Rantaian Bekalan',
-                'sustain.list1': '✓ Sumber hutan lestari',
-                'sustain.list2': '✓ Pematuhan undang-undang & dokumen',
-                'sustain.list3': '✓ Kawalan kualiti & ujian',
-                'sustain.list4': '✓ Teknologi pengeluaran hijau',
-                'sustain.list5': '✓ Pengurangan sisa & kitar semula',
-                'sustain.list6': '✓ Optimasi kecekapan tenaga',
-                'testimonial.quote': 'Dengan Tever, risiko kualiti dan penghantaran hilang. Film faced mereka dan sokongan amat baik.',
-                'testimonial.author': 'Ahmet Yılmaz',
-                'testimonial.role': 'Pengarah Urusan, Yılmaz Construction',
-                'cta.title': 'Kami bantu pilih kombinasi papan lapis yang tepat',
-                'cta.text': 'Pakar kami tentukan solusi terbaik bersama anda.',
-                'cta.button': 'Mohon sebut harga sekarang',
-                'contact.title': 'Hubungi',
-                'contact.subtitle': 'Hubungi untuk sebut harga, sampel, dan kerjasama',
-                'form.name': 'Nama penuh *',
-                'form.company': 'Syarikat *',
-                'form.email': 'Emel *',
-                'form.phone': 'Telefon',
-                'form.requestType': 'Jenis permintaan',
-                'form.message': 'Mesej',
-                'form.submit': 'Mohon sebut harga',
-                'contact.info.title': 'Tever Forest Products',
-                'contact.info.address': '[Alamat syarikat]\\n[Daerah, Bandar] [Poskod]\\nTürkiye',
-                'contact.info.emailTitle': 'Emel',
-                'contact.info.phoneTitle': 'Telefon',
-                'contact.info.whatsappTitle': 'WhatsApp',
-                'contact.info.whatsappText': 'Hubungan pantas melalui WhatsApp.',
-                'contact.info.hoursTitle': 'Waktu Operasi',
-                'contact.info.hoursText': 'Isn-Jum: 09:00 - 18:00\\nSab: 09:00 - 13:00\\nAhd: Tutup',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Forest Products – Hak cipta terpelihara.',
-                'footer.kvkk': 'Data peribadi dilindungi.',
-                'footer.credit': 'Reka bentuk web: Tever Forest Products'
-            },
-            zh: {
-                'lang.current': '中文',
-                'nav.products': '产品',
-                'nav.usage': '应用场景',
-                'nav.why': '为何选择Tever',
-                'nav.sustainability': '可持续',
-                'nav.contact': '联系',
-                'header.contact': '联系我们',
-                'header.cta': '获取报价',
-                'hero.eyebrow': '林产品与胶合板',
-                'hero.title': '每个项目值得信赖的胶合板供应伙伴。',
-                'hero.desc': '自1978年起，Tever为建筑、家具、挂车和工业领域提供胶合板、覆膜板、OSB与MDF等产品。',
-                'hero.badge1': '1978年以来的经验',
-                'hero.badge2': '出口级品质',
-                'hero.badge3': '出口覆盖30+国家',
-                'hero.btnPrimary': '获取报价',
-                'hero.btnSecondary': '查看产品目录',
-                'hero.footnote': '家具 • 建筑 • 挂车 • 工业 • 出口',
-                'hero.card1.title': '胶合板',
-                'hero.card1.desc': '标准模板',
-                'hero.card2.title': '覆膜胶合板',
-                'hero.card2.desc': '模板应用',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': '工业用',
-                'hero.card4.title': '定制切割',
-                'hero.card4.desc': '项目定制',
-                'hero.capacityLabel': '年产能：',
-                'hero.capacityValue': '50,000+ m³',
-                'stats.stat1': '稳定出口潜力至30+国家',
-                'stats.stat2': '1978年以来行业经验',
-                'stats.stat3': '48小时内提供初步报价',
-                'products.title': '我们的产品',
-                'products.subtitle': '为建筑、家具、挂车与工业需求提供全系列产品',
-                'product1.name': '家具级胶合板',
-                'product1.desc': '高品质、平整表面的胶合板，适合家具生产。',
-                'product1.tag1': '厚度: 3-25mm',
-                'product1.tag2': '胶水: E0/E1',
-                'product1.tag3': '用途: 室内',
-                'product2.name': '覆膜模板胶合板',
-                'product2.desc': '耐用覆膜胶合板，适用于混凝土模板。',
-                'product2.tag1': '厚度: 12-21mm',
-                'product2.tag2': '膜层: 三聚氰胺/酚醛',
-                'product2.tag3': '用途: 模板',
-                'product3.name': 'OSB板',
-                'product3.desc': '面向结构用途的OSB。',
-                'product3.tag1': '厚度: 9-22mm',
-                'product3.tag2': '等级: OSB-3/OSB-4',
-                'product3.tag3': '用途: 结构',
-                'product4.name': 'MDF板',
-                'product4.desc': '平滑、易加工的MDF，适合家具与装饰。',
-                'product4.tag1': '厚度: 3-30mm',
-                'product4.tag2': '密度: 700-850 kg/m³',
-                'product4.tag3': '用途: 室内',
-                'product5.name': '挂车地板胶合板',
-                'product5.desc': '高强度胶合板，适合重载运输地板。',
-                'product5.tag1': '厚度: 18-30mm',
-                'product5.tag2': '强度: 高',
-                'product5.tag3': '用途: 运输',
-                'product6.name': '定制与项目专用',
-                'product6.desc': '根据项目定制尺寸、厚度和规格。',
-                'product6.tag1': '定制尺寸',
-                'product6.tag2': '项目导向',
-                'product6.tag3': '最小起订量: 可协商',
-                'usage.title': '应用场景',
-                'usage.subtitle': '产品覆盖多种应用场景',
-                'usage.card1.title': '建筑与模板',
-                'usage.card1.desc': '适用于混凝土模板和临时结构的耐用方案。',
-                'usage.card2.title': '家具与装饰',
-                'usage.card2.desc': '高品质材料，用于家具生产与室内设计。',
-                'usage.card3.title': '挂车与运输',
-                'usage.card3.desc': '强韧地板与侧板，适合重载运输。',
-                'usage.card4.title': '工业应用',
-                'usage.card4.desc': '用于工业项目和设备基础的解决方案。',
-                'usage.card5.title': '室内建筑',
-                'usage.card5.desc': '灵活方案，适用于建筑和定制设计。',
-                'usage.card6.title': '出口项目',
-                'usage.card6.desc': '出口就绪包装与物流支持。',
-                'why.title': '为何选择Tever',
-                'why.subtitle': '我们提供供应策略，而非单纯产品',
-                'why.card1.label': '长期规划',
-                'why.card1.title': '供应策略',
-                'why.card1.desc': '长期规划，保障库存连续与准时交付。',
-                'why.card2.label': '质量标准',
-                'why.card2.title': '标准化质量水平',
-                'why.card2.desc': '每批产品符合国际标准并通过质检。',
-                'why.card3.label': '物流与包装',
-                'why.card3.title': '出口级包装',
-                'why.card3.desc': '为出口项目提供包装、文件与物流支持。',
-                'sustain.title': '可持续',
-                'sustain.text1': '坚持合法与可持续的原料来源，负责任的采购。',
-                'sustain.text2': '持续改进废物管理与能效，采用环保工艺。',
-                'sustain.badge1': 'FSC认证来源',
-                'sustain.badge2': '符合PEFC',
-                'sustain.badge3': '可申请认证',
-                'sustain.badge4': '可追溯性',
-                'sustain.cardTitle': '供应链方式',
-                'sustain.list1': '✓ 可持续森林资源',
-                'sustain.list2': '✓ 法规合规与文件',
-                'sustain.list3': '✓ 质量控制与检测',
-                'sustain.list4': '✓ 环保生产技术',
-                'sustain.list5': '✓ 减少废物与回收',
-                'sustain.list6': '✓ 提升能源效率',
-                'testimonial.quote': '与Tever合作后，质量和交付风险消除。覆膜板品质和服务团队都令人满意。',
-                'testimonial.author': 'Ahmet Yılmaz',
-                'testimonial.role': '总经理, Yılmaz 建筑',
-                'cta.title': '我们帮助您选择合适的胶合板组合',
-                'cta.text': '专家团队与您一起确定最佳方案。',
-                'cta.button': '立即获取报价',
-                'contact.title': '联系',
-                'contact.subtitle': '就报价、样品与合作联系我们',
-                'form.name': '姓名 *',
-                'form.company': '公司 *',
-                'form.email': '邮箱 *',
-                'form.phone': '电话',
-                'form.requestType': '需求类型',
-                'form.message': '留言',
-                'form.submit': '获取报价',
-                'contact.info.title': 'Tever Forest Products',
-                'contact.info.address': '[公司地址]\\n[地区, 城市] [邮编]\\nTürkiye',
-                'contact.info.emailTitle': '邮箱',
-                'contact.info.phoneTitle': '电话',
-                'contact.info.whatsappTitle': 'WhatsApp',
-                'contact.info.whatsappText': '可通过WhatsApp快速联系。',
-                'contact.info.hoursTitle': '工作时间',
-                'contact.info.hoursText': '周一-周五: 09:00 - 18:00\\n周六: 09:00 - 13:00\\n周日: 休息',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Forest Products – 版权所有。',
-                'footer.kvkk': '个人数据受保护。',
-                'footer.credit': '网页设计：Tever Forest Products'
-            },
-            ja: {
-                'lang.current': 'JA',
-                'nav.products': '製品',
-                'nav.usage': '用途',
-                'nav.why': '選ばれる理由',
-                'nav.sustainability': 'サステナビリティ',
-                'nav.contact': 'お問い合わせ',
-                'header.contact': 'お問い合わせ',
-                'header.cta': '見積もり依頼',
-                'hero.eyebrow': '木材製品 & 合板',
-                'hero.title': 'あらゆるプロジェクトの信頼できる合板パートナー。',
-                'hero.desc': '1978年からTeverは建設、家具、トレーラー、産業向けに合板、フィルム合板、OSB、MDFを提供しています。',
-                'hero.badge1': '1978年からの経験',
-                'hero.badge2': '輸出品質',
-                'hero.badge3': '30カ国以上に輸出',
-                'hero.btnPrimary': '見積もり依頼',
-                'hero.btnSecondary': '製品カタログを見る',
-                'hero.footnote': '家具・建設・トレーラー・産業・輸出',
-                'hero.card1.title': '合板',
-                'hero.card1.desc': '標準型枠',
-                'hero.card2.title': 'フィルム合板',
-                'hero.card2.desc': '型枠向け',
-                'hero.card3.title': 'OSB / MDF',
-                'hero.card3.desc': '産業用',
-                'hero.card4.title': 'カスタムカット',
-                'hero.card4.desc': 'プロジェクト別',
-                'hero.capacityLabel': '年間能力:',
-                'hero.capacityValue': '50,000+ m³',
-                'stats.stat1': '30カ国以上へ定期輸出のポテンシャル',
-                'stats.stat2': '1978年からの業界経験',
-                'stats.stat3': '48時間以内に仮見積り',
-                'products.title': '製品一覧',
-                'products.subtitle': '建設・家具・トレーラー・産業向けの幅広いラインアップ',
-                'product1.name': '家具用合板',
-                'product1.desc': '高品質で滑らかな合板、家具製造に最適。',
-                'product1.tag1': '厚さ: 3-25mm',
-                'product1.tag2': '接着剤: E0/E1',
-                'product1.tag3': '用途: 室内',
-                'product2.name': 'フィルム型枠合板',
-                'product2.desc': 'コーティングされた耐久合板、コンクリート型枠に最適。',
-                'product2.tag1': '厚さ: 12-21mm',
-                'product2.tag2': 'フィルム: メラミン/フェノール',
-                'product2.tag3': '用途: 型枠',
-                'product3.name': 'OSBパネル',
-                'product3.desc': '構造用途向けOSB。',
-                'product3.tag1': '厚さ: 9-22mm',
-                'product3.tag2': 'クラス: OSB-3/OSB-4',
-                'product3.tag3': '用途: 構造',
-                'product4.name': 'MDFボード',
-                'product4.desc': '滑らかで加工しやすいMDF、家具・装飾向け。',
-                'product4.tag1': '厚さ: 3-30mm',
-                'product4.tag2': '密度: 700-850 kg/m³',
-                'product4.tag3': '用途: 室内',
-                'product5.name': 'トレーラーフロア用合板',
-                'product5.desc': '重輸送向けの高強度合板フロア。',
-                'product5.tag1': '厚さ: 18-30mm',
-                'product5.tag2': '強度: 高',
-                'product5.tag3': '用途: 輸送',
-                'product6.name': 'カスタム・プロジェクト対応',
-                'product6.desc': 'プロジェクトに合わせたサイズ・仕様を提供。',
-                'product6.tag1': 'カスタムサイズ',
-                'product6.tag2': 'プロジェクトベース',
-                'product6.tag3': '最小ロット: 相談可',
-                'usage.title': '用途',
-                'usage.subtitle': '多様な用途に対応',
-                'usage.card1.title': '建設・型枠',
-                'usage.card1.desc': 'コンクリート型枠や仮設構造に耐久性のあるソリューション。',
-                'usage.card2.title': '家具・インテリア',
-                'usage.card2.desc': '家具製造・内装向けの高品質素材。',
-                'usage.card3.title': 'トレーラー・輸送',
-                'usage.card3.desc': '重輸送向けの強固な床・側板。',
-                'usage.card4.title': '産業用途',
-                'usage.card4.desc': '産業プロジェクトや機械基礎向けのソリューション。',
-                'usage.card5.title': 'インテリア設計',
-                'usage.card5.desc': '建築・カスタムデザインに柔軟対応。',
-                'usage.card6.title': '輸出プロジェクト',
-                'usage.card6.desc': '輸出対応の梱包と物流サポート。',
-                'why.title': '選ばれる理由',
-                'why.subtitle': '製品だけでなく供給戦略を提供',
-                'why.card1.label': '長期計画',
-                'why.card1.title': '供給戦略',
-                'why.card1.desc': '在庫確保と納期厳守を伴う長期計画。',
-                'why.card2.label': '品質基準',
-                'why.card2.title': '標準化された品質',
-                'why.card2.desc': '各ロットは国際基準と品質検査に合格。',
-                'why.card3.label': '物流・梱包',
-                'why.card3.title': '輸出対応梱包',
-                'why.card3.desc': '輸出向け梱包、書類、物流を支援。',
-                'sustain.title': 'サステナビリティ',
-                'sustain.text1': '合法で持続可能な原料調達にコミットしています。',
-                'sustain.text2': '廃棄物管理と省エネを継続改善し、環境配慮のプロセスを採用。',
-                'sustain.badge1': 'FSC認証ソース',
-                'sustain.badge2': 'PEFC準拠',
-                'sustain.badge3': '認証準備完了',
-                'sustain.badge4': 'トレーサビリティ',
-                'sustain.cardTitle': 'サプライチェーンアプローチ',
-                'sustain.list1': '✓ 持続可能な森林資源',
-                'sustain.list2': '✓ 法令遵守とドキュメント',
-                'sustain.list3': '✓ 品質管理とテスト',
-                'sustain.list4': '✓ 環境配慮の生産技術',
-                'sustain.list5': '✓ 廃棄物削減とリサイクル',
-                'sustain.list6': '✓ 省エネ最適化',
-                'testimonial.quote': 'Teverと組んでから品質・納期の不安がなくなりました。フィルム合板の品質とサポートに満足しています。',
-                'testimonial.author': 'Ahmet Yılmaz',
-                'testimonial.role': 'GM, Yılmaz Construction',
-                'cta.title': '最適な合板の組み合わせ選定を支援します',
-                'cta.text': '専門チームが最適解を共に検討します。',
-                'cta.button': '今すぐ見積もり',
-                'contact.title': 'お問い合わせ',
-                'contact.subtitle': '見積もり・サンプル・協業のご連絡はこちら',
-                'form.name': '氏名 *',
-                'form.company': '会社名 *',
-                'form.email': 'メール *',
-                'form.phone': '電話',
-                'form.requestType': 'リクエスト種別',
-                'form.message': 'メッセージ',
-                'form.submit': '見積もり依頼',
-                'contact.info.title': 'Tever Forest Products',
-                'contact.info.address': '[会社住所]\\n[地区, 市] [郵便]\\nTürkiye',
-                'contact.info.emailTitle': 'メール',
-                'contact.info.phoneTitle': '電話',
-                'contact.info.whatsappTitle': 'WhatsApp',
-                'contact.info.whatsappText': 'WhatsAppで迅速に連絡できます。',
-                'contact.info.hoursTitle': '営業時間',
-                'contact.info.hoursText': '月-金: 09:00 - 18:00\\n土: 09:00 - 13:00\\n日: 休業',
-                'footer.copy': '© <span id="currentYear">2024</span> Tever Forest Products – 無断転載を禁じます。',
-                'footer.kvkk': '個人情報は保護されています。',
-                'footer.credit': 'ウェブデザイン: Tever Forest Products'
-            }
-        };
-
-        const rtlLanguages = ['ar'];
-
-        // Set current year in footer
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-        
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    e.preventDefault();
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-        
-        // Mobile menu toggle
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const nav = document.getElementById('nav');
-        if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', function() {
-                nav.classList.toggle('nav-open');
-                this.classList.toggle('active');
-            });
-        }
-        
-        // Sticky header on scroll
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', function() {
-            const currentScroll = window.pageYOffset;
-            if (currentScroll > 100) {
-                header.classList.add('header-scrolled');
-            } else {
-                header.classList.remove('header-scrolled');
-            }
-        });
-        
-        // Language switching
-        const dropdown = document.querySelector('.lang-dropdown');
-        const langCurrent = document.querySelector('.lang-current');
-        const langButtons = document.querySelectorAll('.lang-dropdown button');
-
-        const applyTranslations = (lang) => {
-            const dict = translations[lang] || translations.tr;
-            document.documentElement.lang = lang;
-            const dir = rtlLanguages.includes(lang) ? 'rtl' : 'ltr';
-            document.documentElement.dir = dir;
-            document.body.classList.toggle('rtl', dir === 'rtl');
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                const value = dict[key] || translations.tr[key] || el.textContent;
-                if (el.tagName.toLowerCase() === 'textarea') {
-                    el.placeholder = value;
-                } else {
-                    // preserve inner HTML for footer copy span
-                    if (key === 'footer.copy') {
-                        el.innerHTML = value;
-                    } else {
-                        el.textContent = value;
-                    }
-                }
-            });
-            // update button label
-            if (langCurrent) {
-                const selectedBtn = Array.from(langButtons).find(b => b.dataset.lang === lang);
-                if (selectedBtn) {
-                    const flag = selectedBtn.querySelector('.flag')?.textContent || '';
-                    const label = selectedBtn.textContent.trim();
-                    langCurrent.innerHTML = `<span class="flag">${flag}</span><span class="lang-label">${label.split(' ')[1] || label}</span>`;
-                }
-            }
-        };
-
-        if (langCurrent) {
-            langCurrent.addEventListener('click', () => {
-                dropdown.classList.toggle('open');
-            });
-        }
-
-        langButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                dropdown.classList.remove('open');
-                applyTranslations(btn.dataset.lang);
-            });
-        });
-
-        // Close dropdown on outside click
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.language-switcher')) {
-                dropdown.classList.remove('open');
-            }
-        });
-
-        // Form submission (prevent default, show message)
-        const contactForm = document.getElementById('contactForm');
-        if (contactForm) {
-            contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('Teşekkürler! Mesajınız alındı. En kısa sürede size dönüş yapacağız.');
-                this.reset();
-            });
-        }
-
-        // Init default language
-        applyTranslations('tr');
-    </script>
+    <script src="main.js"></script>
 </body>
-</html>
 
+</html>

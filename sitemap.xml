@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    
+    <!-- Home Page -->
+    <url>
+        <loc>https://teverorman.com/</loc>
+        <lastmod>2026-02-01</lastmod>
+        <priority>1.00</priority>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://teverorman.com/" />
+        
+        <!-- Global English -->
+        <xhtml:link rel="alternate" hreflang="en" href="https://teverorman.com/?lang=en" />
+        
+        <!-- Target Markets (English Speaking/Business) -->
+        <xhtml:link rel="alternate" hreflang="en-ae" href="https://teverorman.com/?lang=ar-gcc" /> <!-- UAE/Dubai -->
+        <xhtml:link rel="alternate" hreflang="en-qa" href="https://teverorman.com/?lang=ar-gcc" /> <!-- Qatar -->
+        <xhtml:link rel="alternate" hreflang="en-in" href="https://teverorman.com/?lang=en" /> <!-- India -->
+        <xhtml:link rel="alternate" hreflang="en-my" href="https://teverorman.com/?lang=en" /> <!-- Malaysia -->
+        <xhtml:link rel="alternate" hreflang="en-gb" href="https://teverorman.com/?lang=en" /> <!-- UK -->
+        <xhtml:link rel="alternate" hreflang="en-us" href="https://teverorman.com/?lang=en" /> <!-- USA -->
+        <xhtml:link rel="alternate" hreflang="en-ca" href="https://teverorman.com/?lang=en" /> <!-- Canada -->
+        <xhtml:link rel="alternate" hreflang="en-pk" href="https://teverorman.com/?lang=en" /> <!-- Pakistan -->
+        <xhtml:link rel="alternate" hreflang="en-vn" href="https://teverorman.com/?lang=en" /> <!-- Vietnam -->
+
+        <!-- Regional Languages -->
+        <xhtml:link rel="alternate" hreflang="tr" href="https://teverorman.com/?lang=tr" /> <!-- Turkey & Turkic Republics -->
+        <xhtml:link rel="alternate" hreflang="ru" href="https://teverorman.com/?lang=ru" /> <!-- CIS Countries -->
+        <xhtml:link rel="alternate" hreflang="ar" href="https://teverorman.com/?lang=ar-gcc" /> <!-- Gulf/Arab World -->
+        <xhtml:link rel="alternate" hreflang="es" href="https://teverorman.com/?lang=es" /> <!-- Spain -->
+        <xhtml:link rel="alternate" hreflang="es-419" href="https://teverorman.com/?lang=es" /> <!-- Latin America -->
+        <xhtml:link rel="alternate" hreflang="fr" href="https://teverorman.com/?lang=fr" /> <!-- France/Canada/Africa -->
+    </url>
+
+    <!-- Products -->
+    <url>
+        <loc>https://teverorman.com/products.html</loc>
+        <lastmod>2026-02-01</lastmod>
+        <priority>0.90</priority>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://teverorman.com/products.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://teverorman.com/products.html?lang=en" />
+        <xhtml:link rel="alternate" hreflang="tr" href="https://teverorman.com/products.html?lang=tr" />
+        <xhtml:link rel="alternate" hreflang="ru" href="https://teverorman.com/products.html?lang=ru" />
+        <xhtml:link rel="alternate" hreflang="ar" href="https://teverorman.com/products.html?lang=ar-gcc" />
+    </url>
+
+    <!-- About -->
+    <url>
+        <loc>https://teverorman.com/about.html</loc>
+        <lastmod>2026-02-01</lastmod>
+        <priority>0.80</priority>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://teverorman.com/about.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://teverorman.com/about.html?lang=en" />
+        <xhtml:link rel="alternate" hreflang="tr" href="https://teverorman.com/about.html?lang=tr" />
+    </url>
+
+    <!-- Art Hub (Tever Sanat) -->
+    <url>
+        <loc>https://teverorman.com/teversanat.html</loc>
+        <lastmod>2026-02-01</lastmod>
+        <priority>0.85</priority>
+    </url>
+
+    <!-- Contact -->
+    <url>
+        <loc>https://teverorman.com/contact.html</loc>
+        <lastmod>2026-02-01</lastmod>
+        <priority>0.80</priority>
+    </url>
+
+</urlset>

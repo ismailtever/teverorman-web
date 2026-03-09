@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Tever Forest Products</title>
+
+    <meta name="description"
+        content="Get in touch with Tever Orman for industrial wood supply or art initiatives. Headquarters in Istanbul, Turkey.">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Contact Tever Forest Products">
+    <meta property="og:description" content="Global Headquarters: Istanbul. Connect for Plywood, Lumber, and Veneer.">
+    <meta property="og:image" content="https://teverorman.com/assets/images/history-sawmill-1920.png">
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Flag Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
+    <!-- Scripts to handle URL params for auto-selection -->
+    <!-- Logic moved to main.js initContactForm() -->
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo">TEVER</a>
+            <button class="mobile-menu-toggle">
+                <div class="hamburger-icon"></div>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+                <li><a href="products.html" class="nav-link" data-i18n="nav.products">Products</a></li>
+                <li><a href="about.html" class="nav-link" data-i18n="nav.about">Our Heritage</a></li>
+                <li><a href="teversanat.html" class="nav-link" data-i18n="nav.sanat">Tever Sanat</a></li>
+                <li><a href="contact.html" class="nav-link active" data-i18n="nav.contact">Contact</a></li>
+
+                <!-- Flag Based Language Selector -->
+                <li class="language-selector">
+                    <button class="lang-btn" id="langBtn">
+                        <span class="fi fi-gb"></span>
+                        <span style="font-size:0.8rem; font-weight:600;">EN</span>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <!-- Populated by JS -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="section">
+        <div class="container" style="max-width: 900px;">
+            <div class="text-center mb-lg">
+                <span class="hero-subtitle" data-i18n="contact.subtitle">Global Headquarters</span>
+                <h1 class="text-h1 mb-sm" data-i18n="contact.title">Get in Touch</h1>
+                <p class="text-lead" data-i18n="contact.desc">
+                    Whether you are a global B2B buyer or an art institution, we are ready to connect.
+                </p>
+            </div>
+
+            <!-- Contact Info Grid -->
+            <div class="grid grid-2 mb-lg" style="align-items: flex-start;">
+                <!-- Main Info -->
+                <div style="background: var(--color-surface-alt); padding: 2rem; border-radius: 8px;">
+                    <h3 class="text-h3 mb-sm" data-i18n="contact.legal_title">Tever Orman Mamülleri Sanayi ve Ticaret
+                        A.Ş.</h3>
+
+                    <div class="mb-sm">
+                        <strong class="text-small" data-i18n="contact.address">Address</strong>
+                        <p class="text-body" style="margin-top:0.25rem;">
+                            Nato Yolu Caddesi, Narin Sokak No: 3/4,<br>
+                            İstanbul, Türkiye
+                        </p>
+                    </div>
+
+                    <div class="mb-sm">
+                        <strong class="text-small" data-i18n="contact.email">Email</strong>
+                        <p class="text-body" style="margin-top:0.25rem;">
+                            <a href="mailto:m.eymen@teverorman.com"
+                                style="color: var(--color-primary); text-decoration: underline;">m.eymen@teverorman.com</a><br>
+                            <a href="mailto:info@teverorman.com"
+                                style="color: var(--color-primary); text-decoration: underline;">info@teverorman.com</a>
+                        </p>
+                    </div>
+
+                    <div>
+                        <strong class="text-small" data-i18n="contact.phone">Phone / WhatsApp</strong>
+                        <p class="text-body" style="margin-top:0.25rem;">
+                            <a href="https://wa.me/905344141224"
+                                style="color: var(--color-primary); display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA"
+                                    width="20">
+                                +90 534 414 12 24
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Simple Links -->
+                <div class="grid grid-2" style="gap: 1rem;">
+                    <a href="https://www.linkedin.com/in/mustafa-eymen-tever-8b081810b" target="_blank"
+                        class="product-card"
+                        style="text-align: center; padding: 1.5rem; background-color: #f4f6f8; border-color: transparent;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png"
+                            alt="LinkedIn" width="30" style="margin-bottom: 0.5rem;">
+                        <h4 style="margin:0;">Personal Profile</h4>
+                    </a>
+
+                    <a href="https://www.linkedin.com/company/tever-orman-mam%C3%BClleri-sanayi-ve-ticaret-a-%C5%9F/services/request-proposal"
+                        target="_blank" class="product-card"
+                        style="text-align: center; padding: 1.5rem; background-color: #004d40; border-color: transparent; color: white;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png"
+                            alt="LinkedIn" width="30" style="margin-bottom: 0.5rem; filter: brightness(0) invert(1);">
+                        <h4 style="margin:0; color: white;">Request Proposal (Company)</h4>
+                    </a>
+                </div>
+            </div>
+
+            <form action="mailto:m.eymen@teverorman.com" method="post" enctype="text/plain"
+                style="background: white; padding: 2rem; border-radius: 8px; border: 1px solid var(--color-border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                <h3 class="mb-md">Inquiry Form</h3>
+
+                <div class="mb-sm">
+                    <label class="text-small"
+                        style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Department / Purpose</label>
+                    <select id="inquiryType"
+                        style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px; background-color: var(--color-surface-alt);">
+                        <option value="industry">Industrial Sales (Plywood/Lumber/Veneer)</option>
+                        <option value="gallery">Tever Sanat | Gallery Partnership</option>
+                        <option value="art_acquisition">Tever Sanat | Art Acquisition</option>
+                        <option value="general">General Inquiry</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-2 mb-sm">
+                    <div>
+                        <label class="text-small" style="display: block; margin-bottom: 0.5rem;">Full Name</label>
+                        <input type="text" id="formName"
+                            style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label class="text-small" style="display: block; margin-bottom: 0.5rem;">Company /
+                            Institution</label>
+                        <input type="text" id="formCompany"
+                            style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+                </div>
+
+                <div class="mb-sm">
+                    <label class="text-small" style="display: block; margin-bottom: 0.5rem;">Email Address</label>
+                    <input type="email" id="formEmail"
+                        style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+
+                <div class="mb-md">
+                    <label class="text-small" style="display: block; margin-bottom: 0.5rem;">Message</label>
+                    <textarea id="formMessage" rows="8"
+                        style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 0.95rem; line-height: 1.5; color: #374151;"></textarea>
+                </div>
+
+                <div class="grid grid-2" style="gap: 1rem; align-items: center;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;"
+                        data-i18n="contact.btn_email">Send Email</button>
+
+                    <button type="button" class="btn btn-outline" id="btnSendWaForm"
+                        style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA" width="20">
+                        <span data-i18n="contact.btn_whatsapp">Send via WhatsApp</span>
+                    </button>
+                </div>
+                <p class="text-small text-muted mt-sm" style="text-align: center;" data-i18n="contact.whatsapp_hint">
+                    Need a faster response? Use the
+                    WhatsApp button.</p>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="brand-logo mb-md" style="display: block;">TEVER</a>
+                    <p class="text-small text-muted">
+                        <strong data-i18n="contact.legal_title">Tever Orman Mamülleri</strong><br>
+                        <span data-i18n="contact.legal_suffix">Sanayi ve Ticaret A.Ş.</span>
+                    </p>
+                    <p class="text-small text-muted" style="margin-top: 1rem;">
+                        Nato Yolu Caddesi, Narin Sokak No: 3/4,<br>
+                        İstanbul, Türkiye
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.products">Products</h4>
+                    <ul>
+                        <li><a href="products.html" data-i18n="footer.plywood">Plywood</a></li>
+                        <li><a href="products.html#veneer" data-i18n="footer.veneer">Veneer (Papel)</a></li>
+                        <li><a href="products.html#lumber" data-i18n="footer.lumber_link">Lumber (Kereste)</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.culture">Culture</h4>
+                    <ul>
+                        <li><a href="teversanat.html" data-i18n="nav.sanat">Tever Sanat</a></li>
+                        <li><a href="teversanat-gallery.html" data-i18n="footer.art_collection">Art Collection</a></li>
+                        <li><a href="teversanat-apply.html" data-i18n="footer.for_artists">For Artists</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.connect">Connect</h4>
+                    <ul>
+                        <li><a href="mailto:m.eymen@teverorman.com">m.eymen@teverorman.com</a></li>
+                        <li><a href="mailto:info@teverorman.com">info@teverorman.com</a></li>
+                        <li><a href="https://wa.me/905344141224">+90 534 414 12 24</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="margin-top: 4rem; padding-top: 2rem; text-align: center; font-size: 0.875rem; color: var(--color-text-muted); border-top: 1px solid var(--color-border);">
+                &copy;
+                <script>document.write(new Date().getFullYear())</script> Tever Orman Mamülleri A.Ş. | Global Trade &
+                Art.
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

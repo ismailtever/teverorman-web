@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curated Collection | Tever Sanat</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Manrope:wght@500;600&display=swap">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: var(--color-surface-museum);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="site-header" style="background-color: var(--color-surface-museum);">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo">TEVER</a>
+            <button class="mobile-menu-toggle">
+                <div class="hamburger-icon"></div>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Main Site</a></li>
+                <li><a href="teversanat.html" class="nav-link">Sanat Hub</a></li>
+                <li><a href="teversanat-gallery.html" class="nav-link active">Gallery</a></li>
+                <li><a href="teversanat-apply.html" class="nav-link">Apply</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="section">
+        <div class="container">
+            <h1 class="text-h2 mb-lg">Curated Works</h1>
+
+            <div class="art-grid">
+                <!-- Art Item 1 -->
+                <div class="art-card" style="aspect-ratio: 3/4;">
+                    <div class="art-image" style="background-color: #d1d1d1;"></div>
+                    <div class="art-overlay">
+                        <h3>Structure I</h3>
+                        <p>Leyla Demir</p>
+                        <p class="text-small">Birch Plywood & Steel</p>
+                    </div>
+                </div>
+                <!-- Art Item 2 -->
+                <div class="art-card" style="aspect-ratio: 1/1;">
+                    <div class="art-image" style="background-color: #e2e2e2;"></div>
+                    <div class="art-overlay">
+                        <h3>Fluidity</h3>
+                        <p>Thomas Weber</p>
+                        <p class="text-small">Steam-bent Poplar</p>
+                    </div>
+                </div>
+                <!-- Art Item 3 -->
+                <div class="art-card" style="aspect-ratio: 4/3;">
+                    <div class="art-image" style="background-color: #cccccc;"></div>
+                    <div class="art-overlay">
+                        <h3>Roots</h3>
+                        <p>Elena S.</p>
+                        <p class="text-small">Walnut Root Veneer</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-block mt-lg" style="background: transparent; color: var(--color-text-main);">
+                <h3 class="text-h3">Acquisitions</h3>
+                <p class="mb-md">For price lists and acquisition inquiries, please contact our art director.</p>
+                <a href="contact.html?type=art_acquisition" class="btn btn-outline"
+                    style="background: white;">Inquire</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="brand-logo mb-md" style="display: block;">TEVER</a>
+                    <p class="text-small text-muted">
+                        <strong data-i18n="contact.legal_title">Tever Orman Mamülleri</strong><br>
+                        <span data-i18n="contact.legal_suffix">Sanayi ve Ticaret A.Ş.</span>
+                    </p>
+                    <p class="text-small text-muted" style="margin-top: 1rem;">
+                        Nato Yolu Caddesi, Narin Sokak No: 3/4,<br>
+                        İstanbul, Türkiye
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.products">Products</h4>
+                    <ul>
+                        <li><a href="products.html" data-i18n="footer.plywood">Plywood</a></li>
+                        <li><a href="products.html#veneer" data-i18n="footer.veneer">Veneer (Papel)</a></li>
+                        <li><a href="products.html#lumber" data-i18n="footer.lumber_link">Lumber (Kereste)</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.culture">Culture</h4>
+                    <ul>
+                        <li><a href="teversanat.html" data-i18n="nav.sanat">Tever Sanat</a></li>
+                        <li><a href="teversanat-gallery.html" data-i18n="footer.art_collection">Art Collection</a></li>
+                        <li><a href="teversanat-apply.html" data-i18n="footer.for_artists">For Artists</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.connect">Connect</h4>
+                    <ul>
+                        <li><a href="mailto:m.eymen@teverorman.com">m.eymen@teverorman.com</a></li>
+                        <li><a href="mailto:info@teverorman.com">info@teverorman.com</a></li>
+                        <li><a href="https://wa.me/905344141224">+90 534 414 12 24</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="margin-top: 4rem; padding-top: 2rem; text-align: center; font-size: 0.875rem; color: var(--color-text-muted); border-top: 1px solid var(--color-border);">
+                &copy;
+                <script>document.write(new Date().getFullYear())</script> Tever Orman Mamülleri A.Ş. | Global Trade &
+                Art.
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
