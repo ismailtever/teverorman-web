@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+build/
+web-build/
+
+# Environment secrets — NEVER commit these
+.env.local
+.env.production
+.env
+
+# Build artifacts
+*.ipa
+*.apk
+*.aab
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Expo generated
+expo-env.d.ts
+
+# EAS credentials (local only)
+credentials.json

@@ -16,11 +16,13 @@ const { width } = Dimensions.get('window');
 interface Props {
   visible: boolean;
   onComplete: () => void;
+  tutorialText?: string;
+  gameTitle?: string;
 }
 
-export const NeuroActivationWarmup = memo(({ visible, onComplete }: Props) => {
-  const [timeLeft, setTimeLeft] = useState(60);
-  const [phase, setPhase] = useState<1 | 2>(1);
+export const NeuroActivationWarmup = memo(({ visible, onComplete, tutorialText, gameTitle }: Props) => {
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [phase, setPhase] = useState<1 | 2 | 3>(1);
   const [isComplete, setIsComplete] = useState(false);
   const [taps, setTaps] = useState(0);
 
@@ -33,18 +35,17 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete }: Props) => {
     if (!visible) return;
 
     // Reset state on visible
-    setTimeLeft(60);
+    setTimeLeft(30);
     setPhase(1);
     setIsComplete(false);
     setTaps(0);
     progress.value = 0;
 
-    // Breathing Animation (4s in, 2s hold, 4s out)
+    // Breathing Animation
     breatheScale.value = withRepeat(
       withSequence(
-        withTiming(1.6, { duration: 4000, easing: Easing.inOut(Easing.ease) }),
-        withTiming(1.6, { duration: 2000 }), // Hold
-        withTiming(1.0, { duration: 4000, easing: Easing.inOut(Easing.ease) })
+        withTiming(1.6, { duration: 3000, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1.0, { duration: 3000, easing: Easing.inOut(Easing.ease) })
       ),
       -1,
       true
@@ -57,7 +58,11 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete }: Props) => {
           finish();
           return 0;
         }
-        if (prev === 41) setPhase(2);
+        
+        // Phase shifts for 30s total
+        if (prev === 21) setPhase(2);
+        if (prev === 11) setPhase(3);
+        
         return prev - 1;
       });
     }, 1000);
@@ -111,8 +116,8 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete }: Props) => {
           >
             {!isComplete ? (
               <View style={styles.phaseContainer}>
-                <ThemedText style={styles.title}>{I18n.t('warmupTitle')}</ThemedText>
-                <ThemedText style={styles.subtitle}>{I18n.t('warmupSubtitle')}</ThemedText>
+                <ThemedText style={styles.title}>{gameTitle || I18n.t('warmupTitle')}</ThemedText>
+                <ThemedText style={styles.subtitle}>{phase === 3 ? (I18n.t('howToPlay') || 'How to Play') : I18n.t('warmupSubtitle')}</ThemedText>
 
                 <View style={styles.visualArea}>
                   {phase === 1 ? (
@@ -124,7 +129,7 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete }: Props) => {
                       <ThemedText style={styles.phaseLabel}>{I18n.t('warmupBreathLabel')}</ThemedText>
                       <ThemedText style={styles.instruction}>{I18n.t('warmupBreathInstruct')}</ThemedText>
                     </View>
-                  ) : (
+                  ) : phase === 2 ? (
                     <View style={styles.motorArea}>
                       <Activity size={40} color={Colors.mentra.brandAccent} />
                       <ThemedText style={styles.phaseLabel}>{I18n.t('warmupMotorLabel')}</ThemedText>
@@ -144,6 +149,14 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete }: Props) => {
                            <ThemedText style={styles.tapText}>R</ThemedText>
                         </Pressable>
                       </View>
+                    </View>
+                  ) : (
+                    <View style={styles.tutorialArea}>
+                       <Animated.View entering={FadeIn.delay(300)} style={styles.tutorialIcon}>
+                          <Sparkles size={48} color={Colors.mentra.brandPrimary} />
+                       </Animated.View>
+                       <ThemedText style={styles.phaseLabel}>{I18n.t('howToPlay')}</ThemedText>
+                       <ThemedText style={styles.tutorialText}>{tutorialText || I18n.t('descDefault')}</ThemedText>
                     </View>
                   )}
                 </View>
@@ -262,6 +275,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 30,
     lineHeight: 26,
+  },
+  tutorialArea: {
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  tutorialIcon: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: Colors.mentra.brandPrimary + '22',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: Colors.mentra.brandPrimary + '44',
+  },
+  tutorialText: {
+    fontSize: 18,
+    color: '#FFF',
+    textAlign: 'center',
+    lineHeight: 26,
+    fontWeight: '600',
   },
   tapTargets: {
     flexDirection: 'row',

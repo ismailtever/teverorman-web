@@ -1,0 +1,45 @@
+{
+  "cli": {
+    "version": ">= 16.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true,
+        "credentialsSource": "remote"
+      },
+      "env": {
+        "EXPO_PUBLIC_REVENUECAT_APPLE_KEY": "test_KSnsCWsmXISyFbUcsTvBIiAnuXs",
+        "EXPO_PUBLIC_REVENUECAT_GOOGLE_KEY": "",
+        "EXPO_PUBLIC_GEMINI_KEY": "AIzaSyBN2Z_r3wQDXmtQJkdz_HsAhoXDOxz0Pso"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "credentialsSource": "remote"
+      },
+      "env": {
+        "EXPO_PUBLIC_REVENUECAT_APPLE_KEY": "test_KSnsCWsmXISyFbUcsTvBIiAnuXs",
+        "EXPO_PUBLIC_REVENUECAT_GOOGLE_KEY": "",
+        "EXPO_PUBLIC_GEMINI_KEY": "AIzaSyBN2Z_r3wQDXmtQJkdz_HsAhoXDOxz0Pso"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "ios": {
+        "credentialsSource": "remote"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "eymen@tevertechnology.com"
+      }
+    }
+  }
+}

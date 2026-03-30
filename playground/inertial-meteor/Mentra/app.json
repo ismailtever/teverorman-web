@@ -1,0 +1,117 @@
+{
+  "expo": {
+    "name": "Mentra",
+    "slug": "Mentra",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "mentra",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tevertechnology.mentra",
+      "buildNumber": "1",
+      "associatedDomains": [
+        "applinks:tevertechnology.com"
+      ],
+      "infoPlist": {
+        "NSUserTrackingUsageDescription": "Mentra does not track you for advertising. This permission is requested by our payment processor to restore your purchases.",
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIRequiredDeviceCapabilities": [
+          "armv7"
+        ],
+        "UIBackgroundModes": [],
+        "NSCameraUsageDescription": "Mentra does not use your camera.",
+        "NSMicrophoneUsageDescription": "Mentra does not use your microphone.",
+        "NSPhotoLibraryUsageDescription": "Mentra does not access your photo library.",
+        "UISupportedInterfaceOrientations": [
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationPortraitUpsideDown"
+        ]
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "CA92.1"
+            ]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "C617.1"
+            ]
+          }
+        ],
+        "NSPrivacyCollectedDataTypes": [],
+        "NSPrivacyTracking": false
+      },
+      "deploymentTarget": "16.0",
+      "entitlements": {
+        "aps-environment": "production",
+        "com.apple.developer.associated-domains": [
+          "applinks:tevertechnology.com"
+        ]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
+      ],
+      "expo-build-properties"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "description": "Mentra trains your brain with science-backed cognitive exercises, AI coaching, and personalized programs for focus, memory, speed, and resilience.",
+    "githubUrl": "https://github.com/eymentever/mentra-ios",
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F8FAF9"
+    },
+    "extra": {
+      "eas": {
+        "projectId": ""
+      },
+      "appStoreUrl": "https://apps.apple.com/app/mentra/id0000000000",
+      "supportUrl": "https://www.tevertechnology.com/support",
+      "privacyPolicyUrl": "https://www.tevertechnology.com/mentra-privacy"
+    },
+    "locales": {
+      "en": "./locales/en.json",
+      "hi": "./locales/hi.json",
+      "tr": "./locales/tr.json",
+      "ar": "./locales/ar.json",
+      "fr": "./locales/fr.json",
+      "de": "./locales/de.json"
+    }
+  }
+}

@@ -1,0 +1,124 @@
+import React from 'react';
+import { TouchableOpacity, StyleSheet, View, ActivityIndicator, TouchableOpacityProps } from 'react-native';
+import { ThemedText } from '../themed-text';
+import { Colors } from '@/constants/Colors';
+import { Metrics } from '@/constants/Theme';
+
+interface ButtonProps extends TouchableOpacityProps {
+    title: string;
+    icon?: React.ReactNode;
+    loading?: boolean;
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+    size?: 'small' | 'medium' | 'large';
+    fullWidth?: boolean;
+}
+
+const getVariantColors = (variant: ButtonProps['variant']) => {
+    switch (variant) {
+        case 'primary':
+            return {
+                bg: Colors.mentra.brandPrimary,
+                text: Colors.mentra.surface,
+                border: Colors.mentra.brandPrimary,
+            };
+        case 'secondary':
+            return {
+                bg: Colors.mentra.surface2,
+                text: Colors.mentra.text,
+                border: Colors.mentra.surface2,
+            };
+        case 'outline':
+            return {
+                bg: 'transparent',
+                text: Colors.mentra.brandPrimary,
+                border: Colors.mentra.border,
+            };
+        case 'ghost':
+            return {
+                bg: 'transparent',
+                text: Colors.mentra.textDim,
+                border: 'transparent',
+            };
+        default:
+            return {
+                bg: Colors.mentra.brandPrimary,
+                text: Colors.mentra.surface,
+                border: Colors.mentra.brandPrimary,
+            };
+    }
+};
+
+export const AppButton = ({
+    title,
+    icon,
+    loading = false,
+    variant = 'primary',
+    size = 'medium',
+    fullWidth = false,
+    style,
+    disabled,
+    ...props
+}: ButtonProps) => {
+    const colors = getVariantColors(variant);
+
+    const height = size === 'small' ? 36 : size === 'medium' ? 48 : 56;
+    const padding = size === 'small' ? 12 : size === 'medium' ? 20 : 24;
+    const fontSize = size === 'small' ? 14 : size === 'medium' ? 16 : 18;
+
+    return (
+        <TouchableOpacity
+            style={[
+                styles.button,
+                {
+                    backgroundColor: colors.bg,
+                    borderColor: colors.border,
+                    height,
+                    paddingHorizontal: padding,
+                    width: fullWidth ? '100%' : 'auto',
+                    opacity: disabled || loading ? 0.6 : 1,
+                },
+                style
+            ]}
+            disabled={disabled || loading}
+            activeOpacity={0.8}
+            {...props}
+        >
+            {loading ? (
+                <ActivityIndicator color={colors.text} size="small" />
+            ) : (
+                <View style={styles.contentContainer}>
+                    {icon && <View style={styles.iconContainer}>{icon}</View>}
+                    <ThemedText style={[styles.text, { color: colors.text, fontSize }]}>
+                        {title}
+                    </ThemedText>
+                </View>
+            )}
+        </TouchableOpacity>
+    );
+};
+
+export const PrimaryButton = (props: Omit<ButtonProps, 'variant'>) => <AppButton variant="primary" {...props} />;
+export const SecondaryButton = (props: Omit<ButtonProps, 'variant'>) => <AppButton variant="secondary" {...props} />;
+export const GhostButton = (props: Omit<ButtonProps, 'variant'>) => <AppButton variant="ghost" {...props} />;
+
+const styles = StyleSheet.create({
+    button: {
+        borderRadius: Metrics.radius.xl,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+    },
+    contentContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    iconContainer: {
+        marginRight: 8,
+    },
+    text: {
+        fontWeight: '600',
+        letterSpacing: 0.3,
+    }
+});

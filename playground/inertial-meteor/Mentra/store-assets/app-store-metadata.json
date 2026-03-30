@@ -1,0 +1,100 @@
+{
+  "_note": "App Store Connect metadata. Fill in before submission.",
+  "app_name": "Mentra — Brain Training",
+  "subtitle": "Focus, Memory & AI Coach",
+  "bundle_id": "com.tevertechnology.mentra",
+  "sku": "mentra-001",
+  "primary_category": "Healthcare & Fitness",
+  "secondary_category": "Education",
+  "content_rating": "4+",
+  "price_tier": "Free (with IAP)",
+  "localizations": {
+    "en-US": {
+      "name": "Mentra — Brain Training",
+      "subtitle": "Focus, Memory & AI Coach",
+      "promotional_text": "Train your brain. Know your mind.",
+      "description": "Mentra is a science-backed cognitive training app that helps you overcome brain fog, sharpen focus, strengthen memory, and build mental resilience — with an AI coach guiding you every step.\n\nWHY MENTRA?\nMost people feel mentally foggy, distracted, or forgetful but don't know why. Mentra diagnoses your 5 cognitive domains and builds a personalized training program around your weakest link.\n\n5 COGNITIVE DOMAINS\n🎯 Focus — Beat distraction and build deep work capacity\n🧠 Memory — Strengthen working memory and recall\n⚡ Speed — Sharpen processing speed and reaction time\n💡 Logic — Train abstract reasoning and problem solving\n🛡️ Resilience — Build stress tolerance and mental flexibility\n\nBRAIN GAMES\n• Grid Focus (Schulte Table) — Expand peripheral vision\n• Memory Grid — Train hippocampal pattern encoding\n• Speed Match — Rapid cognitive pattern recognition\n\nAI COACH\nChat with your personal AI cognitive coach — get personalized advice on focus, memory, stress, and brain fog based on your performance data. 10 free messages/day.\n\nDAILY TRAINING\n• Adaptive difficulty that grows with you\n• Weekly themes based on your weakest domain\n• 12-minute structured daily sessions\n\nJOURNAL\nTrack your mood, sleep, and cognitive state daily. Understand the patterns behind your mental performance.\n\nPRIVACY FIRST\nAll your data stays on your device. No data sold. No ads. Just training.\n\nMENTRA PRO\n• Unlimited AI Coach messages\n• Advanced radar diagnostics\n• Premium routines (Morning Reset, Deep Focus, Sleep Wind-Down)\n• All future features\n\nMonthly and annual plans available. Free trial included.",
+      "keywords": "brain training,focus,memory,cognitive,productivity,ADHD,brain fog,mental fitness,AI coach,concentration,JEE,UPSC,study,India",
+      "support_url": "https://www.tevertechnology.com/support",
+      "marketing_url": "https://www.tevertechnology.com/mentra",
+      "privacy_policy_url": "https://www.tevertechnology.com/mentra-privacy"
+    },
+    "tr": {
+      "name": "Mentra — Beyin Antrenmanı",
+      "subtitle": "Odak, Hafıza & Yapay Zeka Koçu",
+      "promotional_text": "Zihninizi antrenman yapın. Kendinizi tanıyın.",
+      "description": "Mentra, beyin sisini aşmanıza, odaklanmanızı keskinleştirmenize, hafızanızı güçlendirmenize ve zihinsel dayanıklılık oluşturmanıza yardımcı olan bilim temelli bir bilişsel antrenman uygulamasıdır.\n\nNEDEN MENTRA?\nÇoğu insan zihinsel olarak sisli, dağınık veya unutkan hisseder ama nedenini bilmez. Mentra 5 bilişsel alanınızı teşhis eder ve en zayıf halkınız etrafında kişiselleştirilmiş bir antrenman programı oluşturur.\n\n5 BİLİŞSEL ALAN\n🎯 Odak — Dikkatin dağılmasını yenin\n🧠 Hafıza — Çalışma belleğini güçlendirin\n⚡ Hız — İşlem hızını keskinleştirin\n💡 Mantık — Soyut akıl yürütmeyi geliştirin\n🛡️ Dayanıklılık — Stres toleransı oluşturun\n\nYAPAY ZEKA KOÇU\nKişisel yapay zeka bilişsel koçunuzla sohbet edin — performans verilerinize dayalı odak, hafıza ve beyin sisi konularında kişiselleştirilmiş tavsiye alın.\n\nGİZLİLİK ÖNCELİKLİ\nTüm verileriniz cihazınızda kalır. Veri satışı yok. Reklam yok.",
+      "keywords": "beyin antrenmanı,odak,hafıza,bilişsel,verimlilik,beyin sisi,zihinsel fitness,yapay zeka koç,konsantrasyon"
+    },
+    "ar": {
+      "name": "منترا — تدريب الدماغ",
+      "subtitle": "التركيز والذاكرة والمدرب الذكي",
+      "promotional_text": "درّب عقلك. اعرف ذهنك.",
+      "description": "منترا تطبيق تدريب معرفي مدعوم علمياً يساعدك على التغلب على ضباب الدماغ، وتحسين التركيز، وتقوية الذاكرة، وبناء المرونة الذهنية — مع مدرب ذكاء اصطناعي يرشدك في كل خطوة.\n\nلماذا منترا؟\nيشعر معظم الناس بالضبابية الذهنية أو التشتت لكنهم لا يعرفون السبب. منترا يشخّص مجالاتك المعرفية الخمس ويبني برنامجاً مخصصاً حول نقطة ضعفك.\n\nالمجالات المعرفية الخمسة\n🎯 التركيز — تغلب على التشتت\n🧠 الذاكرة — قوّ ذاكرة العمل\n⚡ السرعة — طوّر سرعة المعالجة\n💡 المنطق — درّب التفكير المجرد\n🛡️ المرونة — ابنِ تحمل الضغط\n\nالخصوصية أولاً\nجميع بياناتك تبقى على جهازك. لا بيع للبيانات. لا إعلانات.",
+      "keywords": "تدريب الدماغ,تركيز,ذاكرة,إنتاجية,ضباب الدماغ,لياقة ذهنية,مدرب ذكاء اصطناعي,تنمية بشرية,رمضان"
+    },
+    "fr-FR": {
+      "name": "Mentra — Entraînement Cérébral",
+      "subtitle": "Focus, Mémoire & Coach IA",
+      "promotional_text": "Entraînez votre cerveau. Connaissez votre esprit.",
+      "description": "Mentra est une application d'entraînement cognitif scientifique qui vous aide à surmonter le brouillard mental, à améliorer votre concentration, votre mémoire et votre résilience mentale.\n\nPOURQUOI MENTRA?\nMentra diagnostique vos 5 domaines cognitifs et crée un programme personnalisé.\n\n5 DOMAINES COGNITIFS\n🎯 Concentration · 🧠 Mémoire · ⚡ Vitesse · 💡 Logique · 🛡️ Résilience\n\nCOACH IA\nDiscutez avec votre coach cognitif personnel pour des conseils sur la concentration, la mémoire et le stress.\n\nCONFIDENTIALITÉ\nToutes vos données restent sur votre appareil. Pas de publicité. Conforme RGPD.",
+      "keywords": "entraînement cérébral,mémoire,concentration,productivité,brouillard mental,coach IA,TDAH,bien-être mental"
+    },
+    "de-DE": {
+      "name": "Mentra — Gehirntraining",
+      "subtitle": "Fokus, Gedächtnis & KI-Coach",
+      "promotional_text": "Trainiere dein Gehirn. Erkenne deinen Geist.",
+      "description": "Mentra ist eine wissenschaftlich fundierte kognitive Trainings-App, die dir hilft, geistigen Nebel zu überwinden, Fokus zu schärfen und mentale Stärke aufzubauen.\n\nWARUM MENTRA?\nMentra diagnostiziert deine 5 kognitiven Bereiche und erstellt ein personalisiertes Programm.\n\n5 KOGNITIVE BEREICHE\n🎯 Fokus · 🧠 Gedächtnis · ⚡ Geschwindigkeit · 💡 Logik · 🛡️ Resilienz\n\nKI-COACH\nChatte mit deinem persönlichen kognitiven Coach für Tipps zu Fokus, Gedächtnis und Stress.\n\nDATENSCHUTZ\nAlle Daten bleiben auf deinem Gerät. DSGVO-konform. Keine Werbung.",
+      "keywords": "Gehirntraining,Gedächtnis,Konzentration,Produktivität,Geistige Fitness,KI Coach,ADHS,Gehirnnebel"
+    },
+    "hi": {
+      "name": "Mentra — ब्रेन ट्रेनिंग",
+      "subtitle": "फोकस, याददाश्त और AI कोच",
+      "promotional_text": "अपने दिमाग को ट्रेन करें। अपने मन को जानें।",
+      "description": "Mentra एक विज्ञान-आधारित संज्ञानात्मक प्रशिक्षण ऐप है जो आपको मानसिक धुंध को दूर करने, फोकस तेज करने, याददाश्त मजबूत करने और मानसिक लचीलापन बनाने में मदद करता है — AI कोच के साथ।\n\nMENTRA क्यों?\nपरीक्षा की तैयारी, IT काम का बोझ, या रोजमर्रा का तनाव — Mentra आपके 5 संज्ञानात्मक क्षेत्रों का विश्लेषण करता है और आपकी कमजोरी के आधार पर व्यक्तिगत प्रशिक्षण बनाता है।\n\n5 संज्ञानात्मक क्षेत्र\n🎯 फोकस — ध्यान भटकाना बंद करें\n🧠 याददाश्त — कार्यशील स्मृति मजबूत करें\n⚡ गति — प्रसंस्करण गति तेज करें\n💡 तर्क — अमूर्त सोच विकसित करें\n🛡️ लचीलापन — तनाव सहनशीलता बनाएं\n\nAI कोच\nअपने व्यक्तिगत AI कोच से बात करें — फोकस, याददाश्त और तनाव पर विशेषज्ञ सलाह लें। प्रतिदिन 10 मुफ्त संदेश।\n\nगोपनीयता पहले\nसभी डेटा आपके डिवाइस पर रहता है। DPDP Act 2023 के अनुसार।\n\nMENTRA PRO\n• असीमित AI कोच संदेश\n• उन्नत रडार डायग्नोस्टिक्स\n• प्रीमियम दिनचर्या\nमासिक और वार्षिक योजनाएं उपलब्ध।",
+      "keywords": "ब्रेन ट्रेनिंग,फोकस,याददाश्त,JEE,UPSC,तनाव,मानसिक स्वास्थ्य,AI कोच,उत्पादकता,एकाग्रता",
+      "support_url": "https://www.tevertechnology.com/support",
+      "marketing_url": "https://www.tevertechnology.com/mentra",
+      "privacy_policy_url": "https://www.tevertechnology.com/mentra-privacy"
+    }
+  },
+  "iap_products": [
+    {
+      "product_id": "com.tevertechnology.mentra.pro.monthly",
+      "type": "Auto-Renewable Subscription",
+      "reference_name": "Mentra Pro Monthly",
+      "subscription_group": "Mentra Pro",
+      "duration": "1 Month",
+      "price_tier": "Tier 5 (~$4.99)"
+    },
+    {
+      "product_id": "com.tevertechnology.mentra.pro.yearly",
+      "type": "Auto-Renewable Subscription",
+      "reference_name": "Mentra Pro Annual",
+      "subscription_group": "Mentra Pro",
+      "duration": "1 Year",
+      "price_tier": "Tier 25 (~$29.99)",
+      "free_trial": "7 days"
+    }
+  ],
+  "age_rating_answers": {
+    "cartoon_or_fantasy_violence": "None",
+    "realistic_violence": "None",
+    "sexual_content": "None",
+    "nudity": "None",
+    "profanity": "None",
+    "alcohol_tobacco": "None",
+    "gambling": "None",
+    "horror": "None",
+    "medical_treatment_info": "None",
+    "unrestricted_web_access": "No",
+    "gambling_contests": "No"
+  },
+  "review_notes": "Test account not required — app is fully usable without login. AI Coach feature requires internet. RevenueCat test key is used in builds — real key set via EAS secrets for production. The app targets cognitive wellness, not medical treatment.",
+  "screenshots_required": {
+    "iphone_6_7_inch": "6 screenshots (1290x2796)",
+    "iphone_5_5_inch": "6 screenshots (1242x2208)",
+    "ipad_pro_12_9_inch": "6 screenshots (2048x2732)"
+  },
+  "_india_note": "For India: Set INR pricing in App Store Connect. Recommended: ₹399/month, ₹2499/year. India is a price-sensitive market — consider a lower tier."
+}
