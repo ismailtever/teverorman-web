@@ -89,8 +89,8 @@ export default function FeatureGatePaywall() {
 
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                 <View style={styles.heroSection}>
-                    <ThemedText style={styles.headline}>Unlock Mentra Pro.</ThemedText>
-                    <ThemedText style={styles.subHeadline}>Access advanced training and deeper insights.</ThemedText>
+                    <ThemedText style={styles.headline}>{I18n.t('paywallProUnlock')}</ThemedText>
+                    <ThemedText style={styles.subHeadline}>{I18n.t('paywallProSubtitle')}</ThemedText>
                     <ThemedText style={[styles.subHeadline, { marginTop: 8, fontSize: 13, color: Colors.mentra.paywall.accent, fontWeight: '500' }]}>
                         {I18n.t('paywallValueFrame')}
                     </ThemedText>

@@ -13,7 +13,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { X, Brain, BrainCircuit, Play, Sparkles } from 'lucide-react-native';
-import { I18n } from '@/services/i18n';
+import { useI18n } from '@/services/i18n';
 import { NeuroActivationWarmup } from '@/components/game/NeuroActivationWarmup';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
@@ -26,22 +26,6 @@ import { Streak } from '@/services/streak';
 
 const { width } = Dimensions.get('window');
 
-const GO_STIMULI = [
-  { emoji: '🧠', label: 'Brain Boost', color: Colors.mentra.brandPrimary, bg: '#E8F5F0', tap: true  },
-  { emoji: '⚡', label: 'Focus Up',    color: '#10B981',                  bg: '#ECFDF5', tap: true  },
-  { emoji: '💡', label: 'Logic',       color: '#F59E0B',                  bg: '#FFFBEB', tap: true  },
-  { emoji: '🎯', label: 'Sharp',       color: '#6366F1',                  bg: '#EDECFD', tap: true  },
-];
-
-const NOGO_STIMULI = [
-  { emoji: '❤️',  label: '24 likes',       color: '#EF4444', bg: '#FEF2F2', tap: false },
-  { emoji: '💬',  label: '3 comments',     color: '#3B82F6', bg: '#DBEAFE', tap: false },
-  { emoji: '🔔',  label: 'Notification',   color: '#F59E0B', bg: '#FFFBEB', tap: false },
-  { emoji: '👀',  label: '47 story views', color: '#8B5CF6', bg: '#F5F3FF', tap: false },
-  { emoji: '🔥',  label: 'Trending now',   color: '#EF4444', bg: '#FEF2F2', tap: false },
-  { emoji: '📲',  label: 'New message',    color: '#10B981', bg: '#ECFDF5', tap: false },
-];
-
 const TOTAL_ROUNDS = 20;
 const STIMULUS_MS  = 1000;
 const GAP_MS       = 500;
@@ -50,6 +34,24 @@ type GamePhase = 'intro' | 'playing' | 'results';
 
 export default function ImpulseControlGame() {
   const insets = useSafeAreaInsets();
+  const { t, lang } = useI18n();
+
+  const GO_STIMULI = React.useMemo(() => [
+    { emoji: '🧠', label: t('icStimBrain'), color: Colors.mentra.brandPrimary, bg: '#E8F5F0', tap: true  },
+    { emoji: '⚡', label: t('icStimFocus'), color: '#10B981',                  bg: '#ECFDF5', tap: true  },
+    { emoji: '💡', label: t('icStimLogic'), color: '#F59E0B',                  bg: '#FFFBEB', tap: true  },
+    { emoji: '🎯', label: t('icStimSharp'), color: '#6366F1',                  bg: '#EDECFD', tap: true  },
+  ], [lang, t]);
+
+  const NOGO_STIMULI = React.useMemo(() => [
+    { emoji: '❤️',  label: t('icBaitLikes'),       color: '#EF4444', bg: '#FEF2F2', tap: false },
+    { emoji: '💬',  label: t('icBaitComments'),     color: '#3B82F6', bg: '#DBEAFE', tap: false },
+    { emoji: '🔔',  label: t('icBaitNotif'),   color: '#F59E0B', bg: '#FFFBEB', tap: false },
+    { emoji: '👀',  label: t('icBaitViews'), color: '#8B5CF6', bg: '#F5F3FF', tap: false },
+    { emoji: '🔥',  label: t('icBaitTrending'),   color: '#EF4444', bg: '#FEF2F2', tap: false },
+    { emoji: '📲',  label: t('icBaitMessage'),    color: '#10B981', bg: '#ECFDF5', tap: false },
+  ], [lang, t]);
+
   const [phase, setPhase]           = useState<GamePhase>('intro');
   const [score, setScore]           = useState(0);
   const [showWarmup, setShowWarmup] = useState(false);
@@ -70,6 +72,7 @@ export default function ImpulseControlGame() {
   const sessionStartTime = useRef(0);
   const rtAllMs = useRef<number[]>([]);
   const rtCorrectMs = useRef<number[]>([]);
+  const lastStimTime = useRef<number>(0);
 
   const scale = useSharedValue(1);
   const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
@@ -95,6 +98,7 @@ export default function ImpulseControlGame() {
     const stim = pool[Math.floor(Math.random() * pool.length)];
     setCurrent(stim);
     setFeedback(null);
+    lastStimTime.current = Date.now();
 
     // Auto-expire after STIMULUS_MS
     stimRef.current = setTimeout(() => {
@@ -110,7 +114,7 @@ export default function ImpulseControlGame() {
       setRound(nextRound);
       nextRef.current = setTimeout(() => showNext(nextRound), GAP_MS);
     }, STIMULUS_MS);
-  }, []);
+  }, [GO_STIMULI, NOGO_STIMULI, score, misses, falseAlarms, clearAllTimers]);
 
   const finishSession = useCallback(async (finalScore: number, finalMisses: number, finalFalseAlarms: number) => {
     clearAllTimers();
@@ -120,7 +124,7 @@ export default function ImpulseControlGame() {
     const duration = (Date.now() - sessionStartTime.current) / 1000;
     const totalPossible = TOTAL_ROUNDS;
     const correct = totalPossible - finalMisses - finalFalseAlarms;
-    const acc = correct / totalPossible;
+    const acc = totalPossible > 0 ? correct / totalPossible : 0;
     const avgRt = rtCorrectMs.current.length > 0 
       ? rtCorrectMs.current.reduce((a, b) => a + b, 0) / rtCorrectMs.current.length 
       : 800;
@@ -169,6 +173,7 @@ export default function ImpulseControlGame() {
     sessionStartTime.current = Date.now();
     rtAllMs.current = [];
     rtCorrectMs.current = [];
+    lastStimTime.current = 0;
 
     timerRef.current = setInterval(() => {
       setTimeLeft(t => {
@@ -181,29 +186,30 @@ export default function ImpulseControlGame() {
     }, 1000);
 
     nextRef.current = setTimeout(() => showNext(0), 500);
-  }, [showNext, clearAllTimers]);
+  }, [showNext, clearAllTimers, score, misses, falseAlarms, finishSession]);
 
   const handleTap = useCallback(() => {
     // BUG FIX: Prevent double-tap processing
     if (isProcessingRef.current || !current || phaseRef.current !== 'playing') return;
     isProcessingRef.current = true;
 
-    // Cancel the auto-expire timer
+    // Reset auto-expire
     if (stimRef.current) { clearTimeout(stimRef.current); stimRef.current = null; }
 
+    const rt = Date.now() - lastStimTime.current;
+
     if (current.tap) {
-      const rt = Date.now() - (stimRef.current ? Date.now() : Date.now()); // simplified as we don't have lastStimTime
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
       setScore(s => s + 10);
       setFeedback('correct');
-      rtCorrectMs.current.push(400); // Nominal RT for now
-      rtAllMs.current.push(400);
+      rtCorrectMs.current.push(rt);
+      rtAllMs.current.push(rt);
       scale.value = withSequence(withSpring(1.12), withSpring(1));
     } else {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
       setFalseAlarms(f => f + 1);
       setFeedback('wrong');
-      rtAllMs.current.push(200); // Impulsive tap = very fast RT
+      rtAllMs.current.push(rt);
       scale.value = withSequence(withTiming(0.92, { duration: 80 }), withSpring(1));
     }
 
@@ -212,33 +218,32 @@ export default function ImpulseControlGame() {
     roundRef.current = nextRound;
     setRound(nextRound);
     nextRef.current = setTimeout(() => showNext(nextRound), GAP_MS);
-  }, [current, showNext]);
+  }, [current, showNext, scale]);
 
   const inhibitionScore = Math.max(0, 100 - falseAlarms * 15 - misses * 5);
   const grade = inhibitionScore >= 85
-    ? { label: 'Elite Control',  color: Colors.mentra.success }
+    ? { label: t('eliteControl'),  color: Colors.mentra.success }
     : inhibitionScore >= 65
-    ? { label: 'Good Control',   color: '#6366F1' }
-    : { label: 'Keep Training',  color: '#F59E0B' };
+    ? { label: t('goodControl'),   color: '#6366F1' }
+    : { label: t('keepTraining'),  color: '#F59E0B' };
 
-  // ── Intro ──────────────────────────────────────────────────────────────────
   if (phase === 'intro') return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ headerShown: false }} />
       <StatusBar style="dark" />
-      <Pressable onPress={() => router.back()} style={styles.closeBtn}><X size={22} color={Colors.mentra.text} /></Pressable>
+      <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.closeBtn}><X size={22} color={Colors.mentra.text} /></Pressable>
       <Animated.View entering={FadeIn.springify()} style={styles.introBox}>
         <View style={styles.introIconBox}><Text style={{ fontSize: 48 }}>🛑</Text></View>
-        <Text style={styles.introTitle}>Impulse Control</Text>
+        <Text style={styles.introTitle}>{t('gameImpulseControl')}</Text>
         
         <View style={{ width: '100%', gap: 12, marginVertical: 20 }}>
           <View style={styles.instructionsBox}>
             <View style={styles.sectionHeader}>
               <Play size={14} color={Colors.mentra.brandPrimary} />
-              <ThemedText style={styles.sectionLabel}>{I18n.t('howToPlay') || 'How To Play'}</ThemedText>
+              <ThemedText style={styles.sectionLabel}>{t('howToPlay')}</ThemedText>
             </View>
             <ThemedText style={styles.cardDesc}>
-              {I18n.t('icIntroHow') || 'Tap brain stimuli, ignore social media bait.'}
+              {t('icIntroHow') || 'Tap brain stimuli, ignore social media bait.'}
             </ThemedText>
           </View>
 
@@ -246,26 +251,26 @@ export default function ImpulseControlGame() {
             <View style={styles.sectionHeader}>
               <BrainCircuit size={14} color={Colors.mentra.brandAccent} />
               <ThemedText style={[styles.sectionLabel, { color: Colors.mentra.brandAccent }]}>
-                {I18n.t('scienceBehind')}
+                {t('scienceBehind')}
               </ThemedText>
             </View>
             <ThemedText style={styles.scienceWhat}>
-              {I18n.t('icIntroWhat')}
+              {t('icIntroWhat')}
             </ThemedText>
             <ThemedText style={styles.scienceWhy}>
-              {I18n.t('icIntroWhy')}
+              {t('icIntroWhy')}
             </ThemedText>
           </View>
         </View>
 
         <Pressable onPress={() => setShowWarmup(true)} style={styles.startBtn}>
-          <Text style={styles.startBtnText}>Train Impulse Control</Text>
+          <Text style={styles.startBtnText}>{t('exploreStart')}</Text>
         </Pressable>
 
         <NeuroActivationWarmup 
             visible={showWarmup} 
-            gameTitle="IMPULSE CONTROL"
-            tutorialText={I18n.t('gameImpulseControlTutorial' as any)}
+            gameTitle={t('gameImpulseControl').toUpperCase()}
+            tutorialText={t('gameImpulseControlTutorial')}
             onComplete={() => {
                 setShowWarmup(false);
                 startGame();
@@ -275,30 +280,29 @@ export default function ImpulseControlGame() {
     </View>
   );
 
-  // ── Results ────────────────────────────────────────────────────────────────
   if (phase === 'results') return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ headerShown: false }} />
       <Animated.View entering={FadeIn.springify()} style={styles.resultsBox}>
         <Text style={styles.resultsEmoji}>🧠</Text>
-        <Text style={styles.resultsTitle}>Session Complete</Text>
+        <Text style={styles.resultsTitle}>{t('sessionCompleteText')}</Text>
         <View style={[styles.gradeBox, { borderColor: grade.color + '40' }]}>
           <Text style={[styles.gradeLabel, { color: grade.color }]}>{grade.label}</Text>
           <Text style={styles.inhibScore}>{inhibitionScore}<Text style={{ fontSize: 18 }}>/100</Text></Text>
-          <Text style={styles.inhibLabel}>Inhibitory Control Score</Text>
+          <Text style={styles.inhibLabel}>{t('mentraIndex')}</Text>
         </View>
         <View style={styles.statsRow}>
-          <View style={styles.statItem}><Text style={styles.statVal}>{score}</Text><Text style={styles.statLabel}>Score</Text></View>
-          <View style={styles.statItem}><Text style={[styles.statVal, { color: Colors.mentra.success }]}>{TOTAL_ROUNDS - misses - falseAlarms}</Text><Text style={styles.statLabel}>Correct</Text></View>
-          <View style={styles.statItem}><Text style={[styles.statVal, { color: Colors.mentra.danger }]}>{falseAlarms}</Text><Text style={styles.statLabel}>Bait taken</Text></View>
+          <View style={styles.statItem}><Text style={styles.statVal}>{score}</Text><Text style={styles.statLabel}>{t('scoreLabel')}</Text></View>
+          <View style={styles.statItem}><Text style={[styles.statVal, { color: Colors.mentra.success }]}>{TOTAL_ROUNDS - misses - falseAlarms}</Text><Text style={styles.statLabel}>{t('correctLabel')}</Text></View>
+          <View style={styles.statItem}><Text style={[styles.statVal, { color: Colors.mentra.danger }]}>{falseAlarms}</Text><Text style={styles.statLabel}>{t('baitTakenText')}</Text></View>
         </View>
         <Text style={styles.resultsTip}>
           {falseAlarms > 3
-            ? "Your impulse control needs work. Social media notifications are designed to override your prefrontal cortex. Train daily."
-            : "Good inhibitory control. Your 'stop' signal is strengthening. Keep training."}
+            ? t('icResultsTipLow')
+            : t('icResultsTipHigh')}
         </Text>
-        <Pressable onPress={startGame} style={styles.startBtn}><Text style={styles.startBtnText}>Play Again</Text></Pressable>
-        <Pressable onPress={() => router.back()} style={styles.backLink}><Text style={styles.backLinkText}>← Back</Text></Pressable>
+        <Pressable onPress={startGame} style={styles.startBtn}><Text style={styles.startBtnText}>{t('playAgain')}</Text></Pressable>
+        <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.backLink}><Text style={styles.backLinkText}>← {t('back')}</Text></Pressable>
       </Animated.View>
     </View>
   );
@@ -309,7 +313,7 @@ export default function ImpulseControlGame() {
       <Stack.Screen options={{ headerShown: false }} />
       <StatusBar style="dark" />
       <View style={styles.gameHeader}>
-        <Pressable onPress={() => { clearAllTimers(); router.back(); }} style={styles.closeBtn}>
+        <Pressable onPress={() => { clearAllTimers(); router.canGoBack() ? router.back() : router.replace('/'); }} style={styles.closeBtn}>
           <X size={20} color={Colors.mentra.text} />
         </Pressable>
         <View style={styles.timerBox}>
@@ -319,7 +323,7 @@ export default function ImpulseControlGame() {
       </View>
 
       <Text style={styles.instruction}>
-        {current?.tap === false ? "🚫 Don't tap!" : current?.tap ? '✅ Tap it!' : ''}
+        {current?.tap === false ? t('dontTap') : current?.tap ? t('tapIt') : ''}
       </Text>
 
       <Pressable onPress={handleTap} style={styles.stimArea}>
@@ -329,7 +333,7 @@ export default function ImpulseControlGame() {
               <Text style={styles.stimEmoji}>{current.emoji}</Text>
               <Text style={[styles.stimLabel, { color: current.color }]}>{current.label}</Text>
               {!current.tap && (
-                <View style={styles.stimBaitTag}><Text style={styles.stimBaitText}>SOCIAL MEDIA</Text></View>
+                <View style={styles.stimBaitTag}><Text style={styles.stimBaitText}>{t('socialMediaTag')}</Text></View>
               )}
             </Animated.View>
           </Animated.View>
@@ -341,7 +345,7 @@ export default function ImpulseControlGame() {
         )}
         {feedback === 'wrong' && (
           <Animated.View key="fb-wrong" entering={FadeIn} exiting={FadeOut} style={styles.feedbackPos}>
-            <Text style={[styles.feedbackText, { color: Colors.mentra.danger }]}>Bait! ✗</Text>
+            <Text style={[styles.feedbackText, { color: Colors.mentra.danger }]}>{t('baitLabel')} ✗</Text>
           </Animated.View>
         )}
       </Pressable>

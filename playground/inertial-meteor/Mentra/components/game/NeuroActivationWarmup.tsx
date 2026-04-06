@@ -83,7 +83,7 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete, tutorialText, 
     setIsComplete(true);
     finishTimeout.current = setTimeout(() => {
       onComplete();
-    }, 2000);
+    }, 2000) as any;
   };
 
   const animeCircleStyle = useAnimatedStyle(() => ({
@@ -167,7 +167,7 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete, tutorialText, 
                 <ThemedText style={styles.completeTitle}>{I18n.t('warmupComplete')}</ThemedText>
                 <View style={styles.shieldBadge}>
                    <Sparkles size={14} color={Colors.mentra.brandPrimary} />
-                   <ThemedText style={styles.shieldText}>CEREBRAL SHIELD ACTIVE</ThemedText>
+                   <ThemedText style={styles.shieldText}>{I18n.t('warmupShieldActive')}</ThemedText>
                 </View>
               </View>
             )}

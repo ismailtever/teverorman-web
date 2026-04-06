@@ -26,9 +26,15 @@ export function logCrashAttribute(key: string, value: string) {
 }
 
 export function recordError(error: Error, contextualData?: Record<string, any>) {
-    console.error(`[Error Recorded] ${error.message}`, contextualData);
+    // In production, log only the message — never expose stack or contextualData to console
+    if (__DEV__) {
+        console.error(`[Error Recorded] ${error.message}`, contextualData);
+    } else {
+        console.error(`[Mentra] Error: ${error.message}`);
+    }
 
     if (IS_FIREBASE_ENABLED) {
         // e.g., crashlytics().recordError(error);
     }
 }
+

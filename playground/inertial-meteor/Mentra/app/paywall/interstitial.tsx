@@ -1,3 +1,4 @@
+import { I18n } from '@/services/i18n';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, Dimensions, ImageBackground, InteractionManager, ActivityIndicator } from 'react-native';
 import { router, Stack } from 'expo-router';
@@ -12,7 +13,7 @@ import { getPremiumStatus, restoreFlow, purchasePlan, fetchOfferingsSafe, Offeri
 
 const { width, height } = Dimensions.get('window');
 
-// ─── Paywall 3: The "Saving Throw" Interstitial ──────────────────────────────
+// â”€â”€â”€ Paywall 3: The "Saving Throw" Interstitial â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Shown contextually, e.g. after failing a session or exiting a free feature.
 
 export default function InterstitialPaywall() {
@@ -52,7 +53,7 @@ export default function InterstitialPaywall() {
     };
 
     const priceText = offerings?.hasTrial
-        ? `Try 7 Days Free • Then ${offerings?.yearlyPkg?.product.priceString}/year`
+        ? `Try 7 Days Free â€¢ Then ${offerings?.yearlyPkg?.product.priceString}/year`
         : `${offerings?.yearlyPkg?.product.priceString || '$59.99'}/year`;
 
     const features = [
@@ -80,8 +81,8 @@ export default function InterstitialPaywall() {
 
                 {isReady ? (
                     <Animated.View entering={SlideInDown.springify().delay(100)} style={styles.card}>
-                        <Text style={styles.badge}>WAIT BEFORE YOU GO</Text>
-                        <Text style={styles.title}>Your mind is ready for more.</Text>
+                        <Text style={styles.badge}>{I18n.t('pwWait')}</Text>
+                        <Text style={styles.title}>{I18n.t('pwMind')}</Text>
                         <Text style={styles.subtext}>
                             Don't lose your momentum. Upgrade to Mentra Pro to permanently unlock
                             the tools required to structure your life.
@@ -106,10 +107,10 @@ export default function InterstitialPaywall() {
                             </Text>
                         </Pressable>
                         <Text style={styles.priceHints}>{loading ? "Loading..." : priceText}</Text>
-                        <Text style={styles.priceHints}>Cancel anytime.</Text>
+                        <Text style={styles.priceHints}>{I18n.t('pwCancel')}</Text>
 
                         <Pressable onPress={() => restoreFlow('interstitial_paywall')} style={{ marginTop: 24 }}>
-                            <Text style={styles.restoreText}>Restore Purchases</Text>
+                            <Text style={styles.restoreText}>{I18n.t('pwRestore')}</Text>
                         </Pressable>
                     </Animated.View>
                 ) : (
@@ -154,3 +155,4 @@ const styles = StyleSheet.create({
     priceHints: { fontSize: 12, color: Colors.mentra.muted, marginTop: 12 },
     restoreText: { fontSize: 13, color: Colors.mentra.textDim, fontWeight: '600', textDecorationLine: 'underline' }
 });
+

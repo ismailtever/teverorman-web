@@ -3,6 +3,7 @@ import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
+import { I18n } from '@/services/i18n';
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <View style={styles.section}>
@@ -17,8 +18,8 @@ export default function TermsScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ title: 'Terms of Service', headerBackTitle: 'Back' }} />
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Text style={styles.title}>Terms of Service</Text>
-        <Text style={styles.date}>Tever Technology — Last Updated: March 2026</Text>
+        <Text style={styles.title}>{I18n.t('legalTerms')}</Text>
+        <Text style={styles.date}>{I18n.t('legalLastUpdated')}</Text>
 
         <Section title="1. Acceptance">
           By downloading or using Mentra, you agree to these Terms. If you do not agree, do not use the app. These Terms form a legally binding agreement between you and Tever Technology.

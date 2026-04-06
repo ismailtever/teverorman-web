@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeIn, FadeInDown, useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { X, Brain, BrainCircuit, Play, Pause, RotateCcw, Sparkles } from 'lucide-react-native';
-import { I18n } from '@/services/i18n';
+import { useI18n } from '@/services/i18n';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
 import { Colors } from '@/constants/Colors';
@@ -23,25 +23,27 @@ import { Streak } from '@/services/streak';
 
 type Phase = 'setup' | 'focus' | 'done';
 
-const DURATIONS = [
-  { mins: 5,  label: '5 min',  desc: 'Starter',   color: '#10B981' },
-  { mins: 10, label: '10 min', desc: 'Builder',    color: Colors.mentra.brandPrimary },
-  { mins: 20, label: '20 min', desc: 'Deep Work',  color: '#6366F1' },
-  { mins: 30, label: '30 min', desc: 'Flow State', color: '#8B5CF6' },
-];
-
-const FOCUS_QUOTES = [
-  "Your brain is rebuilding its ability to hold a single thought.",
-  "Every second without checking your phone is a rep for your prefrontal cortex.",
-  "Boredom is not a problem — it's your dopamine system resetting.",
-  "The discomfort you feel is neuroplasticity happening.",
-  "Deep work is the skill social media stole. You're taking it back.",
-];
-
 import { NeuroActivationWarmup } from '@/components/game/NeuroActivationWarmup';
 
 export default function DeepFocusGame() {
   const insets = useSafeAreaInsets();
+  const { t, lang } = useI18n();
+
+  const DURATIONS = React.useMemo(() => [
+    { mins: 5,  label: t('dfDur5min'),  desc: t('dfDurStarter'),   color: '#10B981' },
+    { mins: 10, label: t('dfDur10min'), desc: t('dfDurBuilder'),    color: Colors.mentra.brandPrimary },
+    { mins: 20, label: t('dfDur20min'), desc: t('dfDurDeepWork'),  color: '#6366F1' },
+    { mins: 30, label: t('dfDur30min'), desc: t('dfDurFlowState'), color: '#8B5CF6' },
+  ], [lang]);
+
+  const FOCUS_QUOTES = React.useMemo(() => [
+    t('dfQuote1'),
+    t('dfQuote2'),
+    t('dfQuote3'),
+    t('dfQuote4'),
+    t('dfQuote5'),
+  ], [lang]);
+
   const [phase, setPhase]             = useState<Phase>('setup');
   const [selectedDur, setSelectedDur] = useState(DURATIONS[0]);
   const [task, setTask]               = useState('');
@@ -50,6 +52,14 @@ export default function DeepFocusGame() {
   const [showWarmup, setShowWarmup]   = useState(false);
   const [distractions, setDistractions] = useState(0);
   const [quoteIdx]                    = useState(Math.floor(Math.random() * FOCUS_QUOTES.length));
+
+  // Sync selected duration if language changes during setup
+  useEffect(() => {
+    if (phase === 'setup') {
+      const current = DURATIONS.find(d => d.mins === selectedDur.mins);
+      if (current) setSelectedDur(current);
+    }
+  }, [lang, phase]);
 
   // BUG FIX 1: Use a single ref for the interval — never recreate on state change
   const timerRef     = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -167,8 +177,8 @@ export default function DeepFocusGame() {
         <Stack.Screen options={{ headerShown: false }} />
         <StatusBar style="dark" />
         <View style={styles.header}>
-          <Pressable onPress={() => router.back()} style={styles.closeBtn}><X size={20} color={Colors.mentra.text} /></Pressable>
-          <Text style={styles.headerTitle}>Deep Focus</Text>
+          <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.closeBtn}><X size={20} color={Colors.mentra.text} /></Pressable>
+          <Text style={styles.headerTitle}>{t('dfTitle')}</Text>
           <View style={{ width: 40 }} />
         </View>
         <Animated.View entering={FadeIn.springify()} style={styles.setupContent}>
@@ -176,24 +186,24 @@ export default function DeepFocusGame() {
             <View style={styles.sectionHeader}>
               <BrainCircuit size={14} color={Colors.mentra.brandAccent} />
               <ThemedText style={[styles.sectionLabel, { color: Colors.mentra.brandAccent }]}>
-                {I18n.t('scienceBehind')}
+                {t('scienceBehind')}
               </ThemedText>
             </View>
             <ThemedText style={styles.scienceWhat}>
-              {I18n.t('dfIntroWhat')}
+              {t('dfIntroWhat')}
             </ThemedText>
             <ThemedText style={styles.scienceWhy}>
-              {I18n.t('dfIntroWhy')}
+              {t('dfIntroWhy')}
             </ThemedText>
           </View>
-          <Text style={styles.setupLabel}>WHAT WILL YOU WORK ON?</Text>
+          <Text style={styles.setupLabel}>{t('dfSetupWork')}</Text>
           <TextInput
             style={styles.taskInput}
-            placeholder="e.g. Read 20 pages, Write report intro..."
+            placeholder={t('dfSetupPlaceholder') || "e.g. Read 20 pages, Write report intro..."}
             placeholderTextColor={Colors.mentra.muted}
             value={task} onChangeText={setTask} multiline
           />
-          <Text style={styles.setupLabel}>CHOOSE DURATION</Text>
+          <Text style={styles.setupLabel}>{t('dfSetupDur')}</Text>
           <View style={styles.durGrid}>
             {DURATIONS.map(d => (
               <Pressable key={d.mins}
@@ -207,14 +217,14 @@ export default function DeepFocusGame() {
           </View>
           <Pressable onPress={() => setShowWarmup(true)} style={[styles.startBtn, { backgroundColor: selectedDur.color }]}>
             <Play size={18} color="#FFF" />
-            <Text style={styles.startBtnText}>Start Deep Focus</Text>
+            <Text style={styles.startBtnText}>{t('dfStart')}</Text>
           </Pressable>
         </Animated.View>
 
         <NeuroActivationWarmup 
             visible={showWarmup} 
             gameTitle="DEEP FOCUS"
-            tutorialText={I18n.t('gameDeepFocusTutorial' as any)}
+            tutorialText={t('gameDeepFocusTutorial')}
             onComplete={() => {
                 setShowWarmup(false);
                 startGame();
@@ -230,30 +240,26 @@ export default function DeepFocusGame() {
       <Stack.Screen options={{ headerShown: false }} />
       <Animated.View entering={FadeIn.springify()} style={styles.doneBox}>
         <Text style={{ fontSize: 72 }}>🎯</Text>
-        <Text style={styles.doneTitle}>Deep Work Done</Text>
-        <Text style={styles.doneTask}>{task || 'Focus session'}</Text>
+        <Text style={styles.doneTitle}>{t('dfDone')}</Text>
+        <Text style={styles.doneTask}>{task || t('dfFocusSession')}</Text>
         <View style={styles.doneStats}>
-          <View style={styles.doneStat}><Text style={styles.doneStatVal}>{selectedDur.mins}</Text><Text style={styles.doneStatLabel}>minutes</Text></View>
+          <View style={styles.doneStat}><Text style={styles.doneStatVal}>{selectedDur.mins}</Text><Text style={styles.doneStatLabel}>{t('dfMinutes')}</Text></View>
           <View style={styles.doneStat}>
             <Text style={[styles.doneStatVal, { color: focusScore >= 80 ? Colors.mentra.success : Colors.mentra.warning }]}>{focusScore}</Text>
-            <Text style={styles.doneStatLabel}>focus score</Text>
+            <Text style={styles.doneStatLabel}>{t('dfScore')}</Text>
           </View>
           <View style={styles.doneStat}>
             <Text style={[styles.doneStatVal, distractions > 0 ? { color: Colors.mentra.danger } : { color: Colors.mentra.success }]}>{distractions}</Text>
-            <Text style={styles.doneStatLabel}>pauses</Text>
+            <Text style={styles.doneStatLabel}>{t('dfPauses')}</Text>
           </View>
         </View>
         <Text style={styles.doneTip}>
           {distractions === 0
-            ? "Perfect focus. Your prefrontal cortex just got a full workout."
-            : `${distractions} pause${distractions > 1 ? 's' : ''}. Each one was a pull from your old habit. You still finished — that's the win.`}
+            ? t('dfBoredomTip')
+            : t('dfPauseTip', { count: distractions, plural: distractions > 1 ? 's' : '' })}
         </Text>
-        <Pressable onPress={() => setPhase('setup')} style={[styles.startBtn, { backgroundColor: selectedDur.color }]}>
-          <Text style={styles.startBtnText}>Another Session</Text>
-        </Pressable>
-        <Pressable onPress={() => router.back()} style={styles.backLink}>
-          <Text style={styles.backLinkText}>← Back to Home</Text>
-        </Pressable>
+        <Pressable onPress={startGame} style={styles.startBtn}><Text style={styles.startBtnText}>{t('playAgain')}</Text></Pressable>
+        <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.backLink}><Text style={styles.backLinkText}>← {t('back')}</Text></Pressable>
       </Animated.View>
     </View>
   );
@@ -277,7 +283,7 @@ export default function DeepFocusGame() {
         <View style={styles.timerCircle}>
           <View style={styles.timerCircleInner} />
           <Text style={styles.timerDisplay}>{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</Text>
-          <Text style={styles.timerLabel}>{isPaused ? 'PAUSED' : 'FOCUSED'}</Text>
+          <Text style={styles.timerLabel}>{isPaused ? t('timerPaused') : t('timerFocused')}</Text>
         </View>
         <Text style={styles.focusQuote}>"{FOCUS_QUOTES[quoteIdx]}"</Text>
       </Animated.View>

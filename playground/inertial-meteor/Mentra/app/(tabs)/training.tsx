@@ -13,31 +13,35 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 
 import { Colors } from '@/constants/Colors';
+import { I18n, useI18n } from '@/services/i18n';
 
 const { width } = Dimensions.get('window');
 const CHART_SIZE = width * 0.78;
-const CENTER = CHART_SIZE / 2;
 const RADIUS = CHART_SIZE * 0.34;
+const CENTER = CHART_SIZE / 2;
 const AnimatedPolygon = Animated.createAnimatedComponent(Polygon);
 
-const DIMENSIONS = [
-  { label: 'FOCUS',      key: 'focus',      icon: Target,      color: Colors.mentra.brandPrimary, bg: '#E8F5F0', emoji: '🎯', desc: 'Sustained attention & concentration' },
-  { label: 'MEMORY',     key: 'memory',     icon: BrainCircuit,color: '#6366F1',                  bg: '#EDECFD', emoji: '🧠', desc: 'Working memory & recall' },
-  { label: 'LOGIC',      key: 'logic',      icon: Activity,    color: '#F59E0B',                  bg: '#FFFBEB', emoji: '💡', desc: 'Reasoning & problem solving' },
-  { label: 'SPEED',      key: 'speed',      icon: Zap,         color: '#10B981',                  bg: '#ECFDF5', emoji: '⚡', desc: 'Processing speed & reaction time' },
-  { label: 'RESILIENCE', key: 'resilience', icon: ShieldPlus,  color: '#8B5CF6',                  bg: '#F5F3FF', emoji: '🛡️', desc: 'Mental flexibility & stress recovery' },
-];
-
-const SCORE_LABELS: Record<string, string> = {
-  focus: 'Drift detected at context switches.',
-  memory: 'Working memory above baseline.',
-  logic: 'Abstract reasoning needs attention.',
-  speed: 'Processing speed is solid.',
-  resilience: 'Recovery capacity building.',
-};
 
 export default function DiagnosticsScreen() {
   const insets = useSafeAreaInsets();
+  const { lang, t } = useI18n();
+
+  const DIMENSIONS = React.useMemo(() => [
+    { label: t('focus'),      key: 'focus',      icon: Target,      color: Colors.mentra.brandPrimary, bg: '#E8F5F0', emoji: '🎯', desc: t('descFocus') },
+    { label: t('memory'),     key: 'memory',     icon: BrainCircuit,color: '#6366F1',                  bg: '#EDECFD', emoji: '🧠', desc: t('descMemory') },
+    { label: t('logic'),      key: 'logic',      icon: Activity,    color: '#F59E0B',                  bg: '#FFFBEB', emoji: '💡', desc: t('descLogic') },
+    { label: t('speed'),      key: 'speed',      icon: Zap,         color: '#10B981',                  bg: '#ECFDF5', emoji: '⚡', desc: t('descSpeed') },
+    { label: t('resilience'), key: 'resilience', icon: ShieldPlus,  color: '#8B5CF6',                  bg: '#F5F3FF', emoji: '🛡️', desc: t('descResilience') },
+  ], [lang]);
+
+  const SCORE_LABELS: Record<string, string> = React.useMemo(() => ({
+    focus: t('prefrontalInhibitionDesc'),
+    memory: t('mgIntroWhy'),
+    logic: t('gfIntroWhy'),
+    speed: t('smIntroWhy'),
+    resilience: t('drIntroWhy'),
+  }), [lang]);
+
   const [scores, setScores] = useState({ focus: 55, memory: 72, logic: 41, speed: 68, resilience: 60 });
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -83,11 +87,23 @@ export default function DiagnosticsScreen() {
   };
 
   const animatedProps = useAnimatedProps(() => {
-    const pts = DIMENSIONS.map((dim, i) => {
-      const v = animValues[dim.key as keyof typeof animValues].value;
-      const { x, y } = getCoords(v, i, DIMENSIONS.length);
+    const keys = ['focus', 'memory', 'logic', 'speed', 'resilience'];
+    const total = 5;
+    
+    // Safety check for animValues initialization
+    const pts = keys.map((key, i) => {
+      const val = animValues[key as keyof typeof animValues];
+      if (!val) return `${CENTER},${CENTER}`;
+      
+      const v = val.value ?? 0;
+      const angle = (Math.PI * 2 * i) / total - Math.PI / 2;
+      const x = CENTER + RADIUS * v * Math.cos(angle);
+      const y = CENTER + RADIUS * v * Math.sin(angle);
+      
+      if (isNaN(x) || isNaN(y)) return `${CENTER},${CENTER}`;
       return `${x},${y}`;
     }).join(' ');
+    
     return { points: pts };
   });
 
@@ -100,13 +116,13 @@ export default function DiagnosticsScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>Diagnostics</Text>
-          <Text style={styles.headerSub}>Your cognitive fingerprint</Text>
+          <Text style={styles.headerTitle}>{t('diagnosticsTitle')}</Text>
+          <Text style={styles.headerSub}>{t('diagnosticsSub')}</Text>
         </View>
         <Pressable onPress={triggerRecalibration} disabled={isAnalyzing} style={({ pressed }) => [styles.recalcBtn, pressed && { opacity: 0.7 }]}>
           <RotateCcw size={15} color={isAnalyzing ? Colors.mentra.muted : Colors.mentra.brandPrimary} />
           <Text style={[styles.recalcText, isAnalyzing && { color: Colors.mentra.muted }]}>
-            {isAnalyzing ? 'Scanning...' : 'Recalibrate'}
+            {isAnalyzing ? t('scanning') : t('recalibrate')}
           </Text>
         </Pressable>
       </View>
@@ -118,12 +134,12 @@ export default function DiagnosticsScreen() {
           <LinearGradient colors={['#194031', '#0F2820']} style={StyleSheet.absoluteFill} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} />
           <View style={styles.scoreSumCircle} />
           <View>
-            <Text style={styles.scoreSumLabel}>MENTRA COGNITIVE INDEX</Text>
+            <Text style={styles.scoreSumLabel}>{t('mentraIndex')}</Text>
             <Text style={styles.scoreSumVal}>{avgScore}<Text style={styles.scoreSumMax}>/100</Text></Text>
           </View>
           <View style={styles.scoreSumRight}>
             <TrendingUp size={20} color={Colors.mentra.brandSecondary} />
-            <Text style={styles.scoreSumTrend}>+4 this week</Text>
+            <Text style={styles.scoreSumTrend}>{t('vsLastWeekPositive').replace('%{count}', '4')}</Text>
           </View>
         </Animated.View>
 
@@ -133,26 +149,28 @@ export default function DiagnosticsScreen() {
             {/* Grid rings */}
             {[0.2, 0.4, 0.6, 0.8, 1].map((level, li) => {
               const pts = DIMENSIONS.map((_, i) => { const { x, y } = getCoords(level, i, DIMENSIONS.length); return `${x},${y}`; }).join(' ');
-              return <Polygon key={li} points={pts} stroke={Colors.mentra.border} strokeWidth="1" fill="none" opacity={li === 4 ? 0.8 : 0.4} />;
+              return <Polygon key={li} {...({ points: pts, stroke: Colors.mentra.border, strokeWidth: "1", fill: "none", opacity: li === 4 ? 0.8 : 0.4 } as any)} />;
             })}
             {/* Axis lines */}
             {DIMENSIONS.map((_, i) => {
               const { x, y } = getCoords(1.05, i, DIMENSIONS.length);
-              return <Line key={i} x1={CENTER} y1={CENTER} x2={x} y2={y} stroke={Colors.mentra.border} strokeWidth="1" opacity={0.5} />;
+              return <Line key={i} {...({ x1: CENTER, y1: CENTER, x2: x, y2: y, stroke: Colors.mentra.border, strokeWidth: "1", opacity: 0.5 } as any)} />;
             })}
             {/* Score fill polygon */}
             <AnimatedPolygon
-              animatedProps={animatedProps}
-              fill={Colors.mentra.brandPrimary + '30'}
-              stroke={Colors.mentra.brandPrimary}
-              strokeWidth="2.5"
-              strokeLinejoin="round"
+              {...({
+                animatedProps: animatedProps,
+                fill: Colors.mentra.brandPrimary + '30',
+                stroke: Colors.mentra.brandPrimary,
+                strokeWidth: "2.5",
+                strokeLinejoin: "round"
+              } as any)}
             />
             {/* Score dots */}
             {DIMENSIONS.map((dim, i) => {
               const v = scores[dim.key as keyof typeof scores] / 100;
               const { x, y } = getCoords(v, i, DIMENSIONS.length);
-              return <Circle key={i} cx={x} cy={y} r={5} fill={dim.color} />;
+              return <Circle key={i} {...({ cx: x, cy: y, r: 5, fill: dim.color } as any)} />;
             })}
           </Svg>
 
@@ -219,7 +237,7 @@ export default function DiagnosticsScreen() {
                   {isWeak && (
                     <View style={styles.weakBadge}>
                       <AlertCircle size={10} color={Colors.mentra.danger} />
-                      <Text style={styles.weakBadgeText}>Focus here</Text>
+                      <Text style={styles.weakBadgeText}>{t('focusHere')}</Text>
                     </View>
                   )}
                 </View>
@@ -235,7 +253,7 @@ export default function DiagnosticsScreen() {
 
         {/* Recommended Program */}
         <Animated.View entering={FadeInDown.delay(280).springify()}>
-          <Text style={styles.sectionTitle}>RECOMMENDED PROGRAM</Text>
+          <Text style={styles.sectionTitle}>{t('recommendedProgram')}</Text>
           <Pressable
             style={({ pressed }) => [styles.programCard, pressed && { opacity: 0.95, transform: [{ scale: 0.99 }] }]}
             onPress={() => router.push('/training/daily-session' as any)}
@@ -243,23 +261,23 @@ export default function DiagnosticsScreen() {
             <LinearGradient colors={['#194031', '#20503D']} style={StyleSheet.absoluteFill} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} />
             <View style={styles.programGlow} />
             <View style={styles.programHeader}>
-              <View style={styles.programTag}><Text style={styles.programTagText}>7-DAY PROTOCOL</Text></View>
+              <View style={styles.programTag}><Text style={styles.programTagText}>{t('protocol7Day')}</Text></View>
               <Text style={{ fontSize: 22 }}>{weakDim.emoji}</Text>
             </View>
-            <Text style={styles.programTitle}>{weakDim.label} Mastery</Text>
+            <Text style={styles.programTitle}>{weakDim.label} {t('mastery')}</Text>
             <Text style={styles.programDesc}>
-              Science-backed exercises to sharpen your {weakDim.key} capacity. Used by high-performers and neuroscientists. Just 12 min/day.
+              {t('dailyActivationSubtitle' as any)}
             </Text>
             <View style={styles.programFooter}>
-              <Text style={styles.programMeta}>Est. 12 min/day · 7 days</Text>
-              <View style={styles.programCTA}><Text style={styles.programCTAText}>Start Program</Text></View>
+              <Text style={styles.programMeta}>{t('estTime')}</Text>
+              <View style={styles.programCTA}><Text style={styles.programCTAText}>{t('programStart')}</Text></View>
             </View>
           </Pressable>
         </Animated.View>
 
         {/* All Programs */}
         <Animated.View entering={FadeInDown.delay(320).springify()}>
-          <Text style={[styles.sectionTitle, { marginTop: 24 }]}>ALL TRAINING PROGRAMS</Text>
+          <Text style={[styles.sectionTitle, { marginTop: 24 }]}>{t('allPrograms')}</Text>
           {DIMENSIONS.map((dim, i) => {
             const score = scores[dim.key as keyof typeof scores];
             return (
@@ -272,7 +290,7 @@ export default function DiagnosticsScreen() {
                   <Text style={{ fontSize: 18 }}>{dim.emoji}</Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.programRowTitle}>{dim.label} Training</Text>
+                  <Text style={styles.programRowTitle}>{dim.label} {t('training')}</Text>
                   <Text style={styles.programRowSub}>{dim.desc}</Text>
                 </View>
                 <View style={{ alignItems: 'flex-end', gap: 4 }}>
@@ -289,7 +307,7 @@ export default function DiagnosticsScreen() {
             onPress={() => router.push('/(tabs)/explore' as any)}
             style={({ pressed }) => [styles.browseBtn, pressed && { opacity: 0.8 }]}
           >
-            <Text style={styles.browseBtnText}>Browse Full Library</Text>
+            <Text style={styles.browseBtnText}>{t('browseLibrary')}</Text>
             <ChevronRight size={16} color={Colors.mentra.brandPrimary} />
           </Pressable>
         </Animated.View>

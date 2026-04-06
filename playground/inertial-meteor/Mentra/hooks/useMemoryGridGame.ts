@@ -18,6 +18,7 @@ export function useMemoryGridGame(isPro: boolean = false) {
     const [currentPhase, setCurrentPhase] = useState<1 | 2 | 3>(1);
     const [accuracy, setAccuracy] = useState(0);
     const [reactionTimeMs, setReactionTimeMs] = useState(0);
+    const isMounted = useRef(true);
 
     // Metrics
     const eventLog = useRef<GameEvent[]>([]);
@@ -27,10 +28,13 @@ export function useMemoryGridGame(isPro: boolean = false) {
     const sessionStartTime = useRef<number>(0);
 
     const timeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
+    const intervals = useRef<ReturnType<typeof setInterval>[]>([]);
 
     const clearTimeouts = () => {
         timeouts.current.forEach(clearTimeout);
         timeouts.current = [];
+        intervals.current.forEach(clearInterval);
+        intervals.current = [];
     };
 
     const startGame = () => {
@@ -79,7 +83,7 @@ export function useMemoryGridGame(isPro: boolean = false) {
 
         setAccuracy(accuracy * 100);
         setReactionTimeMs(avgRT);
-        setGameState('results');
+        if (isMounted.current) setGameState('results');
 
         // 1. Save Session & Data
         await Storage.saveSession(session);
@@ -128,6 +132,7 @@ export function useMemoryGridGame(isPro: boolean = false) {
         });
 
         const t1 = setTimeout(() => {
+            if (!isMounted.current) return;
             setGameState('memorize');
             playSequence(newSequence);
         }, 1000);
@@ -137,6 +142,10 @@ export function useMemoryGridGame(isPro: boolean = false) {
     const playSequence = (seq: number[]) => {
         let i = 0;
         const interval = setInterval(() => {
+            if (!isMounted.current) {
+                clearInterval(interval);
+                return;
+            }
             if (i >= seq.length) {
                 clearInterval(interval);
                 setActiveCell(null);
@@ -146,7 +155,8 @@ export function useMemoryGridGame(isPro: boolean = false) {
             }
 
             setActiveCell(seq[i]);
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            // Subtle haptic for stimulus
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
 
             // Log Stimulus
             eventLog.current.push({
@@ -157,12 +167,13 @@ export function useMemoryGridGame(isPro: boolean = false) {
             });
 
             const t = setTimeout(() => {
-                setActiveCell(null);
+                if (isMounted.current) setActiveCell(null);
             }, isPro ? 400 : 600); // Faster tempo for Pro mode (Phase 9 feature requirement)
             timeouts.current.push(t);
 
             i++;
         }, isPro ? 600 : 800);
+        intervals.current.push(interval);
     };
 
     const handleCellPress = (index: number) => {
@@ -209,6 +220,7 @@ export function useMemoryGridGame(isPro: boolean = false) {
         setScore(prev => prev + (level * 10));
 
         const t = setTimeout(() => {
+            if (!isMounted.current) return;
             const nextLevel = level + 1;
             setLevel(nextLevel);
             const newSize = nextLevel > 5 ? 4 : 3;
@@ -225,7 +237,11 @@ export function useMemoryGridGame(isPro: boolean = false) {
     };
 
     useEffect(() => {
-        return () => clearTimeouts();
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+            clearTimeouts();
+        };
     }, []);
 
     return {

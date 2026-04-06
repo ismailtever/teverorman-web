@@ -12,25 +12,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BookOpen, Save, Smile, Meh, Frown, Sun, Cloud, Calendar } from 'lucide-react-native';
 
 import { Colors } from '@/constants/Colors';
-import { I18n } from '@/services/i18n';
+import { I18n, useI18n } from '@/services/i18n';
 
-// ─── Mood Options ─────────────────────────────────────────────────────────────
-
-const MOODS = [
-    { label: I18n.t('moodLabelGreat'), icon: <Sun size={22} color="#F59E0B" />, value: 5 },
-    { label: I18n.t('moodLabelGood'), icon: <Smile size={22} color="#10B981" />, value: 4 },
-    { label: I18n.t('moodLabelOkay'), icon: <Meh size={22} color="#6366F1" />, value: 3 },
-    { label: I18n.t('moodLabelLow'), icon: <Cloud size={22} color="#3B82F6" />, value: 2 },
-    { label: I18n.t('moodLabelRough'), icon: <Frown size={22} color="#EF4444" />, value: 1 },
-];
-
-const getTags = () => [I18n.t('tagProductive'), I18n.t('tagAnxious'), I18n.t('tagMotivated'), I18n.t('tagTired'), I18n.t('tagFocused'), I18n.t('tagGrateful'), I18n.t('tagStressed'), I18n.t('tagCreative')];
 
 // ─── Calendar Strip ───────────────────────────────────────────────────────────
 
-function CalendarStrip() {
+function CalendarStrip({ days }: { days: string[] }) {
     const [selectedDay, setSelectedDay] = useState(new Date().getDay());
-    const days = [I18n.t('calS1'), I18n.t('calM'), I18n.t('calT1'), I18n.t('calW'), I18n.t('calT2'), I18n.t('calF'), I18n.t('calS2')];
     const today = new Date().getDay();
 
     return (
@@ -57,6 +45,25 @@ function CalendarStrip() {
 
 export default function JournalScreen() {
     const insets = useSafeAreaInsets();
+    const { lang, t } = useI18n();
+
+    const MOODS = React.useMemo(() => [
+        { label: t('moodLabelGreat'), icon: <Sun size={22} color="#F59E0B" />, value: 5 },
+        { label: t('moodLabelGood'), icon: <Smile size={22} color="#10B981" />, value: 4 },
+        { label: t('moodLabelOkay'), icon: <Meh size={22} color="#6366F1" />, value: 3 },
+        { label: t('moodLabelLow'), icon: <Cloud size={22} color="#3B82F6" />, value: 2 },
+        { label: t('moodLabelRough'), icon: <Frown size={22} color="#EF4444" />, value: 1 },
+    ], [lang]);
+
+    const tags = React.useMemo(() => [
+        t('tagProductive'), t('tagAnxious'), t('tagMotivated'), t('tagTired'),
+        t('tagFocused'), t('tagGrateful'), t('tagStressed'), t('tagCreative')
+    ], [lang]);
+
+    const calendarDays = React.useMemo(() => [
+        t('calS1'), t('calM'), t('calT1'), t('calW'), t('calT2'), t('calF'), t('calS2')
+    ], [lang]);
+
     const [selectedMood, setSelectedMood] = useState<number | null>(null);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [noteText, setNoteText] = useState('');
@@ -117,18 +124,18 @@ export default function JournalScreen() {
                 {/* ── Header ── */}
                 <Animated.View entering={FadeInDown.springify()} style={styles.header}>
                     <View>
-                        <Text style={styles.screenTitle}>{I18n.t('journalTitle')}</Text>
+                        <Text style={styles.screenTitle}>{t('journalTitle')}</Text>
                         <Text style={styles.screenSub}>{new Date().toLocaleDateString(I18n.getDateLocale(), { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
                     </View>
                     <BookOpen size={24} color={Colors.mentra.brandPrimary} />
                 </Animated.View>
 
                 {/* ── Calendar ── */}
-                <CalendarStrip />
+                <CalendarStrip days={calendarDays} />
 
                 {/* ── Mood ── */}
                 <Animated.View entering={FadeInDown.delay(80).springify()} style={styles.section}>
-                    <Text style={styles.sectionLabel}>{I18n.t('journalFeelPrompt')}</Text>
+                    <Text style={styles.sectionLabel}>{t('journalFeelPrompt')}</Text>
                     <View style={styles.moodRow}>
                         {MOODS.map(m => (
                             <Pressable
@@ -145,9 +152,9 @@ export default function JournalScreen() {
 
                 {/* ── Tags ── */}
                 <Animated.View entering={FadeInDown.delay(140).springify()} style={styles.section}>
-                    <Text style={styles.sectionLabel}>{I18n.t('journalTagsLabel')}</Text>
+                    <Text style={styles.sectionLabel}>{t('journalTagsLabel')}</Text>
                     <View style={styles.tagsWrap}>
-                        {getTags().map(tag => (
+                        {tags.map(tag => (
                             <Pressable
                                 key={tag}
                                 onPress={() => toggleTag(tag)}
@@ -163,10 +170,10 @@ export default function JournalScreen() {
 
                 {/* ── Note ── */}
                 <Animated.View entering={FadeInDown.delay(200).springify()} style={styles.section}>
-                    <Text style={styles.sectionLabel}>{I18n.t('journalNoteLabel')}</Text>
+                    <Text style={styles.sectionLabel}>{t('journalNoteLabel')}</Text>
                     <TextInput
                         style={styles.noteInput}
-                        placeholder={I18n.t('journalPlaceholder')}
+                        placeholder={t('journalPlaceholder')}
                         placeholderTextColor={Colors.mentra.muted}
                         value={noteText}
                         onChangeText={setNoteText}
@@ -184,13 +191,13 @@ export default function JournalScreen() {
                     ]}
                 >
                     <Save size={18} color="#FFF" />
-                    <Text style={styles.saveBtnText}>{saved ? I18n.t('journalSaved') : I18n.t('journalSave')}</Text>
+                    <Text style={styles.saveBtnText}>{saved ? t('journalSaved') : t('journalSave')}</Text>
                 </Pressable>
 
                 {/* ── Past Entries ── */}
                 {pastEntries.length > 0 && (
                     <Animated.View entering={FadeInDown.delay(300).springify()} style={styles.historySection}>
-                        <Text style={styles.historyTitle}>{I18n.t('journalPastLabel')}</Text>
+                        <Text style={styles.historyTitle}>{t('journalPastLabel')}</Text>
                         {pastEntries.map((item, idx) => {
                             const dateObj = new Date(item.date);
                             const moodObj = MOODS.find(m => m.value === item.mood);

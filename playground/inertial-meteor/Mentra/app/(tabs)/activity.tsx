@@ -10,7 +10,7 @@ import {
   Flame, Trophy, Brain,
   Clock, BarChart2, Award, BrainCircuit, Sparkles, Activity, ShieldPlus
 } from 'lucide-react-native';
-import { I18n } from '@/services/i18n';
+import { I18n, useI18n } from '@/services/i18n';
 import { ThemedText } from '@/components/themed-text';
 import { Metrics } from '@/constants/Theme';
 
@@ -21,42 +21,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
 
-// ─── Mock weekly data (replace with real Storage calls) ────────────────────
-const WEEK_DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-const WEEK_SCORES = [72, 78, 65, 82, 79, 0, 88]; // 0 = no session
-
-const DOMAIN_PROGRESS = [
-  { key: 'Focus',      color: Colors.mentra.brandPrimary, emoji: '🎯', before: 48, after: 55, change: +7  },
-  { key: 'Memory',     color: '#6366F1',                  emoji: '🧠', before: 68, after: 72, change: +4  },
-  { key: 'Speed',      color: '#10B981',                  emoji: '⚡', before: 70, after: 68, change: -2  },
-  { key: 'Logic',      color: '#F59E0B',                  emoji: '💡', before: 38, after: 41, change: +3  },
-  { key: 'Resilience', color: '#8B5CF6',                  emoji: '🛡️', before: 55, after: 60, change: +5  },
-];
-
-const ACHIEVEMENTS = [
-  { emoji: '🔥', title: '7-Day Streak',       desc: 'Trained 7 days in a row',          unlocked: true  },
-  { emoji: '🧠', title: 'Memory Master',      desc: 'Scored 90+ on Memory Grid',         unlocked: true  },
-  { emoji: '⚡', title: 'Speed Demon',         desc: 'Sub-500ms average reaction time',   unlocked: false },
-  { emoji: '🏆', title: 'Elite Focus',         desc: 'Reached Elite tier in Grid Focus',  unlocked: false },
-  { emoji: '📅', title: '30-Day Veteran',      desc: 'Completed 30 sessions',             unlocked: false },
-  { emoji: '🌙', title: 'Night Owl',           desc: '10 sessions after 9pm',             unlocked: false },
-];
-
 // ─── Weekly Activity Bar Chart ──────────────────────────────────────────────
-function WeeklyChart() {
-  const max = Math.max(...WEEK_SCORES, 1);
+function WeeklyChart({ days, scores, t }: { days: string[], scores: number[], t: any }) {
+  const max = Math.max(...scores, 1);
   const today = new Date().getDay(); // 0=Sun
   const mapped = [1,2,3,4,5,6,0]; // Mon-Sun
 
   return (
     <Animated.View entering={FadeInDown.delay(80).springify()} style={styles.chartCard}>
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>THIS WEEK</Text>
-        <Text style={styles.sectionMeta}>Avg score: {Math.round(WEEK_SCORES.filter(s=>s>0).reduce((a,b)=>a+b,0)/WEEK_SCORES.filter(s=>s>0).length)}</Text>
+        <Text style={styles.sectionTitle}>{I18n.t('actWeekTitle')}</Text>
+        <Text style={styles.sectionMeta}>{I18n.t('actAvgScore').replace('%{score}', Math.round(scores.filter(s=>s>0).reduce((a,b)=>a+b,0)/scores.filter(s=>s>0).length).toString())}</Text>
       </View>
       <View style={styles.chartRow}>
-        {WEEK_DAYS.map((day, i) => {
-          const score = WEEK_SCORES[i];
+        {days.map((day, i) => {
+          const score = scores[i];
           const barH = score > 0 ? Math.max((score / max) * 80, 8) : 4;
           const isToday = mapped[i] === today;
           const isActive = score > 0;
@@ -136,13 +115,13 @@ function StatsStrip({ streak }: { streak: StreakData }) {
 }
 
 // ─── Domain Progress ────────────────────────────────────────────────────────
-function DomainProgress() {
+function DomainProgress({ progress }: { progress: any[] }) {
   return (
     <Animated.View entering={FadeInDown.delay(140).springify()}>
       <View style={[styles.sectionHeader, { marginBottom: 12 }]}>
-        <Text style={styles.sectionTitle}>DOMAIN CHANGES (30 DAYS)</Text>
+        <Text style={styles.sectionTitle}>{I18n.t('actDomainTitle')}</Text>
       </View>
-      {DOMAIN_PROGRESS.map((d) => (
+      {progress.map((d) => (
         <View key={d.key} style={styles.domainRow}>
           <Text style={{ fontSize: 18, width: 26 }}>{d.emoji}</Text>
           <View style={{ flex: 1 }}>
@@ -170,15 +149,15 @@ function DomainProgress() {
 }
 
 // ─── Achievements ────────────────────────────────────────────────────────────
-function AchievementsGrid() {
+function AchievementsGrid({ achievements }: { achievements: any[] }) {
   return (
     <Animated.View entering={FadeInDown.delay(200).springify()}>
       <View style={[styles.sectionHeader, { marginBottom: 12 }]}>
-        <Text style={styles.sectionTitle}>ACHIEVEMENTS</Text>
-        <Text style={styles.sectionMeta}>{ACHIEVEMENTS.filter(a => a.unlocked).length}/{ACHIEVEMENTS.length} unlocked</Text>
+        <Text style={styles.sectionTitle}>{I18n.t('actAchievTitle')}</Text>
+        <Text style={styles.sectionMeta}>{achievements.filter(a => a.unlocked).length}/{achievements.length} unlocked</Text>
       </View>
       <View style={styles.achieveGrid}>
-        {ACHIEVEMENTS.map((a, i) => (
+        {achievements.map((a, i) => (
           <View key={i} style={[styles.achieveCard, !a.unlocked && styles.achieveCardLocked]}>
             <Text style={[styles.achieveEmoji, !a.unlocked && { opacity: 0.3 }]}>{a.emoji}</Text>
             <Text style={[styles.achieveTitle, !a.unlocked && { color: Colors.mentra.muted }]}>{a.title}</Text>
@@ -194,22 +173,15 @@ function AchievementsGrid() {
 }
 
 // ─── Recent Sessions ─────────────────────────────────────────────────────────
-const RECENT = [
-  { title: 'Daily Training', domains: 'Memory · Speed', score: 88, mins: 12, daysAgo: 0 },
-  { title: 'Grid Focus',     domains: 'Focus',          score: 920, mins: 4,  daysAgo: 1, fpq: true },
-  { title: 'Memory Grid',    domains: 'Memory',         score: 76,  mins: 5,  daysAgo: 1 },
-  { title: 'Daily Training', domains: 'Memory · Speed', score: 79,  mins: 11, daysAgo: 2 },
-  { title: 'Speed Match',    domains: 'Speed',          score: 84,  mins: 3,  daysAgo: 3 },
-];
 
-function RecentSessions() {
-  const dayLabel = (d: number) => d === 0 ? 'Today' : d === 1 ? 'Yesterday' : `${d} days ago`;
+function RecentSessions({ sessions, t }: { sessions: any[], t: any }) {
+  const dayLabel = (d: number) => d === 0 ? t('today') : d === 1 ? t('yesterday') : t('daysAgo').replace('%{count}', d.toString());
   return (
     <Animated.View entering={FadeInDown.delay(240).springify()}>
       <View style={[styles.sectionHeader, { marginBottom: 12 }]}>
-        <Text style={styles.sectionTitle}>RECENT SESSIONS</Text>
+        <Text style={styles.sectionTitle}>{I18n.t('actRecentTitle')}</Text>
       </View>
-      {RECENT.map((s, i) => (
+      {sessions.map((s, i) => (
         <View key={i} style={styles.sessionRow}>
           <View style={styles.sessionIconBox}>
             <Brain size={18} color={Colors.mentra.brandPrimary} />
@@ -230,6 +202,36 @@ function RecentSessions() {
 // ─── Screen ──────────────────────────────────────────────────────────────────
 export default function ActivityScreen() {
   const insets = useSafeAreaInsets();
+  const { lang, t } = useI18n();
+
+  const WEEK_DAYS = React.useMemo(() => [t('calM'), t('calT1'), t('calW'), t('calT2'), t('calF'), t('calS1'), t('calS2')], [lang]);
+  const WEEK_SCORES = [72, 78, 65, 82, 79, 0, 88];
+
+  const DOMAIN_PROGRESS = React.useMemo(() => [
+    { key: t('focus'),      color: Colors.mentra.brandPrimary, emoji: '🎯', before: 48, after: 55, change: +7  },
+    { key: t('memory'),     color: '#6366F1',                  emoji: '🧠', before: 68, after: 72, change: +4  },
+    { key: t('speed'),      color: '#10B981',                  emoji: '⚡', before: 70, after: 68, change: -2  },
+    { key: t('logic'),      color: '#F59E0B',                  emoji: '💡', before: 38, after: 41, change: +3  },
+    { key: t('resilience'), color: '#8B5CF6',                  emoji: '🛡️', before: 55, after: 60, change: +5  },
+  ], [lang]);
+
+  const ACHIEVEMENTS = React.useMemo(() => [
+    { emoji: '🔥', title: t('ach7DayStreak'),   desc: t('ach7DayStreakDesc'),  unlocked: true  },
+    { emoji: '🧠', title: t('achMemoryMaster'),  desc: t('achMemoryMasterDesc'), unlocked: true  },
+    { emoji: '⚡', title: t('achSpeedDemon'),    desc: t('achSpeedDemonDesc'),   unlocked: false },
+    { emoji: '🏆', title: t('achEliteFocus'),    desc: t('achEliteFocusDesc'),   unlocked: false },
+    { emoji: '📅', title: t('ach30DayVeteran'),  desc: t('ach30DayVeteranDesc'), unlocked: false },
+    { emoji: '🌙', title: t('achNightOwl'),      desc: t('achNightOwlDesc'),     unlocked: false },
+  ], [lang]);
+
+  const RECENT = React.useMemo(() => [
+    { title: t('dailyTrainingTitle'), domains: `${t('memory')} · ${t('speed')}`, score: 88, mins: 12, daysAgo: 0 },
+    { title: t('gameGridFocus'),     domains: t('focus'),          score: 920, mins: 4,  daysAgo: 1, fpq: true },
+    { title: t('gameMemoryGrid'),    domains: t('memory'),         score: 76,  mins: 5,  daysAgo: 1 },
+    { title: t('dailyTrainingTitle'), domains: `${t('memory')} · ${t('speed')}`, score: 79,  mins: 11, daysAgo: 2 },
+    { title: t('gameSpeedMatch'),    domains: t('speed'),          score: 84,  mins: 3,  daysAgo: 3 },
+  ], [lang]);
+
   const [streak, setStreak] = useState<StreakData>({ current: 0, longest: 0, lastPlayed: null, playedToday: false, isAtRisk: false });
 
   useFocusEffect(useCallback(() => {
@@ -241,30 +243,30 @@ export default function ActivityScreen() {
       <StatusBar style="dark" />
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>Progress</Text>
-          <Text style={styles.headerSub}>Your cognitive journey</Text>
+          <Text style={styles.headerTitle}>{I18n.t('actProgressTitle')}</Text>
+          <Text style={styles.headerSub}>{I18n.t('actProgressSub')}</Text>
         </View>
         <View style={styles.headerBadge}>
           <Award size={16} color={Colors.mentra.brandPrimary} />
-          <Text style={styles.headerBadgeText}>Level 4</Text>
+          <Text style={styles.headerBadgeText}>{I18n.t('actLevelBadge')}</Text>
         </View>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
         <StatsStrip streak={streak} />
         <AnalystReport />
-        <WeeklyChart />
+        <WeeklyChart days={WEEK_DAYS} scores={WEEK_SCORES} t={t} />
 
         <View style={styles.card}>
-          <DomainProgress />
+          <DomainProgress progress={DOMAIN_PROGRESS} />
         </View>
 
         <View style={styles.card}>
-          <AchievementsGrid />
+          <AchievementsGrid achievements={ACHIEVEMENTS} />
         </View>
 
         <View style={styles.card}>
-          <RecentSessions />
+          <RecentSessions sessions={RECENT} t={t} />
         </View>
 
         <View style={{ height: 120 }} />

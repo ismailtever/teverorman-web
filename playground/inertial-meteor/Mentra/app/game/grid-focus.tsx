@@ -27,36 +27,9 @@ import { ThemedText } from '@/components/themed-text';
 import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
 import { Streak } from '@/services/streak';
-import { I18n } from '@/services/i18n';
+import { useI18n } from '@/services/i18n';
 
 const { width } = Dimensions.get('window');
-
-// ─── Performance tier labels ─────────────────────────────────────────────────
-function getTier(fpq: number): { label: string; emoji: string; color: string } {
-    if (fpq >= 850) return { label: 'Elite', emoji: '🏆', color: '#F59E0B' };
-    if (fpq >= 650) return { label: 'Advanced', emoji: '⚡', color: '#6366F1' };
-    if (fpq >= 400) return { label: 'Strong', emoji: '💪', color: '#10B981' };
-    if (fpq >= 200) return { label: 'Building', emoji: '📈', color: Colors.mentra.brandPrimary };
-    return { label: 'Starting', emoji: '🌱', color: Colors.mentra.textDim };
-}
-
-// ─── Shareable card text (Wordle-style virality) ─────────────────────────────
-function buildShareText(fpq: number, accuracy: number, avgReactionMs: number): string {
-    const tier = getTier(fpq);
-    const bars = Math.round((fpq / 999) * 5);
-    const barStr = '█'.repeat(bars) + '░'.repeat(5 - bars);
-    return [
-        `🧠 Mentra Focus Score`,
-        `${tier.emoji} ${fpq} FPQ — ${tier.label}`,
-        ``,
-        `Accuracy  ${accuracy}%`,
-        `Reaction  ${(avgReactionMs / 1000).toFixed(2)}s`,
-        ``,
-        barStr,
-        ``,
-        `Train your brain → mentra.app`,
-    ].join('\n');
-}
 
 // ─── Cell sub-component ────────────────────────────────────────────────────────
 interface CellProps {
@@ -116,11 +89,37 @@ import { NeuroActivationWarmup } from '@/components/game/NeuroActivationWarmup';
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 export default function GridFocusScreen() {
     const insets = useSafeAreaInsets();
+    const { t, lang } = useI18n();
     const level = 1;
     const [personalBest, setPersonalBest] = useState<number>(0);
     const [isNewBest, setIsNewBest] = useState(false);
     const [showWarmup, setShowWarmup] = useState(false);
     const scoreScale = useSharedValue(0.5);
+
+    // ─── Performance tier labels ─────────────────────────────────────────────────
+    const getTier = useCallback((fpq: number): { label: string; emoji: string; color: string } => {
+        if (fpq >= 850) return { label: t('gfTierElite'), emoji: '🏆', color: '#F59E0B' };
+        if (fpq >= 650) return { label: t('gfTierAdvanced'), emoji: '⚡', color: '#6366F1' };
+        if (fpq >= 400) return { label: t('gfTierStrong'), emoji: '💪', color: '#10B981' };
+        if (fpq >= 200) return { label: t('gfTierBuilding'), emoji: '📈', color: Colors.mentra.brandPrimary };
+        return { label: t('gfTierStarting'), emoji: '🌱', color: Colors.mentra.textDim };
+    }, [lang]);
+
+    // ─── Shareable card text (Wordle-style virality) ─────────────────────────────
+    const buildShareText = useCallback((fpq: number, accuracy: number, avgReactionMs: number): string => {
+        const tier = getTier(fpq);
+        const bars = Math.round((fpq / 999) * 5);
+        const barStr = '█'.repeat(bars) + '░'.repeat(5 - bars);
+        
+        return t('gfShareBody', {
+            emoji: tier.emoji,
+            fpq,
+            tier: tier.label,
+            accuracy,
+            reaction: (avgReactionMs / 1000).toFixed(2),
+            bars: barStr
+        });
+    }, [lang, getTier]);
 
     const {
         gameState,
@@ -140,7 +139,7 @@ export default function GridFocusScreen() {
 
     // Load personal best on mount
     useEffect(() => {
-        AsyncStorage.getItem('mentra_grid_personal_best').then(val => {
+        AsyncStorage.getItem('mentra_grid_personal_best').then((val: string | null) => {
             if (val) setPersonalBest(parseInt(val, 10));
         });
     }, []);
@@ -148,6 +147,9 @@ export default function GridFocusScreen() {
     // auto-start into instructions (pre_game) instead of jumping into countdown
     useEffect(() => {
         initGame();
+        return () => {
+             // Ensure no hanging states happen on unmount
+        };
     }, []);
 
     // When results appear, check personal best and trigger celebration
@@ -162,9 +164,9 @@ export default function GridFocusScreen() {
                 setIsNewBest(true);
                 setPersonalBest(fpq);
                 AsyncStorage.setItem('mentra_grid_personal_best', String(fpq));
-                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
             } else {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
             }
             // Celebration bounce animation
             scoreScale.value = withSequence(
@@ -177,14 +179,14 @@ export default function GridFocusScreen() {
     const handleShare = useCallback(async () => {
         try {
             const fpq = Math.min(Math.round((accuracy / 100) * (1000 / Math.max(avgReactionMs / 1000, 0.5))), 999);
-            const title = I18n.t('gfShareTitle');
-            const message = `${I18n.t('gfShareText')}: ${fpq} 🎯\n\n${buildShareText(fpq, accuracy, avgReactionMs)}\n\nCan you beat my focus score? Play Mentra!`;
+            const title = t('gfShareTitle');
+            const message = `${t('gfShareText')}: ${fpq} 🎯\n\n${buildShareText(fpq, accuracy, avgReactionMs)}\n\nCan you beat my focus score? Play Mentra!`;
 
             await Share.share({ message, title });
         } catch (error) {
             console.error('Share error', error);
         }
-    }, [accuracy, avgReactionMs]);
+    }, [accuracy, avgReactionMs, lang, buildShareText]);
 
     const scoreAnimStyle = useAnimatedStyle(() => ({
         transform: [{ scale: scoreScale.value }],
@@ -206,18 +208,18 @@ export default function GridFocusScreen() {
                     <View style={styles.introIconBox}>
                         <Target size={32} color={Colors.mentra.brandPrimary} />
                     </View>
-                    <Text style={styles.introTitle}>{I18n.t('gfTitle')}</Text>
-                    <Text style={styles.introSub}>{I18n.t('gfIntroSub')}</Text>
+                    <Text style={styles.introTitle}>{t('gfTitle')}</Text>
+                    <Text style={styles.introSub}>{t('gfIntroSub')}</Text>
                 </Animated.View>
 
                 <Animated.View entering={FadeIn.delay(200).duration(400)} style={{ width: '100%', gap: 12 }}>
                     <View style={styles.instructionsBox}>
                         <View style={styles.sectionHeader}>
                             <Play size={14} color={Colors.mentra.brandPrimary} />
-                            <ThemedText style={styles.sectionLabel}>{I18n.t('howToPlay') || 'How To Play'}</ThemedText>
+                            <ThemedText style={styles.sectionLabel}>{t('howToPlay') || 'How To Play'}</ThemedText>
                         </View>
                         <ThemedText style={styles.cardDesc}>
-                            {I18n.t('gfHowTo')}
+                            {t('gfHowTo')}
                         </ThemedText>
                     </View>
 
@@ -225,34 +227,34 @@ export default function GridFocusScreen() {
                         <View style={styles.sectionHeader}>
                             <BrainCircuit size={14} color={Colors.mentra.brandAccent} />
                             <ThemedText style={[styles.sectionLabel, { color: Colors.mentra.brandAccent }]}>
-                                {I18n.t('scienceBehind')}
+                                {t('scienceBehind')}
                             </ThemedText>
                         </View>
                         <ThemedText style={styles.scienceWhat}>
-                            {I18n.t('gfIntroWhat')}
+                            {t('gfIntroWhat')}
                         </ThemedText>
                         <ThemedText style={styles.scienceWhy}>
-                            {I18n.t('gfIntroWhy')}
+                            {t('gfIntroWhy')}
                         </ThemedText>
                     </View>
                 </Animated.View>
 
                 <Animated.View entering={FadeIn.delay(400).duration(400)} style={{ marginTop: 40 }}>
                     <Pressable
-                        onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy); setShowWarmup(true); }}
+                        onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => {}); setShowWarmup(true); }}
                         style={styles.introStartBtn}
                     >
-                        <Text style={styles.introStartBtnText}>{I18n.t('gfStartBtn')}</Text>
+                        <Text style={styles.introStartBtnText}>{t('gfStartBtn') || 'Start Training'}</Text>
                     </Pressable>
-                    <Pressable onPress={() => router.back()} style={{ marginTop: 20, alignItems: 'center' }}>
-                        <Text style={styles.backBtnText}>{I18n.t('gfBackHome')}</Text>
+                    <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={{ marginTop: 20, alignItems: 'center' }}>
+                        <Text style={styles.backBtnText}>{t('gfBackHome')}</Text>
                     </Pressable>
                 </Animated.View>
 
                 <NeuroActivationWarmup 
                     visible={showWarmup} 
                     gameTitle="GRID FOCUS"
-                    tutorialText={I18n.t('gameGridFocusTutorial' as any)}
+                    tutorialText={t('gameGridFocusTutorial')}
                     onComplete={() => {
                         setShowWarmup(false);
                         startCountdown();
@@ -271,7 +273,7 @@ export default function GridFocusScreen() {
                 <Animated.View entering={ZoomIn} key={`cd-${countdown}`}>
                     <Text style={styles.countdownText}>{countdown}</Text>
                 </Animated.View>
-                <Text style={styles.countdownLabel}>Find 1 → {gridSize * gridSize}</Text>
+                <Text style={styles.countdownLabel}>{t('gfFind', { max: (gridSize * gridSize).toString() })}</Text>
             </View>
         );
     }
@@ -296,47 +298,47 @@ export default function GridFocusScreen() {
 
                     {/* ── FPQ Score with celebration animation ── */}
                     <Animated.View style={[styles.scoreBlock, scoreAnimStyle]}>
-                        <Text style={styles.resultsTitle}>{I18n.t('gfFocusScore')}</Text>
+                        <Text style={styles.resultsTitle}>{t('gfFocusScore')}</Text>
                         <Text style={[styles.fpqScore, { color: tier.color }]}>{fpq}</Text>
-                        <Text style={styles.fpqLabel}>{I18n.t('gfFpqLabel')}</Text>
+                        <Text style={styles.fpqLabel}>{t('gfFpqLabel')}</Text>
                     </Animated.View>
 
                     {/* ── Personal Best Banner ── */}
                     {isNewBest && (
                         <Animated.View entering={ZoomInEasyUp.delay(300)} style={styles.newBestBanner}>
                             <Trophy size={16} color="#F59E0B" />
-                            <Text style={styles.newBestText}>{I18n.t('gfNewBest')}</Text>
+                            <Text style={styles.newBestText}>{t('gfNewBest')}</Text>
                         </Animated.View>
                     )}
                     {!isNewBest && prevBest > 0 && (
                         <Animated.View entering={FadeIn.delay(400)} style={styles.prevBestRow}>
                             <TrendingUp size={14} color={Colors.mentra.textDim} />
-                            <Text style={styles.prevBestText}>{I18n.t('gfPrevBest')} {prevBest}</Text>
+                            <Text style={styles.prevBestText}>{t('gfPrevBest')} {prevBest}</Text>
                         </Animated.View>
                     )}
 
                     {/* ── Stats ── */}
                     <View style={styles.statsRow}>
-                        <ResultStat icon={<CheckCircle size={18} color={Colors.mentra.brandPrimary} />} label={I18n.t('gfAccuracy')} value={`${accuracy}%`} />
-                        <ResultStat icon={<Zap size={18} color={Colors.mentra.warning} />} label={I18n.t('gfReaction')} value={`${(avgReactionMs / 1000).toFixed(2)}s`} />
-                        <ResultStat icon={<Target size={18} color={Colors.mentra.brandPrimary} />} label={I18n.t('gfRawScore')} value={`${score}`} />
+                        <ResultStat icon={<CheckCircle size={18} color={Colors.mentra.brandPrimary} />} label={t('gfAccuracy')} value={`${accuracy}%`} />
+                        <ResultStat icon={<Zap size={18} color={Colors.mentra.warning} />} label={t('gfReaction')} value={`${(avgReactionMs / 1000).toFixed(2)}s`} />
+                        <ResultStat icon={<Target size={18} color={Colors.mentra.brandPrimary} />} label={t('gfRawScore')} value={`${score}`} />
                     </View>
 
                     {/* ── CTAs ── */}
                     <Pressable
-                        onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); setIsNewBest(false); initGame(); }}
+                        onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {}); setIsNewBest(false); initGame(); }}
                         style={styles.retryBtn}
                     >
-                        <Text style={styles.retryBtnText}>{I18n.t('gfPlayAgain')}</Text>
+                        <Text style={styles.retryBtnText}>{t('gfPlayAgain') || 'Play Again'}</Text>
                     </Pressable>
 
                     <Pressable onPress={handleShare} style={styles.shareBtn}>
                         <Share2 size={16} color={Colors.mentra.brandPrimary} />
-                        <Text style={styles.shareBtnText}>{I18n.t('gfShareScore')}</Text>
+                        <Text style={styles.shareBtnText}>{t('gfShareScore')}</Text>
                     </Pressable>
 
-                    <Pressable onPress={() => router.back()} style={styles.backBtn}>
-                        <Text style={styles.backBtnText}>{I18n.t('gfBackHome')}</Text>
+                    <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.backBtn}>
+                        <Text style={styles.backBtnText}>{t('gfBackHome')}</Text>
                     </Pressable>
                 </Animated.View>
             </View>
@@ -359,11 +361,11 @@ export default function GridFocusScreen() {
 
                 {/* ── Header ── */}
                 <View style={styles.header}>
-                    <Pressable onPress={() => router.back()} style={styles.closeBtn}>
+                    <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.closeBtn}>
                         <X size={24} color={Colors.mentra.textDim} />
                     </Pressable>
                     <View style={styles.headerCenter}>
-                        <Text style={styles.headerLabel}>{I18n.t('gfTarget')}</Text>
+                        <Text style={styles.headerLabel}>{t('gfTarget')}</Text>
                         <Animated.Text key={target} entering={ZoomIn.springify().damping(12).stiffness(150)} style={styles.targetNumber}>
                             {target}
                         </Animated.Text>

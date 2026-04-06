@@ -17,7 +17,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { X, ChevronRight, Brain, TrendingDown, BrainCircuit, Play, Sparkles } from 'lucide-react-native';
-import { I18n } from '@/services/i18n';
+import { I18n, useI18n } from '@/services/i18n';
 import { NeuroActivationWarmup } from '@/components/game/NeuroActivationWarmup';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
@@ -30,45 +30,52 @@ import { Streak } from '@/services/streak';
 
 type Phase = 'intro' | 'trigger' | 'urge' | 'reset' | 'done';
 
-const TRIGGERS = [
-  { emoji: '😴', label: 'Boredom', desc: 'Nothing to do, grabbed the phone' },
-  { emoji: '😰', label: 'Anxiety', desc: 'Stressed, needed distraction' },
-  { emoji: '😴', label: 'Tiredness', desc: 'Too tired for real work' },
-  { emoji: '🍽️', label: 'Waiting', desc: 'Waiting for something' },
-  { emoji: '😔', label: 'Loneliness', desc: 'Wanted to feel connected' },
-  { emoji: '📵', label: 'Habit', desc: 'No reason, just automatic' },
-];
-
-const RESET_EXERCISES = [
-  {
-    title: '4-7-8 Breath',
-    emoji: '🌬️',
-    duration: '60 sec',
-    steps: ['Breathe IN for 4 seconds', 'HOLD for 7 seconds', 'Breathe OUT slowly for 8 seconds', 'Repeat 3 times'],
-    science: 'Activates parasympathetic nervous system — directly counteracts the dopamine spike from social media.',
-  },
-  {
-    title: 'Body Scan',
-    emoji: '🧘',
-    duration: '90 sec',
-    steps: ['Close your eyes', 'Notice your feet on the floor', 'Feel your hands in your lap', 'Notice 3 sounds around you', 'Come back to now'],
-    science: 'Shifts brain from default mode network (scrolling/rumination) to present-moment awareness.',
-  },
-  {
-    title: '5-4-3-2-1 Ground',
-    emoji: '🌍',
-    duration: '60 sec',
-    steps: ['Name 5 things you can SEE', 'Name 4 things you can TOUCH', 'Name 3 things you can HEAR', 'Name 2 things you can SMELL', 'Name 1 thing you can TASTE'],
-    science: 'Grounds prefrontal cortex activity — stops the reward-seeking loop cold.',
-  },
-];
 
 export default function DopamineResetGame() {
   const insets = useSafeAreaInsets();
+  const { lang, t } = useI18n();
+
+  const TRIGGERS = React.useMemo(() => [
+    { emoji: '😴', label: t('drBoredom'), desc: t('drBoredomDesc') },
+    { emoji: '😰', label: t('drAnxiety'), desc: t('drAnxietyDesc') },
+    { emoji: '😴', label: t('drTiredness'), desc: t('drTirednessDesc') },
+    { emoji: '🍽️', label: t('drWaiting'), desc: t('drWaitingDesc') },
+    { emoji: '😔', label: t('drLoneliness'), desc: t('drLonelinessDesc') },
+    { emoji: '📵', label: t('drHabit'), desc: t('drHabitDesc') },
+  ], [lang]);
+
+  const RESET_EXERCISES = React.useMemo(() => [
+    {
+      title: t('exBreathTitle'),
+      emoji: '🌬️',
+      duration: `60 ${t('secDuration')}`,
+      steps: [t('exBreathStep1'), t('exBreathStep2'), t('exBreathStep3'), t('exBreathStep4')],
+      science: t('exBreathScience'),
+    },
+    {
+      title: t('exBodyScanTitle'),
+      emoji: '🧘',
+      duration: `90 ${t('secDuration')}`,
+      steps: [t('exBodyScanStep1'), t('exBodyScanStep2'), t('exBodyScanStep3'), t('exBodyScanStep4'), t('exBodyScanStep5')],
+      science: t('exBodyScanScience'),
+    },
+    {
+      title: t('exGroundTitle'),
+      emoji: '🌍',
+      duration: `60 ${t('secDuration')}`,
+      steps: [t('exGroundStep1'), t('exGroundStep2'), t('exGroundStep3'), t('exGroundStep4'), t('exGroundStep5')],
+      science: t('exGroundScience'),
+    },
+  ], [lang]);
+
   const [phase, setPhase] = useState<Phase>('intro');
-  const [selectedTrigger, setSelectedTrigger] = useState<typeof TRIGGERS[0] | null>(null);
+  const [selectedTrigger, setSelectedTrigger] = useState<any>(null);
   const [urgeLevel, setUrgeLevel] = useState(5);
-  const [selectedExercise, setSelectedExercise] = useState(RESET_EXERCISES[0]);
+  const [selectedExercise, setSelectedExercise] = useState<any>(null);
+
+  React.useEffect(() => {
+    if (!selectedExercise) setSelectedExercise(RESET_EXERCISES[0]);
+  }, [RESET_EXERCISES]);
   const [showWarmup, setShowWarmup] = useState(false);
   const [stepIdx, setStepIdx] = useState(0);
   const [sessions, setSessions] = useState(0);
@@ -127,43 +134,43 @@ export default function DopamineResetGame() {
       <ScrollView contentContainerStyle={styles.scroll}>
         <Animated.View entering={FadeInDown.springify()} style={styles.introBox}>
           <Text style={styles.introEmoji}>🎰</Text>
-          <Text style={styles.introTitle}>Dopamine Reset</Text>
+          <Text style={styles.introTitle}>{t('drTitle')}</Text>
           
           <View style={{ width: '100%', gap: 12, marginVertical: 20 }}>
             <View style={styles.instructionsBox}>
               <View style={styles.sectionHeader}>
                 <Play size={14} color={Colors.mentra.brandPrimary} />
-                <ThemedText style={styles.sectionLabel}>{I18n.t('howToPlay') || 'How To Play'}</ThemedText>
+                <ThemedText style={styles.sectionLabel}>{t('howToPlay')}</ThemedText>
               </View>
               <ThemedText style={styles.cardDesc}>
-                {I18n.t('drIntroHow') || 'Consciously identify triggers and reset your neural pathways.'}
+                {t('drIntroHow')}
               </ThemedText>
             </View>
-
+ 
             <View style={styles.scienceBox}>
               <View style={styles.sectionHeader}>
                 <BrainCircuit size={14} color={Colors.mentra.brandAccent} />
                 <ThemedText style={[styles.sectionLabel, { color: Colors.mentra.brandAccent }]}>
-                  {I18n.t('scienceBehind')}
+                  {t('scienceBehind')}
                 </ThemedText>
               </View>
               <ThemedText style={styles.scienceWhat}>
-                {I18n.t('drIntroWhat')}
+                {t('drIntroWhat')}
               </ThemedText>
               <ThemedText style={styles.scienceWhy}>
-                {I18n.t('drIntroWhy')}
+                {t('drIntroWhy')}
               </ThemedText>
             </View>
           </View>
-
+ 
           <Pressable onPress={() => setShowWarmup(true)} style={styles.startBtn}>
-            <Text style={styles.startBtnText}>Start Reset Session</Text>
+            <Text style={styles.startBtnText}>{t('drStart')}</Text>
           </Pressable>
-
+ 
           <NeuroActivationWarmup 
             visible={showWarmup} 
-            gameTitle="DOPAMINE RESET"
-            tutorialText={I18n.t('gameDopamineResetTutorial' as any)}
+            gameTitle={t('drNeuroTitle')}
+            tutorialText={t('gameDopamineResetTutorial' as any)}
             onComplete={() => {
                 setShowWarmup(false);
                 setPhase('trigger');
@@ -173,15 +180,15 @@ export default function DopamineResetGame() {
       </ScrollView>
     </View>
   );
-
+ 
   if (phase === 'trigger') return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ headerShown: false }} />
       <Pressable onPress={() => router.back()} style={styles.closeBtn}><X size={22} color={Colors.mentra.text} /></Pressable>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Animated.View entering={FadeInDown.springify()} style={{ gap: 16 }}>
-          <Text style={styles.phaseTitle}>What triggered you?</Text>
-          <Text style={styles.phaseSub}>Be honest — this is private. Identifying your trigger is the first step to breaking the pattern.</Text>
+        <Animated.View entering={FadeInDown.springify()} style={{ gap: 20 }}>
+          <Text style={styles.phaseTitle}>{t('drRateTitle')}</Text>
+          <Text style={styles.phaseSub}>{t('drRateSub')}</Text>
           {TRIGGERS.map((t, i) => (
             <Pressable
               key={i}
@@ -198,21 +205,21 @@ export default function DopamineResetGame() {
           ))}
           {selectedTrigger && (
             <Pressable onPress={() => setPhase('urge')} style={styles.startBtn}>
-              <Text style={styles.startBtnText}>Continue →</Text>
+              <Text style={styles.startBtnText}>{t('drContinue')}</Text>
             </Pressable>
           )}
         </Animated.View>
       </ScrollView>
     </View>
   );
-
+ 
   if (phase === 'urge') return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView contentContainerStyle={styles.scroll}>
         <Animated.View entering={FadeInDown.springify()} style={{ gap: 20 }}>
-          <Text style={styles.phaseTitle}>Rate your urge</Text>
-          <Text style={styles.phaseSub}>How strong is the pull to open social media right now?</Text>
+          <Text style={styles.phaseTitle}>{t('drRateTitle')}</Text>
+          <Text style={styles.phaseSub}>{t('drRateSub')}</Text>
           <View style={styles.urgeRow}>
             {[1,2,3,4,5,6,7,8,9,10].map(n => (
               <Pressable
@@ -225,11 +232,11 @@ export default function DopamineResetGame() {
             ))}
           </View>
           <Text style={styles.urgeHint}>
-            {urgeLevel >= 8 ? '🔥 High urge. Your dopamine system is activated. This is exactly when training matters most.'
-            : urgeLevel >= 5 ? '⚡ Moderate urge. Good time to practice the reset before it gets stronger.'
-            : '🌱 Low urge. Great time to build the habit proactively.'}
+            {urgeLevel >= 8 ? t('drUrgeHigh')
+            : urgeLevel >= 5 ? t('drUrgeMid')
+            : t('drUrgeLow')}
           </Text>
-          <Text style={styles.setupLabel}>CHOOSE YOUR RESET METHOD</Text>
+          <Text style={styles.setupLabel}>{t('drSetupLabel')}</Text>
           {RESET_EXERCISES.map((ex, i) => (
             <Pressable
               key={i}
@@ -245,61 +252,61 @@ export default function DopamineResetGame() {
             </Pressable>
           ))}
           <Pressable onPress={() => { setStepIdx(0); setPhase('reset'); }} style={styles.startBtn}>
-            <Text style={styles.startBtnText}>Begin {selectedExercise.title}</Text>
+            <Text style={styles.startBtnText}>{t('drBeginRef').replace('%{method}', (selectedExercise || {}).title)}</Text>
           </Pressable>
         </Animated.View>
       </ScrollView>
     </View>
   );
-
+ 
   if (phase === 'reset') return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ headerShown: false }} />
       <Animated.View entering={FadeInDown.springify()} style={styles.resetBox}>
-        <Text style={styles.resetEmoji}>{selectedExercise.emoji}</Text>
-        <Text style={styles.resetTitle}>{selectedExercise.title}</Text>
+        <Text style={styles.resetEmoji}>{(selectedExercise || {}).emoji}</Text>
+        <Text style={styles.resetTitle}>{(selectedExercise || {}).title}</Text>
         <View style={styles.stepBox}>
-          <Text style={styles.stepNum}>Step {stepIdx + 1} of {selectedExercise.steps.length}</Text>
-          <Text style={styles.stepText}>{selectedExercise.steps[stepIdx]}</Text>
+          <Text style={styles.stepNum}>{t('drStepRef').replace('%{current}', (stepIdx + 1).toString()).replace('%{total}', (selectedExercise?.steps || []).length.toString())}</Text>
+          <Text style={styles.stepText}>{(selectedExercise?.steps || [])[stepIdx]}</Text>
         </View>
         <View style={styles.stepDots}>
-          {selectedExercise.steps.map((_, i) => (
+          {selectedExercise.steps.map((_: string, i: number) => (
             <View key={i} style={[styles.stepDot, i === stepIdx && styles.stepDotActive, i < stepIdx && styles.stepDotDone]} />
           ))}
         </View>
         <Pressable onPress={nextStep} style={styles.startBtn}>
-          <Text style={styles.startBtnText}>{stepIdx < selectedExercise.steps.length - 1 ? 'Next Step →' : 'Complete Reset ✓'}</Text>
+          <Text style={styles.startBtnText}>{stepIdx < (selectedExercise?.steps || []).length - 1 ? t('drNextStep') : t('drCompleteReset')}</Text>
         </Pressable>
-        <Text style={styles.scienceSmall}>{selectedExercise.science}</Text>
+        <Text style={styles.scienceSmall}>{(selectedExercise || {}).science}</Text>
       </Animated.View>
     </View>
   );
-
+ 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ headerShown: false }} />
       <Animated.View entering={FadeInDown.springify()} style={styles.doneBox}>
         <Text style={{ fontSize: 64 }}>🧠</Text>
-        <Text style={styles.doneTitle}>Reset Complete</Text>
+        <Text style={styles.doneTitle}>{t('drDoneTitle')}</Text>
         <Text style={styles.doneSub}>
-          You just chose your prefrontal cortex over your dopamine loop.{'\n'}That's neuroplasticity in action.
+          {t('drDoneSub')}
         </Text>
         <View style={styles.doneCard}>
           <TrendingDown size={16} color={Colors.mentra.success} />
           <Text style={styles.doneCardText}>
-            Trigger: <Text style={{ fontWeight: '700' }}>{selectedTrigger?.label}</Text>{'\n'}
-            Urge level was: <Text style={{ fontWeight: '700' }}>{urgeLevel}/10</Text>{'\n'}
-            Method: <Text style={{ fontWeight: '700' }}>{selectedExercise.title}</Text>
+            {t('drTriggerLabel')}: <Text style={{ fontWeight: '700' }}>{selectedTrigger?.label}</Text>{'\n'}
+            {t('drUrgeLevelLabel')}: <Text style={{ fontWeight: '700' }}>{urgeLevel}/10</Text>{'\n'}
+            {t('drMethodLabel')}: <Text style={{ fontWeight: '700' }}>{(selectedExercise || {}).title}</Text>
           </Text>
         </View>
         <Text style={styles.doneTip}>
-          Do this every time you feel the scroll urge. After 7 days, your brain will start to associate the trigger with the reset — not with social media.
+          {t('drDoneTip')}
         </Text>
-        <Pressable onPress={() => setPhase('intro')} style={styles.startBtn}>
-          <Text style={styles.startBtnText}>Do Another Reset</Text>
+        <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.startBtn}>
+          <Text style={styles.startBtnText}>{t('backToHome')}</Text>
         </Pressable>
         <Pressable onPress={() => router.back()} style={styles.backLink}>
-          <Text style={styles.backLinkText}>← Back</Text>
+          <Text style={styles.backLinkText}>← {t('drBack')}</Text>
         </Pressable>
       </Animated.View>
     </View>

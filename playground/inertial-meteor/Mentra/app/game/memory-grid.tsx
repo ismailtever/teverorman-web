@@ -10,7 +10,7 @@ import { PrimaryButton } from '@/components/ui/Buttons';
 import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
 import { useMemoryGridGame } from '@/hooks/useMemoryGridGame';
-import { I18n } from '@/services/i18n';
+import { I18n, useI18n } from '@/services/i18n';
 import { Storage } from '@/services/storage';
 
 // New Phase 9 Cognitive Depth Components
@@ -23,6 +23,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withSpring, withSequence, w
 const { width } = Dimensions.get('window');
 
 export default function MemoryGridScreen() {
+    const { t } = useI18n();
     const {
         gameState,
         gridSize,
@@ -57,7 +58,7 @@ export default function MemoryGridScreen() {
             if (gameState === 'success') {
                 return (
                     <View style={{ alignItems: 'center' }}>
-                        <ThemedText style={styles.successText}>{I18n.t('correct') || 'CORRECT'}</ThemedText>
+                        <ThemedText style={styles.successText}>{t('correct') || 'CORRECT'}</ThemedText>
                     </View>
                 );
             }
@@ -67,22 +68,22 @@ export default function MemoryGridScreen() {
                         <RotateCcw size={32} color={Colors.mentra.brandPrimary} />
                     </View>
                     <ThemedText style={styles.cardTitle}>
-                        {gameState === 'fail' ? (I18n.t('gameOver') || 'Session Over') : (I18n.t('readyToFocus') || 'Ready to Memorize?')}
+                        {gameState === 'fail' ? (t('gameOver') || 'Session Over') : (t('readyToFocus') || 'Ready to Memorize?')}
                     </ThemedText>
 
                     {gameState === 'fail' && (
                         <ThemedText style={styles.scoreText}>
-                            {I18n.t('score') || 'Score'}: {score}
+                            {t('score') || 'Score'}: {score}
                         </ThemedText>
                     )}
 
                     <View style={styles.instructionsBox}>
                         <View style={styles.sectionHeader}>
                             <Play size={14} color={Colors.mentra.brandPrimary} />
-                            <ThemedText style={styles.sectionLabel}>{I18n.t('howToPlay') || 'How To Play'}</ThemedText>
+                            <ThemedText style={styles.sectionLabel}>{t('howToPlay') || 'How To Play'}</ThemedText>
                         </View>
                         <ThemedText style={styles.cardDesc}>
-                            {I18n.t('memoryGridDesc') || 'Memorize the pattern and repeat it back.'}
+                            {t('memoryGridDesc') || 'Memorize the pattern and repeat it back.'}
                         </ThemedText>
                     </View>
 
@@ -90,19 +91,19 @@ export default function MemoryGridScreen() {
                         <View style={styles.sectionHeader}>
                             <BrainCircuit size={14} color={Colors.mentra.brandAccent} />
                             <ThemedText style={[styles.sectionLabel, { color: Colors.mentra.brandAccent }]}>
-                                {I18n.t('scienceBehind')}
+                                {t('scienceBehind')}
                             </ThemedText>
                         </View>
                         <ThemedText style={styles.scienceWhat}>
-                            {I18n.t('mgIntroWhat')}
+                            {t('mgIntroWhat')}
                         </ThemedText>
                         <ThemedText style={styles.scienceWhy}>
-                            {I18n.t('mgIntroWhy')}
+                            {t('mgIntroWhy')}
                         </ThemedText>
                     </View>
 
                     <PrimaryButton
-                        title={gameState === 'fail' ? (I18n.t('tryAgain') || 'Try Again') : (I18n.t('startGame') || 'Start Session')}
+                        title={gameState === 'fail' ? (t('tryAgain') || 'Try Again') : (t('startGame') || 'Start Session')}
                         icon={gameState === 'fail' ? <RotateCcw size={20} color={Colors.mentra.surface} /> : <Play size={20} color={Colors.mentra.surface} />}
                         onPress={() => setShowWarmup(true)}
                         fullWidth
@@ -156,7 +157,7 @@ export default function MemoryGridScreen() {
                     accuracy={accuracy}
                     reactionTimeMs={reactionTimeMs}
                     identityLevel={identityLevel}
-                    onContinue={() => router.back()}
+                    onContinue={() => router.canGoBack() ? router.back() : router.replace('/')}
                     onRetry={startGame}
                 />
             );
@@ -173,12 +174,12 @@ export default function MemoryGridScreen() {
 
             {/* Header */}
             <View style={styles.header}>
-                <Pressable onPress={() => router.back()} style={styles.backButton}>
+                <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.backButton}>
                     <ArrowLeft color={Colors.mentra.text} size={24} />
                 </Pressable>
                 <View style={{ alignItems: 'center' }}>
-                    <ThemedText style={styles.headerSubtitle}>MEMORY GRID</ThemedText>
-                    <ThemedText style={styles.headerTitle}>{I18n.t('level') || 'Level'} {level}</ThemedText>
+                    <ThemedText style={styles.headerSubtitle}>{t('gameMemoryGrid')}</ThemedText>
+                    <ThemedText style={styles.headerTitle}>{t('level') || 'Level'} {level}</ThemedText>
                 </View>
                 <View style={{ width: 40 }} />
             </View>
@@ -200,7 +201,7 @@ export default function MemoryGridScreen() {
                 <View style={styles.footer}>
                     <Card variant="outline" style={styles.statBox}>
                         {/* @ts-ignore */}
-                        <ThemedText style={styles.statLabel}>{(I18n.t('score') || 'SCORE').toUpperCase()}</ThemedText>
+                        <ThemedText style={styles.statLabel}>{(t('score') || 'SCORE').toUpperCase()}</ThemedText>
                         <ThemedText style={styles.statValue}>{score}</ThemedText>
                     </Card>
                 </View>
@@ -209,7 +210,7 @@ export default function MemoryGridScreen() {
             <NeuroActivationWarmup 
                 visible={showWarmup} 
                 gameTitle="MEMORY GRID"
-                tutorialText={I18n.t('gameMemoryGridTutorial' as any)}
+                tutorialText={t('gameMemoryGridTutorial' as any)}
                 onComplete={() => {
                     setShowWarmup(false);
                     startGame();

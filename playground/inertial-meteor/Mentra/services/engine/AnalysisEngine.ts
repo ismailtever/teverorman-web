@@ -1,4 +1,5 @@
 import { RawGameSession, CognitiveProfile } from './types';
+import { Logger } from '../logger';
 
 // Clamp helper
 const clamp = (val: number, min: number, max: number) => Math.min(Math.max(val, min), max);
@@ -122,42 +123,58 @@ export const AnalysisEngine = {
     // --- 3. Profile Update ---
 
     updateProfile(currentProfile: CognitiveProfile, session: RawGameSession): CognitiveProfile {
-        const rtsAll = this.getAllRTs(session);
-        // Correct RTs already baked into avgReactionTime by the game hook, but we can verify if needed.
-
-        const speedScore = this.calculateSpeedScore(session.avgReactionTime || 500);
-        const accuracyScore = this.calculateAccuracyScore(session.accuracy);
-
-        // Meta Metrics
-        const stabilityIndex = this.calculateStabilityIndex(rtsAll);
-        const fatigueScore = this.detectFatigue(rtsAll);
-        const impulseScore = this.detectImpulsivity(session.events || []);
-
-        // EWMA (Exponential Weighted Moving Average)
-        // Alpha determines how fast we adapt. 0.2 = Moderate adaptation.
-        const alpha = 0.2;
-
-        const newProfile = { ...currentProfile };
-
-        newProfile.stabilityOffset = Math.round(currentProfile.stabilityOffset * (1 - alpha) + stabilityIndex * alpha);
-        newProfile.fatigueIndex = Math.round(currentProfile.fatigueIndex * (1 - alpha) + fatigueScore * alpha);
-        newProfile.impulseFactor = Math.round(currentProfile.impulseFactor * (1 - alpha) + impulseScore * alpha);
-
-        if (session.gameId === 'speed-match') {
-            newProfile.speed = Math.round(currentProfile.speed * (1 - alpha) + speedScore * alpha);
-            newProfile.focus = Math.round(currentProfile.focus * (1 - alpha) + accuracyScore * alpha);
-
-        } else if (session.gameId === 'memory-grid') {
-            const memoryScore = session.score > 0 ? clamp(session.score / 5, 0, 100) : 0;
-            newProfile.memory = Math.round(currentProfile.memory * (1 - alpha) + memoryScore * alpha);
-
-            // If user was fast in memory grid, boost speed slightly
-            if (session.avgReactionTime > 0) {
-                newProfile.speed = Math.round(currentProfile.speed * (1 - alpha) + speedScore * alpha);
-            }
+        if (!currentProfile) {
+            Logger.warn('AnalysisEngine: Missing currentProfile. Using default.');
+            currentProfile = DEFAULT_COGNITIVE_PROFILE;
+        }
+        if (!session) {
+            Logger.warn('AnalysisEngine: Missing session data. Returning current profile.');
+            return currentProfile;
         }
 
-        return newProfile;
+        try {
+            const rtsAll = this.getAllRTs(session);
+            // Correct RTs already baked into avgReactionTime by the game hook, but we can verify if needed.
+
+            const speedScore = this.calculateSpeedScore(session.avgReactionTime || 500);
+            const accuracyScore = this.calculateAccuracyScore(session.accuracy || 0);
+
+            // Meta Metrics
+            const stabilityIndex = this.calculateStabilityIndex(rtsAll);
+            const fatigueScore = this.detectFatigue(rtsAll);
+            const impulseScore = this.detectImpulsivity(session.events || []);
+
+            // EWMA (Exponential Weighted Moving Average)
+            // Alpha determines how fast we adapt. 0.2 = Moderate adaptation.
+            const alpha = 0.2;
+
+            const newProfile = { ...currentProfile };
+
+            newProfile.stabilityOffset = Math.round(currentProfile.stabilityOffset * (1 - alpha) + stabilityIndex * alpha) || 50;
+            newProfile.fatigueIndex = Math.round((currentProfile.fatigueIndex || 0) * (1 - alpha) + fatigueScore * alpha) || 0;
+            newProfile.impulseFactor = Math.round((currentProfile.impulseFactor || 0) * (1 - alpha) + impulseScore * alpha) || 0;
+
+            if (session.gameId === 'speed-match') {
+                newProfile.speed = Math.round((currentProfile.speed || 50) * (1 - alpha) + speedScore * alpha);
+                newProfile.focus = Math.round((currentProfile.focus || 50) * (1 - alpha) + accuracyScore * alpha);
+            } else if (session.gameId === 'memory-grid') {
+                const memoryScore = session.score > 0 ? clamp(session.score / 5, 0, 100) : 0;
+                newProfile.memory = Math.round((currentProfile.memory || 50) * (1 - alpha) + memoryScore * alpha);
+
+                // If user was fast in memory grid, boost speed slightly
+                if (session.avgReactionTime > 0) {
+                    newProfile.speed = Math.round((currentProfile.speed || 50) * (1 - alpha) + speedScore * alpha);
+                }
+            } else if (session.gameId === 'dopamine-reset' || session.gameId === 'impulse-control') {
+                // Focus / Stability boost
+                newProfile.focus = Math.round((currentProfile.focus || 50) * (1 - alpha) + accuracyScore * alpha);
+            }
+
+            return newProfile;
+        } catch (e) {
+            Logger.error('AnalysisEngine: updateProfile failed', e);
+            return currentProfile;
+        }
     },
 
     /**

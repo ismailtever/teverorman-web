@@ -3,6 +3,7 @@ import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/Colors';
+import { I18n } from '@/services/i18n';
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <View style={styles.section}>
@@ -17,11 +18,11 @@ export default function PrivacyScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ title: 'Privacy Policy', headerBackTitle: 'Back' }} />
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Text style={styles.title}>Privacy Policy</Text>
-        <Text style={styles.date}>Tever Technology — Last Updated: March 2026</Text>
+        <Text style={styles.title}>{I18n.t('legalPrivacy')}</Text>
+        <Text style={styles.date}>{I18n.t('legalLastUpdated')}</Text>
 
         <Section title="1. Overview">
-          Mentra is a cognitive training application developed by Tever Technology. We are committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights.
+          Mentra is a cognitive training application developed by Tever Technology. We are committed to protecting your privacy through a "Local-First" architecture. This policy explains what data we collect, how we use it, and your rights across multiple jurisdictions including the EU, USA, Turkey, Japan, and South Korea.
         </Section>
 
         <Section title="2. Data We Collect">
@@ -31,7 +32,7 @@ export default function PrivacyScreen() {
         </Section>
 
         <Section title="3. Data We Do NOT Collect">
-          We do not collect: your name or email address, device identifiers for advertising (IDFA), location data, contacts, camera or microphone data, or any biometric data. Mentra does not run advertising networks.
+          We do NOT collect: your name or email address (unless provided for support), device identifiers for advertising (IDFA), precise location data, contacts, camera or microphone data, or any biometric data. Mentra does not run advertising networks or sell user data to brokers.
         </Section>
 
         <Section title="4. AI Coach & Third Parties">
@@ -39,26 +40,30 @@ export default function PrivacyScreen() {
         </Section>
 
         <Section title="5. Data Storage & Security">
-          All local data is stored using Apple's encrypted storage (AsyncStorage). Your data is protected by your device passcode/Face ID. We use HTTPS for all API communications.
+          All local data is stored in the application's private sandboxed storage (AsyncStorage), which is protected by your device's native security systems (Passcode, Face ID, or Biometrics). We enforce HTTPS for all external communications and utilize industry-standard protocols to prevent unauthorized access.
         </Section>
 
-        <Section title="6. Your Rights">
-          You can delete all your data at any time from Settings → Export Data → Reset. Uninstalling the app permanently deletes all local data. For AI Coach history, use the Clear button in the Coach tab.{"\n\n"}
-          EU Users (GDPR Art. 17): You have the right to access, rectify, erase, and port your data.{"\n\n"}
-          Turkish Users (KVKK): Your rights under Law No. 6698 are respected.{"\n\n"}
-          Saudi/MENA Users (PDPL): We comply with the Saudi Personal Data Protection Law.{"\n\n"}
-          Indian Users (DPDP Act 2023): We comply with India's Digital Personal Data Protection Act 2023. All your data is stored locally on your device. No personal data is transmitted to our servers. You have the right to access and erase your data at any time from Settings.
+        <Section title="6. Regional Compliance & Your Rights">
+          You can delete all your data at any time from Settings → Data & Privacy → Reset. Uninstalling the app permanently deletes all local data.{"\n\n"}
+          EU/UK Users (GDPR): You have the right to access, rectify, erase, and port your data. Mentra acts as a Data Controller for minimal purchase status and a Data Processor via Local Storage.{"\n\n"}
+          USA Users (CCPA/CPRA): We do not "sell" or "share" your personal information. You have the right to know what data is collected and request its deletion.{"\n\n"}
+          Turkish Users (KVKK): Your rights under Law No. 6698 are fully respected. Data remains within your device.{"\n\n"}
+          Japanese Users (APPI): We comply with the Act on the Protection of Personal Information. Your cognitive data is considered personal information and is handled locally on your device.{"\n\n"}
+          South Korean Users (PIPA): We comply with the Personal Information Protection Act. User data is not transmitted to third parties except for AI processing as described in Section 4.{"\n\n"}
+          Persian (FA) / Iranian Users: We respect any relevant data protection regulations and ensure that no sensitive personal information is stored on our servers. All cognitive data remains on your device.{"\n\n"}
+          MENA Users (PDPL): We comply with the Saudi Personal Data Protection Law and relevant regional regulations.{"\n\n"}
+          Indian Users (DPDP Act 2023): We comply with India's Digital Personal Data Protection Act. No personal data is transmitted to our servers.
         </Section>
 
         <Section title="7. Children">
-          Mentra is not intended for children under 13. We do not knowingly collect data from children under 13. If you believe a child has provided data, contact us immediately.
+          Mentra is not intended for children under 13. We do not knowingly collect data from children. If you believe a child has provided data, contact us for immediate deletion.
         </Section>
 
         <Section title="8. Contact">
           Tever Technology{"\n"}
           Website: www.tevertechnology.com{"\n"}
           Email: privacy@tevertechnology.com{"\n"}
-          For data requests: dpo@tevertechnology.com
+          Data Request: dpo@tevertechnology.com
         </Section>
       </ScrollView>
     </View>

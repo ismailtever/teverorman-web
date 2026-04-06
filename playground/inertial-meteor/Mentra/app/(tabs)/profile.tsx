@@ -17,16 +17,17 @@ import {
 import { Colors } from '@/constants/Colors';
 import { Storage, UserProfile } from '@/services/storage';
 import { getPremiumStatus, restoreFlow } from '@/services/purchases';
-import { I18n, Lang } from '@/services/i18n';
+import { I18n, useI18n, LANG_META, Lang } from '@/services/i18n';
 import { RamadanService } from '@/services/ramadan';
 
 export default function ProfileScreen() {
     const insets = useSafeAreaInsets();
+    const { lang, t } = useI18n();
     const [user, setUser] = useState<UserProfile | null>(null);
     const [isPro, setIsPro] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
     const [ramadanMode, setRamadanMode] = useState(false);
-    const [currentLang, setCurrentLang] = useState<Lang>(I18n.getLanguage() as Lang);
+    const [currentLang, setCurrentLang] = useState<Lang>(lang);
 
     useFocusEffect(
         useCallback(() => {
@@ -42,11 +43,11 @@ export default function ProfileScreen() {
         try {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
             Alert.alert(
-                "Export Your Data",
-                "Generate a JSON package of all your journals, scores, and routines?",
+                t('exportDataTitle' as any),
+                t('exportDataMsg' as any),
                 [
-                    { text: "Cancel", style: "cancel" },
-                    { text: "Export", style: "default", onPress: performExport }
+                    { text: t('cancel'), style: "cancel" },
+                    { text: t('export' as any), style: "default", onPress: performExport }
                 ]
             );
         } catch (e) {
@@ -72,11 +73,11 @@ export default function ProfileScreen() {
             });
 
             // Share Sheet
-            if (await Share.share({ message: JSON.stringify(exportData, null, 2), title: 'Mentra Export' })) {
+            if (await Share.share({ message: JSON.stringify(exportData, null, 2), title: t('mentraExport' as any) })) {
                 Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             }
         } catch (e) {
-            Alert.alert("Export Failed", "There was an error generating your data package.");
+            Alert.alert(t('exportFailed' as any), t('exportErrorMsg' as any));
         } finally {
             setIsExporting(false);
         }
@@ -88,28 +89,36 @@ export default function ProfileScreen() {
             const success = await restoreFlow("settings_tab");
             if (success) {
                 setIsPro(true);
-                Alert.alert("Restored", "Your Pro subscription has been restored.");
+                Alert.alert(t('alertRestored'), t('alertRestoredMsg'));
             } else {
-                Alert.alert("No Purchases Found", "We couldn't find an active Pro subscription linked to this Apple ID.");
+                Alert.alert(t('alertNoPurchases'), t('alertNoPurchasesMsg'));
             }
         } catch (e) {
-            Alert.alert("Error", "Could not restore purchases at this time.");
+            Alert.alert(t('error'), t('restoreFailed'));
         }
     };
 
-    const handleLangChange = async (lang: Lang) => {
+    const handleLangChange = async (newLang: Lang) => {
         Haptics.selectionAsync?.();
-        await I18n.setLanguage(lang);
-        setCurrentLang(lang);
+        await I18n.setLanguage(newLang);
+        setCurrentLang(newLang);
     };
 
     const LANG_OPTIONS: { code: Lang; label: string; flag: string }[] = [
         { code: 'en', label: 'EN', flag: '🇬🇧' },
-        { code: 'hi', label: 'हि', flag: '🇮🇳' },
         { code: 'tr', label: 'TR', flag: '🇹🇷' },
+        { code: 'zh', label: 'ZH', flag: '🇨🇳' },
         { code: 'ar', label: 'AR', flag: '🌍' },
         { code: 'fr', label: 'FR', flag: '🇫🇷' },
         { code: 'de', label: 'DE', flag: '🇩🇪' },
+        { code: 'hi', label: 'HI', flag: '🇮🇳' },
+        { code: 'es', label: 'ES', flag: '🇪🇸' },
+        { code: 'nl', label: 'NL', flag: '🇳🇱' },
+        { code: 'it', label: 'IT', flag: '🇮🇹' },
+        { code: 'ja', label: 'JA', flag: '🇯🇵' },
+        { code: 'ko', label: 'KO', flag: '🇰🇷' },
+        { code: 'fi', label: 'FI', flag: '🇫🇮' },
+        { code: 'fa', label: 'FA', flag: '🇮🇷' },
     ];
 
     const RowItem = ({ icon, label, subLabel, onPress, danger }: any) => (
@@ -139,7 +148,7 @@ export default function ProfileScreen() {
                 >
                     <ChevronLeft size={28} color={Colors.mentra.text} />
                 </Pressable>
-                <Text style={styles.headerTitle}>Settings</Text>
+                <Text style={styles.headerTitle}>{t('profSettings')}</Text>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
@@ -151,80 +160,82 @@ export default function ProfileScreen() {
                             <Text style={styles.avatarText}>{user?.name?.charAt(0) || 'U'}</Text>
                         </View>
                         <View style={styles.profileInfo}>
-                            <Text style={styles.profileName}>{user?.name || 'User'}</Text>
-                            <Text style={styles.profileEmail}>{isPro ? 'Mentra Pro Member' : 'Free Tier'}</Text>
+                            <Text style={styles.profileName}>{user?.name || t('user' as any)}</Text>
+                            <Text style={styles.profileEmail}>{isPro ? t('proActive') : t('freeTier' as any)}</Text>
                         </View>
                         {!isPro && (
                             <Pressable style={styles.proBtn} onPress={() => router.push('/paywall/onboarding' as any)}>
                                 <Zap size={14} color={Colors.mentra.brandPrimary} />
-                                <Text style={styles.proBtnText}>Upgrade</Text>
+                                <Text style={styles.proBtnText}>{t('profUpgrade')}</Text>
                             </Pressable>
                         )}
                     </View>
                 </View>
 
                 {/* Account & Billing */}
-                <Text style={styles.sectionTitle}>Account</Text>
+                <Text style={styles.sectionTitle}>{t('profAccount')}</Text>
                 <View style={styles.group}>
                     <RowItem
                         icon={<User size={20} color={Colors.mentra.textDim} />}
-                        label="Personal Information"
+                        label={t('personalInfo' as any)}
                     />
                     <View style={styles.divider} />
                     <RowItem
                         icon={<CreditCard size={20} color={Colors.mentra.textDim} />}
-                        label="Subscription"
-                        subLabel={isPro ? "Active • Mentra Pro Yearly" : "Free Tier"}
+                        label={t('subscriptionLabel')}
+                        subLabel={isPro ? t('proActiveYearly') : t('freeTier')}
                         onPress={() => isPro ? null : router.push('/paywall/onboarding' as any)}
                     />
                     <View style={styles.divider} />
                     <RowItem
                         icon={<Activity size={20} color={Colors.mentra.textDim} />}
-                        label="Restore Purchases"
+                        label={t('paywallRestore')}
                         onPress={handleRestore}
                     />
                 </View>
 
                 {/* Data & Privacy */}
-                <Text style={styles.sectionTitle}>Data & Privacy</Text>
+                <Text style={styles.sectionTitle}>{t('profPrivacy')}</Text>
                 <View style={styles.group}>
                     <RowItem
                         icon={<Database size={20} color={Colors.mentra.textDim} />}
-                        label="Export Data (JSON)"
-                        subLabel={isExporting ? "Generating..." : "Download all your journals and stats"}
+                        label={t('exportDataBtn' as any)}
+                        subLabel={isExporting ? t('processing') : t('exportDataDesc' as any)}
                         onPress={handleDataExport}
                     />
                     <View style={styles.divider} />
                     <RowItem
                         icon={<Shield size={20} color={Colors.mentra.textDim} />}
-                        label="Privacy Policy"
+                        label={t('legalPrivacy')}
                         onPress={() => router.push('/legal/privacy' as any)}
                     />
                     <View style={styles.divider} />
                     <RowItem
                         icon={<BookOpen size={20} color={Colors.mentra.textDim} />}
-                        label="Terms of Service"
+                        label={t('legalTerms')}
                         onPress={() => router.push('/legal/terms' as any)}
                     />
                     <View style={styles.divider} />
                     <RowItem
                         icon={<AlertTriangle size={20} color={Colors.mentra.textDim} />}
-                        label="Medical Disclaimer"
+                        label={t('legalDisclaimer')}
                         onPress={() => router.push('/legal/disclaimer' as any)}
                     />
                 </View>
 
                 {/* Preferences */}
-                <Text style={styles.sectionTitle}>App Preferences</Text>
+                <Text style={styles.sectionTitle}>{t('profAppPref')}</Text>
                 <View style={styles.group}>
                     {/* Language Switcher */}
-                    <View style={styles.rowItem}>
-                        <View style={[styles.rowIcon, { backgroundColor: Colors.mentra.surface2 }]}>
-                            <Globe size={20} color={Colors.mentra.textDim} />
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <Text style={styles.rowLabel}>Language</Text>
-                            <Text style={styles.rowSubLabel}>Interface language</Text>
+                    <View style={styles.rowItemScrollable}>
+                        <View style={styles.langHeader}>
+                            <View style={[styles.rowIcon, { backgroundColor: Colors.mentra.surface2 }]}>
+                                <Globe size={20} color={Colors.mentra.textDim} />
+                            </View>
+                            <View style={{ flex: 1 }}>
+                                <Text style={styles.rowLabel}>{t('profLanguage')}</Text>
+                                <Text style={styles.rowSubLabel}>{t('profInterfaceLang')}</Text>
+                            </View>
                         </View>
                         <View style={styles.langSwitcher}>
                             {LANG_OPTIONS.map((opt) => (
@@ -242,8 +253,8 @@ export default function ProfileScreen() {
                     <View style={styles.divider} />
                     <RowItem
                         icon={<Text style={{ fontSize: 18 }}>🌙</Text>}
-                        label={I18n.t('ramadanMode')}
-                        subLabel={ramadanMode ? I18n.t('ramadanActive') : 'Auto-detect or enable manually'}
+                        label={t('ramadanMode')}
+                        subLabel={ramadanMode ? t('ramadanActive') : t('ramadanAutoDetect')}
                         onPress={async () => {
                             const next = !ramadanMode;
                             await RamadanService.setRamadanMode(next);
@@ -253,13 +264,13 @@ export default function ProfileScreen() {
                     <View style={styles.divider} />
                     <RowItem
                         icon={<Bell size={20} color={Colors.mentra.textDim} />}
-                        label="Push Notifications"
-                        subLabel="Daily streak and check-in reminders"
+                        label={t('pushNotifications')}
+                        subLabel={t('pushNotificationsDesc')}
                     />
                     <View style={styles.divider} />
                     <RowItem
                         icon={<HelpCircle size={20} color={Colors.mentra.textDim} />}
-                        label="Help & Support"
+                        label={t('supportTitle')}
                         subLabel="support@tevertechnology.com"
                         onPress={() => {
                             const { Linking } = require('react-native');
@@ -272,7 +283,7 @@ export default function ProfileScreen() {
                 <View style={[styles.group, { marginTop: 24, marginBottom: 120 }]}>
                     <RowItem
                         icon={<LogOut size={20} color={Colors.mentra.danger} />}
-                        label="Sign Out"
+                        label={t('signOut' as any)}
                         danger
                     />
                 </View>
@@ -313,15 +324,17 @@ const styles = StyleSheet.create({
 
     // Row Item
     rowItem: { flexDirection: 'row', alignItems: 'center', padding: 16, gap: 16 },
+    rowItemScrollable: { padding: 16, gap: 12 },
+    langHeader: { flexDirection: 'row', alignItems: 'center', gap: 16 },
     rowIcon: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
     rowLabel: { fontSize: 16, fontWeight: '600', color: Colors.mentra.text },
     rowSubLabel: { fontSize: 13, color: Colors.mentra.textDim, marginTop: 2 },
 
     // Language Switcher
-    langSwitcher: { flexDirection: 'row', gap: 6 },
-    langBtn: { flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: 8, paddingVertical: 6, borderRadius: 10, borderWidth: 1, borderColor: Colors.mentra.border, backgroundColor: Colors.mentra.bg },
+    langSwitcher: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 },
+    langBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 12, borderWidth: 1, borderColor: Colors.mentra.border, backgroundColor: Colors.mentra.bg, minWidth: 60, justifyContent: 'center' },
     langBtnActive: { borderColor: Colors.mentra.brandPrimary, backgroundColor: Colors.mentra.brandPrimary + '15' },
-    langFlag: { fontSize: 14 },
-    langBtnText: { fontSize: 11, fontWeight: '700', color: Colors.mentra.textDim },
+    langFlag: { fontSize: 16 },
+    langBtnText: { fontSize: 12, fontWeight: '700', color: Colors.mentra.textDim },
     langBtnTextActive: { color: Colors.mentra.brandPrimary },
 });

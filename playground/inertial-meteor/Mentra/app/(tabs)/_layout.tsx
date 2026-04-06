@@ -6,8 +6,10 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Home, Compass, Activity, User, BrainCircuit, TrendingUp, Target } from 'lucide-react-native';
 import { BlurView } from 'expo-blur';
+import { useI18n } from '@/services/i18n';
 
 export default function TabLayout() {
+  const { t } = useI18n();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
@@ -51,27 +53,27 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: t('home' as any),
           tabBarIcon: ({ color, focused }) => (
-            <Home size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+            <Home size={22} color={color} {...({ strokeWidth: focused ? 2.5 : 1.8 } as any)} />
           ),
         }}
       />
       <Tabs.Screen
         name="coach"
         options={{
-          title: 'Coach',
+          title: t('coach' as any),
           tabBarIcon: ({ color, focused }) => (
-            <BrainCircuit size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+            <BrainCircuit size={22} color={color} {...({ strokeWidth: focused ? 2.5 : 1.8 } as any)} />
           ),
         }}
       />
       <Tabs.Screen
         name="training"
         options={{
-          title: 'Brain',
+          title: t('diagnosticsTitle'),
           tabBarIcon: ({ color, focused }) => (
-            <Target size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+            <Target size={22} color={color} {...({ strokeWidth: focused ? 2.5 : 1.8 } as any)} />
           ),
         }}
       />

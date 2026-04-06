@@ -91,7 +91,7 @@
       "reactCompiler": true
     },
     "description": "Mentra trains your brain with science-backed cognitive exercises, AI coaching, and personalized programs for focus, memory, speed, and resilience.",
-    "githubUrl": "https://github.com/eymentever/mentra-ios",
+
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
@@ -111,7 +111,16 @@
       "tr": "./locales/tr.json",
       "ar": "./locales/ar.json",
       "fr": "./locales/fr.json",
-      "de": "./locales/de.json"
+      "de": "./locales/de.json",
+      "zh": "./locales/zh.json",
+      "es": "./locales/es.json",
+      "nl": "./locales/nl.json",
+      "it": "./locales/it.json",
+      "ja": "./locales/ja.json",
+      "ko": "./locales/ko.json",
+      "fi": "./locales/fi.json",
+      "fa": "./locales/fa.json"
     }
+
   }
 }

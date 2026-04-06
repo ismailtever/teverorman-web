@@ -13,7 +13,7 @@ import {
   Flame, ChevronRight, Zap, BrainCircuit, Play,
   TrendingUp, CheckCircle2, Lock, Sparkles, User, Brain, Clock, ShieldCheck
 } from 'lucide-react-native';
-import { I18n } from '@/services/i18n';
+import { I18n, useI18n } from '@/services/i18n';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
 
@@ -26,32 +26,27 @@ import { RamadanService } from '@/services/ramadan';
 
 const { width } = Dimensions.get('window');
 
-// ─── Cognitive Domain Config ───────────────────────────────────────────────
-const DOMAINS = [
-  { key: 'focus',      label: 'Focus',      color: Colors.mentra.brandPrimary, bg: '#E8F5F0', emoji: '🎯', score: 55 },
-  { key: 'memory',     label: 'Memory',     color: '#6366F1',                  bg: '#EDECFD', emoji: '🧠', score: 72 },
-  { key: 'speed',      label: 'Speed',      color: '#10B981',                  bg: '#ECFDF5', emoji: '⚡', score: 68 },
-  { key: 'logic',      label: 'Logic',      color: '#F59E0B',                  bg: '#FFFBEB', emoji: '💡', score: 41 },
-  { key: 'resilience', label: 'Resilience', color: '#8B5CF6',                  bg: '#F5F3FF', emoji: '🛡️', score: 60 },
-];
 
 // ─── Score Ring ────────────────────────────────────────────────────────────
 const ScoreRing = React.memo(({ score, size = 78 }: { score: number; size?: number }) => {
+  const { t } = useI18n();
   return (
     <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
       <View style={{ position: 'absolute', width: size, height: size, borderRadius: size / 2, borderWidth: 6, borderColor: 'rgba(255,255,255,0.18)' }} />
       <View style={{ position: 'absolute', width: size - 18, height: size - 18, borderRadius: size, backgroundColor: 'rgba(74,222,128,0.12)' }} />
       <Text style={{ fontSize: size * 0.29, fontWeight: '900', color: '#FFF', letterSpacing: -1 }}>{score}</Text>
-      <Text style={{ fontSize: size * 0.11, fontWeight: '700', color: 'rgba(255,255,255,0.55)', letterSpacing: 0.5 }}>SCORE</Text>
+      <Text style={{ fontSize: size * 0.11, fontWeight: '700', color: 'rgba(255,255,255,0.55)', letterSpacing: 0.5 }}>{t('score' as any).toUpperCase()}</Text>
     </View>
   );
 });
 
 // ─── Hero Card ─────────────────────────────────────────────────────────────
-const HeroCard = React.memo(({ score, streak, name }: { score: number; streak: number; name: string }) => {
+const HeroCard = React.memo(({ score, streak, name, sessionCount, trend }: { score: number; streak: number; name: string, sessionCount: number, trend: number }) => {
+  const { t } = useI18n();
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? (I18n.t('goodMorning' as any) || 'Good morning') : hour < 18 ? (I18n.t('goodAfternoon' as any) || 'Good afternoon') : (I18n.t('goodEvening' as any) || 'Good evening');
-  const tagline = score >= 80 ? (I18n.t('peakForm' as any) || "You're in peak form.") : score >= 60 ? (I18n.t('steadyProgress' as any) || 'Steady progress. Keep going.') : (I18n.t('warmingUp' as any) || 'Your brain is warming up.');
+  const greeting = hour < 12 ? t('goodMorning' as any) : hour < 18 ? t('goodAfternoon' as any) : t('goodEvening' as any);
+  const tagline = score >= 80 ? t('peakForm' as any) : score >= 60 ? t('steadyProgress' as any) : t('warmingUp' as any);
+
 
   return (
     <Animated.View entering={FadeInUp.springify()} style={styles.heroWrapper}>
@@ -62,7 +57,7 @@ const HeroCard = React.memo(({ score, streak, name }: { score: number; streak: n
           <View style={{ flex: 1 }}>
             <View style={styles.heroProtectionBadge}>
               <ShieldCheck size={10} color={Colors.mentra.brandPrimary} />
-              <Text style={styles.heroProtectionText}>{I18n.t('protectionActive' as any) || 'PROTECTION ACTIVE'}</Text>
+              <Text style={styles.heroProtectionText}>{t('protectionActiveShort')}</Text>
             </View>
             <Text style={styles.heroGreeting}>{greeting}, {name} 👋</Text>
             <Text style={styles.heroTagline}>{tagline}</Text>
@@ -76,19 +71,19 @@ const HeroCard = React.memo(({ score, streak, name }: { score: number; streak: n
           <View style={styles.heroStat}>
             <Flame size={14} color="#F59E0B" />
             <Text style={styles.heroStatVal}>{streak}</Text>
-            <Text style={styles.heroStatLabel}>day streak</Text>
+            <Text style={styles.heroStatLabel}>{t('consistency' as any)}</Text>
           </View>
           <View style={styles.heroStatDivider} />
           <View style={styles.heroStat}>
-            <TrendingUp size={14} color={Colors.mentra.brandSecondary} />
-            <Text style={styles.heroStatVal}>Top 22%</Text>
-            <Text style={styles.heroStatLabel}>this week</Text>
+            <TrendingUp size={14} color={trend >= 0 ? Colors.mentra.brandSecondary : Colors.mentra.danger} />
+            <Text style={styles.heroStatVal}>{trend > 0 ? '+' : ''}{trend}%</Text>
+            <Text style={styles.heroStatLabel}>{t('thisWeekTitle' as any)}</Text>
           </View>
           <View style={styles.heroStatDivider} />
           <View style={styles.heroStat}>
             <CheckCircle2 size={14} color={Colors.mentra.success} />
-            <Text style={styles.heroStatVal}>12</Text>
-            <Text style={styles.heroStatLabel}>sessions</Text>
+            <Text style={styles.heroStatVal}>{sessionCount}</Text>
+            <Text style={styles.heroStatLabel}>{t('sessions' as any)}</Text>
           </View>
           <View style={{ marginLeft: 8 }}>
             <ChevronRight size={14} color="rgba(255,255,255,0.3)" />
@@ -100,6 +95,7 @@ const HeroCard = React.memo(({ score, streak, name }: { score: number; streak: n
 });
 
 const NewsFlash = React.memo(() => {
+  const { t } = useI18n();
   return (
     <Animated.View entering={FadeInDown.delay(50).springify()}>
       <Pressable 
@@ -115,8 +111,8 @@ const NewsFlash = React.memo(() => {
           <Sparkles size={14} color={Colors.mentra.brandAccent} />
         </View>
         <View style={{ flex: 1 }}>
-          <ThemedText style={styles.newsTitle}>{I18n.t('latestResearch' as any) || 'LATEST RESEARCH UNLOCKED'}</ThemedText>
-          <ThemedText style={styles.newsSub}>{I18n.t('scienceBehindPrompt' as any) || 'Deep neuroscience added to all training start screens.'}</ThemedText>
+          <ThemedText style={styles.newsTitle}>{t('latestResearch' as any)}</ThemedText>
+          <ThemedText style={styles.newsSub}>{t('scienceBehindPrompt' as any)}</ThemedText>
         </View>
         <ChevronRight size={14} color={Colors.mentra.brandAccent} />
       </Pressable>
@@ -126,6 +122,7 @@ const NewsFlash = React.memo(() => {
 
 // ─── Daily Session CTA ─────────────────────────────────────────────────────
 const DailySessionCard = React.memo(() => {
+  const { t } = useI18n();
   return (
     <Animated.View entering={FadeInDown.delay(80).springify()}>
       <Pressable
@@ -136,13 +133,13 @@ const DailySessionCard = React.memo(() => {
         <View style={styles.dailyLeft}>
           <View style={styles.dailyTag}>
             <Sparkles size={10} color={Colors.mentra.brandPrimary} />
-            <Text style={styles.dailyTagText}>TODAY'S BRAIN WORKOUT</Text>
+            <Text style={styles.dailyTagText}>{t('dailyWorkoutTag' as any)}</Text>
           </View>
-          <Text style={styles.dailyTitle}>Daily Training</Text>
-          <Text style={styles.dailyDesc}>Memory · Speed · Focus  •  ~12 min</Text>
+          <Text style={styles.dailyTitle}>{t('dailyTrainingTitle' as any)}</Text>
+          <Text style={styles.dailyDesc}>{t('dailyTrainingSubtitle' as any)}</Text>
           <View style={styles.dailyMeta}>
             <View style={styles.dailyDot} />
-            <Text style={styles.dailyMetaText}>Adaptive difficulty</Text>
+            <Text style={styles.dailyMetaText}>{t('adaptiveDifficulty' as any)}</Text>
           </View>
         </View>
         <View style={styles.dailyPlayBtn}>
@@ -154,18 +151,19 @@ const DailySessionCard = React.memo(() => {
 });
 
 // ─── Domain Strip ──────────────────────────────────────────────────────────
-const DomainStrip = React.memo(() => {
-  const weakest = DOMAINS.reduce((a, b) => (a.score < b.score ? a : b));
+const DomainStrip = React.memo(({ domains }: { domains: any[] }) => {
+  const { t } = useI18n();
+  const weakest = domains.reduce((a: any, b: any) => (a.score < b.score ? a : b));
   return (
     <Animated.View entering={FadeInDown.delay(130).springify()}>
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>COGNITIVE PROFILE</Text>
+        <Text style={styles.sectionTitle}>{t('cognitiveProfileTitle' as any)}</Text>
         <Pressable onPress={() => router.push('/(tabs)/training' as any)}>
-          <Text style={styles.sectionLink}>Full radar →</Text>
+          <Text style={styles.sectionLink}>{t('fullRadarLink' as any)}</Text>
         </Pressable>
       </View>
       <View style={styles.domainStrip}>
-        {DOMAINS.map((d) => {
+        {domains.map((d) => {
           const isWeak = d.key === weakest.key;
           return (
             <Pressable key={d.key} onPress={() => router.push('/(tabs)/training' as any)} style={[styles.domainPill, isWeak && { borderColor: d.color + '60' }]}>
@@ -198,7 +196,8 @@ function RamadanBanner({ rec }: { rec: { title: string; desc: string; shouldTrai
 }
 
 // ─── Growth Edge Card ──────────────────────────────────────────────────────
-function GrowthEdgeCard({ primaryChallengeKey }: { primaryChallengeKey?: string }) {
+function GrowthEdgeCard({ primaryChallengeKey, domains }: { primaryChallengeKey?: string, domains: any[] }) {
+  const { t } = useI18n();
   // Map primaryChallenge → domain key
   const challengeToDomain: Record<string, string> = {
     brainFog: 'focus', stress: 'resilience', focus: 'focus',
@@ -206,14 +205,14 @@ function GrowthEdgeCard({ primaryChallengeKey }: { primaryChallengeKey?: string 
   };
   const domainFromChallenge = primaryChallengeKey ? challengeToDomain[primaryChallengeKey] : null;
   const weakest = domainFromChallenge
-    ? (DOMAINS.find(d => d.key === domainFromChallenge) ?? DOMAINS.reduce((a, b) => (a.score < b.score ? a : b)))
-    : DOMAINS.reduce((a, b) => (a.score < b.score ? a : b));
+    ? (domains.find(d => d.key === domainFromChallenge) ?? domains.reduce((a, b) => (a.score < b.score ? a : b)))
+    : domains.reduce((a, b) => (a.score < b.score ? a : b));
   const tips: Record<string, string> = {
-    focus:      'Your attention drifts at task-switch points. Grid Focus rebuilds sustained attention fast.',
-    memory:     'Working memory is your biggest lever right now. Memory Grid trains the prefrontal cortex directly.',
-    speed:      'Processing speed underpins every other domain. Speed Match trains rapid pattern recognition.',
-    logic:      'Abstract reasoning shapes your decision quality. Pattern exercises are the direct path.',
-    resilience: 'Mental flexibility helps you recover under stress. Breathing + cognitive shifting work together.',
+    focus:      t('tipFocus'),
+    memory:     t('tipMemory'),
+    speed:      t('tipSpeed'),
+    logic:      t('tipLogic'),
+    resilience: t('tipResilience'),
   };
   const routes: Record<string, string> = {
     focus: '/game/grid-focus', memory: '/game/memory-grid',
@@ -226,12 +225,12 @@ function GrowthEdgeCard({ primaryChallengeKey }: { primaryChallengeKey?: string 
       </View>
       <View style={{ flex: 1 }}>
         <View style={[styles.edgePill, { backgroundColor: weakest.color + '16' }]}>
-          <Text style={[styles.edgePillText, { color: weakest.color }]}>YOUR GROWTH EDGE</Text>
+          <Text style={[styles.edgePillText, { color: weakest.color }]}>{t('growthEdgeTag')}</Text>
         </View>
         <Text style={styles.edgeDomain}>{weakest.label}</Text>
         <Text style={styles.edgeTip}>{tips[weakest.key]}</Text>
-        <Pressable onPress={() => router.push(routes[weakest.key] as any)} style={[styles.edgeBtn, { backgroundColor: weakest.color }]}>
-          <Text style={styles.edgeBtnText}>Train {weakest.label} Now →</Text>
+        <Pressable onPress={() => router.push(routes[weakest.key])} style={[styles.edgeBtn, { backgroundColor: weakest.color }]}>
+          <Text style={styles.edgeBtnText}>{t('exploreStart')} {weakest.label} {t('finish')} →</Text>
         </Pressable>
       </View>
     </Animated.View>
@@ -240,38 +239,37 @@ function GrowthEdgeCard({ primaryChallengeKey }: { primaryChallengeKey?: string 
 
 // ─── Social Media Detox Section ──────────────────────────────────────────────
 function DetoxSection() {
+  const { t } = useI18n();
   return (
     <Animated.View entering={FadeInDown.delay(195).springify()} style={detoxStyles.card}>
       <View style={detoxStyles.header}>
         <View style={detoxStyles.badge}>
-          <Text style={detoxStyles.badgeText}>ELITE LABS</Text>
+          <Text style={detoxStyles.badgeText}>{t('badgeEliteLabs')}</Text>
         </View>
-        <Text style={detoxStyles.title}>📵 Digital Detox Protocols</Text>
+        <Text style={detoxStyles.title}>{t('titleDigitalDetox')}</Text>
       </View>
       <Text style={detoxStyles.desc}>
-        Science shows 2+ hrs/day scrolling reduces prefrontal impulse control by 35%. Our researchers are validating these protocols.
+        {t('detoxDescription')}
       </Text>
       <View style={detoxStyles.games}>
         <Pressable
           style={({ pressed }) => [detoxStyles.gameBtn, { opacity: pressed ? 0.85 : 1 }]}
           onPress={() => {
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+            router.push('/game/impulse-control');
           }}
         >
-          <View style={detoxStyles.lockOverlay}>
-            <Lock size={12} color={Colors.mentra.brandPrimary} />
-          </View>
-          <Text style={[detoxStyles.gameBtnEmoji, { opacity: 0.3 }]}>🛑</Text>
-          <Text style={[detoxStyles.gameBtnLabel, { color: Colors.mentra.textDim }]}>Impulse Control</Text>
-          <Text style={detoxStyles.gameBtnSub}>Phased Update</Text>
+          <Text style={[detoxStyles.gameBtnEmoji]}>🛑</Text>
+          <Text style={[detoxStyles.gameBtnLabel, { color: Colors.mentra.text }]}>{t('btnImpulseControl')}</Text>
+          <Text style={detoxStyles.gameBtnSub}>{t('btnRebuildAttention')}</Text>
         </Pressable>
         <Pressable
           style={({ pressed }) => [detoxStyles.gameBtn, detoxStyles.gameBtnGreen, { opacity: pressed ? 0.85 : 1 }]}
-          onPress={() => router.push('/game/deep-focus' as any)}
+          onPress={() => router.push('/game/deep-focus')}
         >
           <Text style={detoxStyles.gameBtnEmoji}>🎯</Text>
-          <Text style={detoxStyles.gameBtnLabel}>Deep Focus</Text>
-          <Text style={detoxStyles.gameBtnSub}>Rebuild attention</Text>
+          <Text style={detoxStyles.gameBtnLabel}>{t('btnDeepFocus')}</Text>
+          <Text style={detoxStyles.gameBtnSub}>{t('btnRebuildAttention')}</Text>
         </Pressable>
       </View>
     </Animated.View>
@@ -304,25 +302,19 @@ const detoxStyles = StyleSheet.create({
   gameBtnSub: { fontSize: 10, color: Colors.mentra.textDim, fontWeight: '600' },
 });
 
-// ─── Quick Games ────────────────────────────────────────────────────────────
-const QUICK_GAMES = [
-  { title: 'Grid Focus',   sub: 'Focus',   emoji: '🎯', color: Colors.mentra.brandPrimary, bg: '#E8F5F0', route: '/game/grid-focus',   pro: false },
-  { title: 'Memory Grid', sub: 'Memory',  emoji: '🧠', color: '#6366F1',                  bg: '#EDECFD', route: '/game/memory-grid',  pro: false },
-  { title: 'Elite Lab',   sub: 'Research', emoji: '🔬', color: Colors.mentra.brandAccent,  bg: Colors.mentra.brandAccent + '10', route: '/(tabs)/explore', pro: false, phased: true },
-  { title: 'Dopamine',    sub: 'Reset',   emoji: '🔄', color: '#8B5CF6',                  bg: '#F5F3FF', route: '/game/dopamine-reset', pro: false },
-];
 
-function QuickGamesRow({ isPro }: { isPro: boolean }) {
+function QuickGamesRow({ isPro, games }: { isPro: boolean; games: any[] }) {
+  const { t } = useI18n();
   return (
     <Animated.View entering={FadeInDown.delay(210).springify()}>
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>BRAIN GAMES</Text>
-        <Pressable onPress={() => router.push('/(tabs)/explore' as any)}>
-          <Text style={styles.sectionLink}>See all</Text>
+        <Text style={styles.sectionTitle}>{t('brainGames')}</Text>
+        <Pressable onPress={() => router.push('/(tabs)/explore')}>
+          <Text style={styles.sectionLink}>{t('seeAll')}</Text>
         </Pressable>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.gamesRow}>
-        {QUICK_GAMES.map((g) => {
+        {games.map((g) => {
           const locked = g.pro && !isPro;
           return (
             <Pressable
@@ -332,7 +324,7 @@ function QuickGamesRow({ isPro }: { isPro: boolean }) {
                   Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
                 }
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); 
-                router.push(g.route as any); 
+                router.push(g.route); 
               }}
               style={({ pressed }) => [styles.gameCard, { backgroundColor: g.bg, opacity: pressed ? 0.86 : 1 }]}
             >
@@ -342,7 +334,7 @@ function QuickGamesRow({ isPro }: { isPro: boolean }) {
                 {g.phased && <View style={[styles.gameLock, { backgroundColor: g.color }]}><Clock size={10} color="#FFF" /></View>}
               </View>
               <Text style={[styles.gameTitle, { color: g.color }]}>{g.title}</Text>
-              <Text style={styles.gameSub}>{g.phased ? 'Coming Soon' : g.sub}</Text>
+              <Text style={styles.gameSub}>{g.phased ? t('comingSoon') : g.sub}</Text>
             </Pressable>
           );
         })}
@@ -351,20 +343,15 @@ function QuickGamesRow({ isPro }: { isPro: boolean }) {
   );
 }
 
-// ─── Routines Section ──────────────────────────────────────────────────────
-const ROUTINES = [
-  { title: 'Morning Reset',   icon: '🌅', desc: 'Activate & set intention',  dur: '8 min',  color: '#F59E0B', bg: '#FFFBEB', route: '/training/daily-session', pro: false },
-  { title: 'Deep Focus',      icon: '🎯', desc: 'Build sustained attention', dur: '15 min', color: Colors.mentra.brandPrimary, bg: '#E8F5F0', route: '/training/daily-session', pro: true },
-  { title: 'Sleep Wind-Down', icon: '🌙', desc: 'Calm the cognitive storm',  dur: '10 min', color: '#6366F1', bg: '#EDECFD', route: '/training/daily-session', pro: true },
-];
 
-function RoutinesSection({ isPro }: { isPro: boolean }) {
+function RoutinesSection({ isPro, routines }: { isPro: boolean; routines: any[] }) {
+  const { t } = useI18n();
   return (
     <Animated.View entering={FadeInDown.delay(250).springify()}>
       <View style={[styles.sectionHeader, { marginTop: 8 }]}>
-        <Text style={styles.sectionTitle}>ROUTINES</Text>
+        <Text style={styles.sectionTitle}>{t('routines')}</Text>
       </View>
-      {ROUTINES.map((r) => {
+      {routines.map((r) => {
         const locked = r.pro && !isPro;
         return (
           <Pressable
@@ -382,7 +369,7 @@ function RoutinesSection({ isPro }: { isPro: boolean }) {
             {locked ? (
               <View style={styles.routineProBadge}>
                 <Zap size={11} color={Colors.mentra.brandPrimary} />
-                <Text style={styles.routineProText}>Pro</Text>
+                <Text style={styles.routineProText}>{t('routineProText')}</Text>
               </View>
             ) : (
               <ChevronRight size={18} color={Colors.mentra.muted} />
@@ -394,35 +381,24 @@ function RoutinesSection({ isPro }: { isPro: boolean }) {
   );
 }
 
-// ─── Insight + Upsell ─────────────────────────────────────────────────────
-const INSIGHTS = [
-  '"Focused training for 12 minutes yields more cognitive gain than 2 hours of passive screen time."',
-  '"The brain consolidates learning during sleep — tonight\'s rest is part of today\'s training."',
-  '"Working memory is trainable. Each session builds the prefrontal scaffolding you rely on all day."',
-  '"Mental flexibility — the ability to shift contexts — predicts life outcomes more than raw IQ."',
-];
 
 // ─── Social Media Detox Section ───────────────────────────────────────────
-const DETOX_GAMES = [
-  { emoji: '🛑', title: 'Impulse Control', sub: 'Resist the scroll', color: Colors.mentra.danger, bg: '#FEF2F2', route: '/game/impulse-control' },
-  { emoji: '🎯', title: 'Deep Focus',       sub: '5–30 min timer',   color: '#6366F1',             bg: '#EDECFD', route: '/game/deep-focus' },
-  { emoji: '🔄', title: 'Dopamine Reset',   sub: 'Break the urge',   color: '#8B5CF6',             bg: '#F5F3FF', route: '/game/dopamine-reset' },
-];
 
-function SocialMediaSection() {
+function SocialMediaSection({ detoxGames }: { detoxGames: any[] }) {
+  const { t } = useI18n();
   return (
     <Animated.View entering={FadeInDown.delay(295).springify()} style={{ marginBottom: 20 }}>
       <View style={[styles.sectionHeader, { marginBottom: 10 }]}>
-        <Text style={styles.sectionTitle}>📵 DIGITAL DETOX</Text>
+        <Text style={styles.sectionTitle}>📵 {t('digitalDetoxTitle' as any)}</Text>
         <Pressable onPress={() => router.push('/(tabs)/explore' as any)}>
-          <Text style={styles.sectionLink}>See all</Text>
+          <Text style={styles.sectionLink}>{t('seeAll' as any)}</Text>
         </Pressable>
       </View>
       <View style={styles.detoxBox}>
-        <Text style={styles.detoxHeadline}>Research: Digital toxin reversal.</Text>
-        <Text style={styles.detoxSub}>Rebuild the prefrontal "stop" network.</Text>
+        <Text style={styles.detoxHeadline}>{t('detoxHeadline')}</Text>
+        <Text style={styles.detoxSub}>{t('detoxSub')}</Text>
         <View style={styles.detoxRow}>
-          {DETOX_GAMES.map(g => (
+          {detoxGames.map(g => (
             <Pressable
               key={g.title}
               onPress={() => { router.push(g.route as any); }}
@@ -441,6 +417,7 @@ function SocialMediaSection() {
 
 // ─── Journal Quick Card ────────────────────────────────────────────────────
 function JournalCard() {
+  const { t } = useI18n();
   return (
     <Animated.View entering={FadeInDown.delay(285).springify()}>
       <Pressable
@@ -450,8 +427,8 @@ function JournalCard() {
         <View style={styles.journalLeft}>
           <View style={styles.journalIcon}><Text style={{ fontSize: 20 }}>📔</Text></View>
           <View>
-            <Text style={styles.journalTitle}>Journal</Text>
-            <Text style={styles.journalSub}>Track mood & reflect</Text>
+            <Text style={styles.journalTitle}>{t('journalTitle' as any)}</Text>
+            <Text style={styles.journalSub}>{t('journalFeelPrompt' as any)}</Text>
           </View>
         </View>
         <ChevronRight size={18} color={Colors.mentra.muted} />
@@ -460,13 +437,14 @@ function JournalCard() {
   );
 }
 
-function InsightCard() {
-  const insight = INSIGHTS[new Date().getDay() % INSIGHTS.length];
+function InsightCard({ insights }: { insights: string[] }) {
+  const { t } = useI18n();
+  const insight = insights[new Date().getDay() % insights.length];
   return (
     <Animated.View entering={FadeInDown.delay(290).springify()} style={styles.insightCard}>
       <View style={styles.insightHeader}>
         <BrainCircuit size={15} color={Colors.mentra.brandPrimary} />
-        <Text style={styles.insightLabel}>DAILY COGNITIVE INSIGHT</Text>
+        <Text style={styles.insightLabel}>{t('dailyInsight')}</Text>
       </View>
       <Text style={styles.insightText}>{insight}</Text>
     </Animated.View>
@@ -474,16 +452,17 @@ function InsightCard() {
 }
 
 function UpsellBanner() {
+  const { t } = useI18n();
   return (
     <Animated.View entering={FadeInDown.delay(320).springify()}>
       <Pressable onPress={() => router.push('/paywall/onboarding' as any)} style={({ pressed }) => [styles.upsellCard, pressed && { opacity: 0.9 }]}>
         <LinearGradient colors={['#194031', '#20503D']} style={StyleSheet.absoluteFill} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} />
         <View style={styles.upsellCircle} />
         <View style={{ flex: 1 }}>
-          <Text style={styles.upsellTitle}>Unlock Your Full Potential</Text>
-          <Text style={styles.upsellSub}>Advanced radar · Unlimited AI Coach · Zero ads</Text>
+          <Text style={styles.upsellTitle}>{t('upsellTitle')}</Text>
+          <Text style={styles.upsellSub}>{t('upsellSub')}</Text>
         </View>
-        <View style={styles.upsellBtn}><Text style={styles.upsellBtnText}>Go Pro</Text></View>
+        <View style={styles.upsellBtn}><Text style={styles.upsellBtnText}>{t('btnGoPro')}</Text></View>
       </Pressable>
     </Animated.View>
   );
@@ -491,10 +470,11 @@ function UpsellBanner() {
 
 // ─── Top Header ───────────────────────────────────────────────────────────
 function HomeHeader() {
+  const { t } = useI18n();
   return (
     <Animated.View entering={FadeInDown.duration(600).springify()} style={styles.headerRow}>
       <View style={styles.headerLeft}>
-        <Text style={styles.brandTitle}>Mentra</Text>
+        <Text style={styles.brandTitle}>{t('mentraBrand')}</Text>
         <View style={styles.brandDot} />
       </View>
       <Pressable
@@ -513,28 +493,86 @@ function HomeHeader() {
 // ─── Screen ────────────────────────────────────────────────────────────────
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const { lang, t } = useI18n();
+
+  const DOMAINS = React.useMemo(() => [
+    { key: 'focus',      label: t('focus' as any),      color: Colors.mentra.brandPrimary, bg: '#E8F5F0', emoji: '🎯', score: 55 },
+    { key: 'memory',     label: t('memory' as any),     color: '#6366F1',                  bg: '#EDECFD', emoji: '🧠', score: 72 },
+    { key: 'speed',      label: t('speed' as any),      color: '#10B981',                  bg: '#ECFDF5', emoji: '⚡', score: 68 },
+    { key: 'logic',      label: t('logic' as any),      color: '#F59E0B',                  bg: '#FFFBEB', emoji: '💡', score: 41 },
+    { key: 'resilience', label: t('resilience' as any), color: '#8B5CF6',                  bg: '#F5F3FF', emoji: '🛡️', score: 60 },
+  ], [lang]);
+
+  const QUICK_GAMES = React.useMemo(() => [
+    { title: t('gameGridFocus'),   sub: t('focus'),   emoji: '🎯', color: Colors.mentra.brandPrimary, bg: '#E8F5F0', route: '/game/grid-focus',   pro: false },
+    { title: t('gameMemoryGrid'), sub: t('memory'),  emoji: '🧠', color: '#6366F1',                  bg: '#EDECFD', route: '/game/memory-grid',  pro: false },
+    { title: t('exploreEliteBadge'),   sub: t('latestResearch'), emoji: '🔬', color: Colors.mentra.brandAccent,  bg: Colors.mentra.brandAccent + '10', route: '/(tabs)/explore', pro: false },
+    { title: t('gameDopamineReset'),    sub: t('drTitle'),   emoji: '🔄', color: '#8B5CF6',                  bg: '#F5F3FF', route: '/game/dopamine-reset', pro: false },
+  ], [lang]);
+
+  const ROUTINES = React.useMemo(() => [
+    { title: t('morningResetTitle'),   icon: '🌅', desc: t('morningResetDesc'),  dur: '8 min',  color: '#F59E0B', bg: '#FFFBEB', route: '/training/daily-session', pro: false },
+    { title: t('deepFocusTitle'),      icon: '🎯', desc: t('deepFocusDesc'), dur: '15 min', color: Colors.mentra.brandPrimary, bg: '#E8F5F0', route: '/training/daily-session', pro: true },
+    { title: t('sleepWindDownTitle'), icon: '🌙', desc: t('sleepWindDownDesc'),  dur: '10 min', color: '#6366F1', bg: '#EDECFD', route: '/training/daily-session', pro: true },
+  ], [lang]);
+
+  const DETOX_GAMES = React.useMemo(() => [
+    { emoji: '🛑', title: t('impulseControlTitle'), sub: t('drPhaseTriggerSub'), color: Colors.mentra.danger, bg: '#FEF2F2', route: '/game/impulse-control' },
+    { emoji: '🎯', title: t('deepFocusTitle'),       sub: '5–30 min timer',   color: '#6366F1',             bg: '#EDECFD', route: '/game/deep-focus' },
+    { emoji: '🔄', title: t('drTitle'),   sub: t('drRateSub'),   color: '#8B5CF6',             bg: '#F5F3FF', route: '/game/dopamine-reset' },
+  ], [lang]);
+
+  const INSIGHTS = React.useMemo(() => [
+    t('insight1' as any),
+    t('insight2' as any),
+    t('insight3' as any),
+    t('insight4' as any),
+  ], [lang]);
+
   const [userName, setUserName] = useState('there');
   const [streakData, setStreakData] = useState<StreakData>({ current: 0, longest: 0, lastPlayed: null, playedToday: false, isAtRisk: false });
   const [mentraScore, setMentraScore] = useState(72);
+  const [sessionCount, setSessionCount] = useState(0);
+  const [trendScore, setTrendScore] = useState(0);
   const [isPro, setIsPro] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [ramadanActive, setRamadanActive] = useState(false);
   const [ramadanRec, setRamadanRec] = useState<{ title: string; desc: string; shouldTrain: boolean } | null>(null);
   const [primaryChallenge, setPrimaryChallenge] = useState<string>('logic');
 
+  const calculateTrend = (sessions: any[]) => {
+    if (!sessions || sessions.length === 0) return 0;
+    const now = Date.now();
+    const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
+    const thisWeek = sessions.filter(s => now - new Date(s.timestamp).getTime() < oneWeekMs);
+    const lastWeek = sessions.filter(s => {
+      const t = now - new Date(s.timestamp).getTime();
+      return t >= oneWeekMs && t < 2 * oneWeekMs;
+    });
+    if (thisWeek.length === 0) return 0;
+    if (lastWeek.length === 0) return Math.min(Math.round(thisWeek.length * 2.5), 15);
+    const avgThis = thisWeek.reduce((acc, s) => acc + (s.score || 0), 0) / thisWeek.length;
+    const avgLast = lastWeek.reduce((acc, s) => acc + (s.score || 0), 0) / lastWeek.length;
+    if (avgLast === 0) return 100;
+    return Math.round(((avgThis - avgLast) / avgLast) * 100);
+  };
+
   const loadData = useCallback(async () => {
-    const [up, sd, pro, isRamadan, score] = await Promise.all([
+    const [up, sd, pro, isRamadan, score, sessions] = await Promise.all([
       Storage.getUserProfile(),
       Streak.get(),
       getPremiumStatus(),
       RamadanService.isRamadanModeActive(),
       Storage.getGlobalScore(),
+      Storage.getRecentSessions(50),
     ]);
     if (up?.name) setUserName(up.name.split(' ')[0]);
     if (up?.primaryChallenge) setPrimaryChallenge(up.primaryChallenge);
     setStreakData(sd);
     setIsPro(pro);
     setMentraScore(score);
+    setSessionCount(sessions.length);
+    setTrendScore(calculateTrend(sessions));
     setRamadanActive(isRamadan);
     if (isRamadan) {
       setRamadanRec(RamadanService.getTrainingRecommendation(new Date().getHours()));
@@ -553,18 +591,18 @@ export default function HomeScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={async () => { setRefreshing(true); await loadData(); setRefreshing(false); }} tintColor={Colors.mentra.brandPrimary} />}
       >
         <HomeHeader />
-        <HeroCard score={mentraScore} streak={streakData.current} name={userName} />
+        <HeroCard score={mentraScore} streak={streakData.current} name={userName} sessionCount={sessionCount} trend={trendScore} />
         {ramadanActive && ramadanRec && <RamadanBanner rec={ramadanRec} />}
         <DailySessionCard />
-        <DomainStrip />
+        <DomainStrip domains={DOMAINS} />
         <NewsFlash />
-        <GrowthEdgeCard primaryChallengeKey={primaryChallenge} />
+        <GrowthEdgeCard primaryChallengeKey={primaryChallenge} domains={DOMAINS} />
         <DetoxSection />
-        <QuickGamesRow isPro={isPro} />
-        <RoutinesSection isPro={isPro} />
+        <QuickGamesRow isPro={isPro} games={QUICK_GAMES} />
+        <RoutinesSection isPro={isPro} routines={ROUTINES} />
         <JournalCard />
-        <SocialMediaSection />
-        <InsightCard />
+        <SocialMediaSection detoxGames={DETOX_GAMES} />
+        <InsightCard insights={INSIGHTS} />
         {!isPro && <UpsellBanner />}
         <View style={{ height: 120 }} />
       </ScrollView>

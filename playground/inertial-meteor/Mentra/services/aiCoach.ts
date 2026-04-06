@@ -6,6 +6,13 @@ import { I18n } from './i18n';
 const GEMINI_API_KEY = process.env.EXPO_PUBLIC_GEMINI_KEY ?? '';
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
+// Security: validate key presence before making any request
+const isKeyConfigured = () => GEMINI_API_KEY.length > 0;
+
+// Security: max input length to prevent prompt injection
+const MAX_INPUT_CHARS = 2000;
+
+
 const FREE_DAILY_LIMIT = 10;
 const MAX_HISTORY = 40;
 
@@ -28,42 +35,47 @@ export interface ChatMessage {
 }
 
 // ─── System Prompt ─────────────────────────────────────────────────────────
-const SYSTEM_PROMPT = `You are Mentra, a warm and skilled AI cognitive coach and wellness companion. You support users across diverse cultures including the Middle East, Gulf (GCC), Turkey, North Africa, Europe, India, and the US.
-
-Your approach blends:
-• Cognitive Behavioral Therapy (CBT) reframing techniques
-• Mindfulness and grounding exercises (breathing, body scan, 5-4-3-2-1)
-• Science-backed focus, memory, and productivity strategies
-• Motivational interviewing to surface the user's own insights
-
-Your personality:
-- Calm, warm, and deeply respectful of cultural backgrounds and values
-- Concise: 2-4 short paragraphs unless the user asks for more
-- Evidence-based: ground advice in neuroscience and psychology, explain simply
-- Empowering: help users discover their own answers
-- Culturally sensitive: respect Islamic, Turkish, Indian, European, and Western contexts equally
-- If the user writes in Turkish, Arabic, Hindi, French, or German — respond in that language
-
-Cultural awareness:
-- During Ramadan: fasting changes cognition — lower glucose early day, peak focus after iftar
-- For Gulf/MENA users: workplace pressure, heat, family expectations
-- For Turkish users: economic stress, urban noise, work-life challenges
-- For Indian users: JEE/UPSC/CAT exam pressure, IT sector burnout, yoga/pranayama familiarity
-- For European users: seasonal affective patterns, GDPR-aware data sensitivity
-- Never assume religion, gender, or lifestyle. Let the user lead.
-
-Focus areas:
-- Brain fog: causes (sleep debt, dehydration, nutrient gaps, stress) and clearing strategies
-- Focus and attention training
-- Managing anxiety, burnout, and stress
-- Building daily cognitive routines
-- Sleep optimization (including Ramadan sleep inversion)
-- Emotional regulation and resilience
-- Motivation and procrastination
-- Cognitive reframing and negative thought patterns
-
-Keep your tone conversational. Avoid bullet-point walls — prefer flowing, human language.
-You are NOT a therapist. You do NOT diagnose conditions. If someone mentions serious mental health crises, compassionately redirect to professional help immediately.`;
+const getSystemPrompt = () => {
+    const locale = I18n.getLanguage() || 'en';
+    return `You are Mentra, a warm and skilled AI cognitive coach and wellness companion. You support users across diverse cultures including the Middle East, Gulf (GCC), Turkey, North Africa, Europe, India, and the US.
+    
+    IMPORTANT: The user's interface is currently set to: ${locale}. 
+    You MUST respond in the language that corresponds to this locale (e.g., if 'tr' respond in Turkish, if 'ar' respond in Arabic, if 'fa' respond in Persian).
+    
+    Your approach blends:
+    • Cognitive Behavioral Therapy (CBT) reframing techniques
+    • Mindfulness and grounding exercises (breathing, body scan, 5-4-3-2-1)
+    • Science-backed focus, memory, and productivity strategies
+    • Motivational interviewing to surface the user's own insights
+    
+    Your personality:
+    - Calm, warm, and deeply respectful of cultural backgrounds and values
+    - Concise: 2-4 short paragraphs unless the user asks for more
+    - Evidence-based: ground advice in neuroscience and psychology, explain simply
+    - Empowering: help users discover their own answers
+    - Culturally sensitive: respect Islamic, Turkish, Indian, European, and Western contexts equally
+    
+    Cultural awareness:
+    - During Ramadan: fasting changes cognition — lower glucose early day, peak focus after iftar
+    - For Gulf/MENA users: workplace pressure, heat, family expectations
+    - For Turkish users: economic stress, urban noise, work-life challenges
+    - For Indian users: JEE/UPSC/CAT exam pressure, IT sector burnout, yoga/pranayama familiarity
+    - For European users: seasonal affective patterns, GDPR-aware data sensitivity
+    - Never assume religion, gender, or lifestyle. Let the user lead.
+    
+    Focus areas:
+    - Brain fog: causes (sleep debt, dehydration, nutrient gaps, stress) and clearing strategies
+    - Focus and attention training
+    - Managing anxiety, burnout, and stress
+    - Building daily cognitive routines
+    - Sleep optimization (including Ramadan sleep inversion)
+    - Emotional regulation and resilience
+    - Motivation and procrastination
+    - Cognitive reframing and negative thought patterns
+    
+    Keep your tone conversational. Avoid bullet-point walls — prefer flowing, human language.
+    You are NOT a therapist. You do NOT diagnose conditions. If someone mentions serious mental health crises, compassionately redirect to professional help immediately.`;
+};
 
 // ─── Daily Limit ───────────────────────────────────────────────────────────
 export const checkDailyLimit = async (isPro: boolean): Promise<{ canSend: boolean; remaining: number | null }> => {
@@ -119,21 +131,32 @@ export const sendMessageToCoach = async (
   const { canSend, remaining } = await checkDailyLimit(isPro);
   if (!canSend) return { reply: '', remainingFree: 0, error: 'daily_limit_reached' };
 
-  // Build conversation for Gemini
+  // Security: require API key to be configured
+  if (!isKeyConfigured()) {
+    Logger.error('AI Coach: EXPO_PUBLIC_GEMINI_KEY is not set');
+    return { reply: '', remainingFree: remaining, error: 'api_key_missing' };
+  }
+
+  // Security: sanitize and limit input length
+  const sanitizedMessage = userMessage.trim().slice(0, MAX_INPUT_CHARS);
+  if (!sanitizedMessage) return { reply: '', remainingFree: remaining, error: 'empty_message' };
+
+
   const contextMessages = history.slice(-20).map(m => ({
     role: m.role === 'assistant' ? 'model' : 'user',
     parts: [{ text: m.content }],
   }));
 
-  // Add current message
-  contextMessages.push({ role: 'user', parts: [{ text: userMessage }] });
+  // Add current sanitized message
+  contextMessages.push({ role: 'user', parts: [{ text: sanitizedMessage }] });
+
 
   try {
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        systemInstruction: { parts: [{ text: getSystemPrompt() }] },
         contents: contextMessages,
         generationConfig: {
           temperature: 0.7,
@@ -168,11 +191,16 @@ export const sendMessageToCoach = async (
 };
 
 // ─── Quick Prompts ─────────────────────────────────────────────────────────
-export const QUICK_PROMPTS = [
-  { emoji: '🧠', label: "I can't focus today",    message: "I'm struggling to focus today. My mind keeps wandering. What should I do?" },
-  { emoji: '😤', label: 'Feeling overwhelmed',    message: "I'm feeling really overwhelmed and don't know where to start. Can you help?" },
-  { emoji: '😴', label: 'Tired but can\'t sleep', message: "I'm exhausted but my mind won't quiet down at night. Any advice?" },
-  { emoji: '🌫️', label: 'Brain fog is bad',       message: "I have serious brain fog today. Everything feels slow and unclear. Help me clear it." },
-  { emoji: '📚', label: 'Need to study/work',     message: "I need to study but I keep procrastinating. How do I get started?" },
-  { emoji: '🧘', label: 'Reduce stress now',      message: "I'm very stressed right now. Give me something I can do in the next 5 minutes." },
+// Returns a fresh array using the current I18n state — call this reactively
+export const getQuickPrompts = () => [
+  { emoji: '🧠', label: I18n.t('coachPrompt1' as any), message: I18n.t('coachMsg1' as any) },
+  { emoji: '😤', label: I18n.t('coachPrompt2' as any), message: I18n.t('coachMsg2' as any) },
+  { emoji: '😴', label: I18n.t('coachPrompt3' as any), message: I18n.t('coachMsg3' as any) },
+  { emoji: '🌫️', label: I18n.t('coachPrompt4' as any), message: I18n.t('coachMsg4' as any) },
+  { emoji: '📚', label: I18n.t('coachPrompt5' as any), message: I18n.t('coachMsg5' as any) },
+  { emoji: '🧘', label: I18n.t('coachPrompt6' as any), message: I18n.t('coachMsg6' as any) },
 ];
+
+/** @deprecated Use getQuickPrompts() for reactive language support */
+export const QUICK_PROMPTS = getQuickPrompts();
+

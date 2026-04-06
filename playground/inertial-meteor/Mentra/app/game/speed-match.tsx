@@ -10,7 +10,7 @@ import { Card } from '@/components/ui/Cards';
 import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
 import { useSpeedMatchGame } from '@/hooks/useSpeedMatchGame';
-import { I18n } from '@/services/i18n';
+import { I18n, useI18n } from '@/services/i18n';
 import { Storage } from '@/services/storage';
 
 // New Phase 9 Cognitive Depth Components
@@ -21,6 +21,7 @@ import { NeuroActivationWarmup } from '@/components/game/NeuroActivationWarmup';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withSequence, withTiming } from 'react-native-reanimated';
 
 export default function SpeedMatchScreen() {
+    const { t } = useI18n();
     const { isPlaying, gameState, score, timeRemaining, currentPhase, currentSymbol, accuracy, reactionTimeMs, startGame, handleGuess } = useSpeedMatchGame(true);
     const [identityLevel, setIdentityLevel] = React.useState('Focus');
     const [showWarmup, setShowWarmup] = React.useState(false);
@@ -72,10 +73,10 @@ export default function SpeedMatchScreen() {
 
             {/* Header */}
             <View style={styles.header}>
-                <Pressable onPress={() => router.back()} style={styles.closeBtn}>
+                <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.closeBtn}>
                     <X color={Colors.mentra.text} size={24} />
                 </Pressable>
-                <ThemedText style={styles.headerTitle}>SPEED MATCH</ThemedText>
+                <ThemedText style={styles.headerTitle}>{t('gameSpeedMatch')}</ThemedText>
                 <View style={styles.scoreBadge}>
                     <ThemedText style={styles.scoreText}>{score}</ThemedText>
                 </View>
@@ -95,15 +96,15 @@ export default function SpeedMatchScreen() {
                             <View style={styles.iconContainer}>
                                 <Triangle size={32} color={Colors.mentra.brandPrimary} />
                             </View>
-                            <ThemedText style={styles.lobbyTitle}>{I18n.t('readyToFocus') || 'Ready to Focus?'}</ThemedText>
+                            <ThemedText style={styles.lobbyTitle}>{t('readyToFocus') || 'Ready to Focus?'}</ThemedText>
 
                             <View style={styles.instructionsBox}>
                                 <View style={styles.sectionHeader}>
                                     <Play size={14} color={Colors.mentra.brandPrimary} />
-                                    <ThemedText style={styles.sectionLabel}>{I18n.t('howToPlay') || 'How to Play'}</ThemedText>
+                                    <ThemedText style={styles.sectionLabel}>{t('howToPlay') || 'How to Play'}</ThemedText>
                                 </View>
                                 <ThemedText style={styles.lobbyDesc}>
-                                    {I18n.t('speedMatchDesc') || 'Does the current symbol match the previous one? Speed and accuracy are tracked.'}
+                                    {t('speedMatchDesc') || 'Does the current symbol match the previous one? Speed and accuracy are tracked.'}
                                 </ThemedText>
                             </View>
 
@@ -111,19 +112,19 @@ export default function SpeedMatchScreen() {
                                 <View style={styles.sectionHeader}>
                                     <BrainCircuit size={14} color={Colors.mentra.brandAccent} />
                                     <ThemedText style={[styles.sectionLabel, { color: Colors.mentra.brandAccent }]}>
-                                        {I18n.t('scienceBehind')}
+                                        {t('scienceBehind')}
                                     </ThemedText>
                                 </View>
                                 <ThemedText style={styles.scienceWhat}>
-                                    {I18n.t('smIntroWhat')}
+                                    {t('smIntroWhat')}
                                 </ThemedText>
                                 <ThemedText style={styles.scienceWhy}>
-                                    {I18n.t('smIntroWhy')}
+                                    {t('smIntroWhy')}
                                 </ThemedText>
                             </View>
 
                             <PrimaryButton 
-                                title={I18n.t('startGame') || 'Start Session'} 
+                                title={t('startGame') || 'Start Session'} 
                                 onPress={() => setShowWarmup(true)} 
                                 fullWidth 
                             />
@@ -146,7 +147,7 @@ export default function SpeedMatchScreen() {
                         accuracy={accuracy}
                         reactionTimeMs={reactionTimeMs}
                         identityLevel={identityLevel}
-                        onContinue={() => router.back()}
+                        onContinue={() => router.canGoBack() ? router.back() : router.replace('/')}
                         onRetry={startGame}
                     />
                 )}
@@ -155,7 +156,7 @@ export default function SpeedMatchScreen() {
             <NeuroActivationWarmup 
                 visible={showWarmup} 
                 gameTitle="SPEED MATCH"
-                tutorialText={I18n.t('gameSpeedMatchTutorial' as any)}
+                tutorialText={t('gameSpeedMatchTutorial' as any)}
                 onComplete={() => {
                     setShowWarmup(false);
                     startGame();
@@ -171,7 +172,7 @@ export default function SpeedMatchScreen() {
                         ]}
                         onPress={() => handlePress(false)}
                     >
-                        <ThemedText style={{ color: Colors.mentra.danger, fontSize: 24, fontWeight: '800' }}>NO</ThemedText>
+                        <ThemedText style={{ color: Colors.mentra.danger, fontSize: 24, fontWeight: '800' }}>{t('speedMatchNo')}</ThemedText>
                     </Pressable>
 
                     <Pressable
@@ -181,7 +182,7 @@ export default function SpeedMatchScreen() {
                         ]}
                         onPress={() => handlePress(true)}
                     >
-                        <ThemedText style={{ color: Colors.mentra.success, fontSize: 24, fontWeight: '800' }}>YES</ThemedText>
+                        <ThemedText style={{ color: Colors.mentra.success, fontSize: 24, fontWeight: '800' }}>{t('speedMatchYes')}</ThemedText>
                     </Pressable>
                 </View>
             )}

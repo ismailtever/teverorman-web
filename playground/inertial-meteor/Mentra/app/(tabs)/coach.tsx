@@ -33,7 +33,11 @@ import {
   Trash2,
   Zap,
   Sparkles,
+  X,
+  ChevronRight,
 } from 'lucide-react-native';
+import { I18n, useI18n } from '@/services/i18n';
+
 
 import { Colors } from '@/constants/Colors';
 import { getPremiumStatus } from '@/services/purchases';
@@ -46,8 +50,9 @@ import {
   clearChatHistory,
   sendMessageToCoach,
   checkDailyLimit,
-  QUICK_PROMPTS,
+  getQuickPrompts,
 } from '@/services/aiCoach';
+
 
 // ─── Typing Indicator ─────────────────────────────────────────────────────────
 
@@ -121,19 +126,22 @@ function MessageBubble({ message, index }: { message: ChatMessage; index: number
 // ─── Empty State ───────────────────────────────────────────────────────────────
 
 function EmptyState({ onPromptPress }: { onPromptPress: (msg: string) => void }) {
+  const { t } = useI18n();
+  const prompts = getQuickPrompts();
+
   return (
     <Animated.View entering={FadeIn.springify()} style={styles.emptyContainer}>
       <View style={styles.emptyAvatar}>
         <BrainCircuit size={36} color={Colors.mentra.brandPrimary} />
       </View>
-      <Text style={styles.emptyTitle}>Your AI Life Coach</Text>
+      <Text style={styles.emptyTitle}>{t('coachEmptyTitle') || t('coachEmpty')}</Text>
       <Text style={styles.emptySubtitle}>
-        Ask me anything about focus, anxiety, habits, sleep, or how to perform at your best.
+        {t('coachEmptyDesc')}
       </Text>
 
-      <Text style={styles.promptsLabel}>QUICK STARTS</Text>
+      <Text style={styles.promptsLabel}>{t('coachQuickStartsLabel') || t('coachPrompts')}</Text>
       <View style={styles.promptsGrid}>
-        {QUICK_PROMPTS.map((p, i) => (
+        {prompts.map((p, i) => (
           <Pressable
             key={i}
             onPress={() => onPromptPress(p.message)}
@@ -148,9 +156,11 @@ function EmptyState({ onPromptPress }: { onPromptPress: (msg: string) => void })
   );
 }
 
+
 // ─── Main Screen ───────────────────────────────────────────────────────────────
 
 export default function CoachScreen() {
+  const { t, lang } = useI18n();
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
 
@@ -160,6 +170,7 @@ export default function CoachScreen() {
   const [isPro, setIsPro] = useState(false);
   const [remaining, setRemaining] = useState<number | null>(null);
   const [userName, setUserName] = useState('');
+
 
   useFocusEffect(
     useCallback(() => {
@@ -294,12 +305,13 @@ export default function CoachScreen() {
             <BrainCircuit size={20} color="#FFF" />
           </View>
           <View>
-            <Text style={styles.headerTitle}>AI Coach</Text>
+            <Text style={styles.headerTitle}>{t('coachHeaderTitle')}</Text>
             <View style={styles.onlineRow}>
               <View style={styles.onlineDot} />
-              <Text style={styles.onlineText}>Online · Ready to help</Text>
+              <Text style={styles.onlineText}>{t('coachHeaderSub')}</Text>
             </View>
           </View>
+
         </View>
         <View style={styles.headerRight}>
           {!isPro && (
@@ -308,7 +320,7 @@ export default function CoachScreen() {
               style={styles.proChip}
             >
               <Zap size={12} color={Colors.mentra.brandPrimary} />
-              <Text style={styles.proChipText}>Pro</Text>
+              <Text style={styles.proChipText}>{I18n.t('coachProBadge')}</Text>
             </Pressable>
           )}
           {messages.length > 0 && (
@@ -327,7 +339,7 @@ export default function CoachScreen() {
             {remaining} free message{remaining !== 1 ? 's' : ''} left today.{' '}
           </Text>
           <Pressable onPress={() => router.push('/paywall/onboarding' as any)}>
-            <Text style={styles.limitBannerLink}>Go Pro</Text>
+            <Text style={styles.limitBannerLink}>{I18n.t('coachLimitLink')}</Text>
           </Pressable>
         </Animated.View>
       )}
@@ -377,7 +389,7 @@ export default function CoachScreen() {
               style={styles.limitExhaustedBtn}
             >
               <Zap size={16} color="#FFF" />
-              <Text style={styles.limitExhaustedText}>Upgrade for Unlimited Coaching</Text>
+              <Text style={styles.limitExhaustedText}>{I18n.t('coachUpgrade')}</Text>
             </Pressable>
           ) : (
             <View style={styles.inputRow}>

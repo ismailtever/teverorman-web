@@ -20,6 +20,8 @@ export function useSpeedMatchGame(isPro: boolean = false) {
     // Game State
     const [currentSymbol, setCurrentSymbol] = useState<string>('');
     const [previousSymbol, setPreviousSymbol] = useState<string | null>(null);
+    const isMounted = useRef(true);
+    const isProcessingGuess = useRef(false);
 
     // Metrics
     const eventLog = useRef<GameEvent[]>([]);
@@ -77,6 +79,7 @@ export function useSpeedMatchGame(isPro: boolean = false) {
         // Auto-advance after 900ms to get the game moving.
         if (isPlaying && currentSymbol && !previousSymbol) {
             const t = setTimeout(() => {
+                if (!isMounted.current) return;
                 // Advance using explicit variable passing to avoid async state race
                 const prev = currentSymbol;
                 setPreviousSymbol(prev);
@@ -84,7 +87,7 @@ export function useSpeedMatchGame(isPro: boolean = false) {
                 const next = generateSymbol(prev);
                 setCurrentSymbol(next);
 
-                Haptics.selectionAsync(); // Subtle cue
+                Haptics.selectionAsync().catch(() => {}); // Subtle cue
             }, 900);
             return () => clearTimeout(t);
         }
@@ -112,6 +115,10 @@ export function useSpeedMatchGame(isPro: boolean = false) {
 
         if (timerRef.current) clearInterval(timerRef.current);
         timerRef.current = setInterval(() => {
+            if (!isMounted.current) {
+                if (timerRef.current) clearInterval(timerRef.current);
+                return;
+            }
             setTimeRemaining((prev) => {
                 if (prev <= 1) return 0;
                 return prev - 1;
@@ -154,7 +161,7 @@ export function useSpeedMatchGame(isPro: boolean = false) {
 
         setAccuracy(accuracy * 100);
         setReactionTimeMs(avgCorrectRT);
-        setGameState('results');
+        if (isMounted.current) setGameState('results');
 
         // 1. Save Session & Data
         await Storage.saveSession(session);
@@ -181,7 +188,8 @@ export function useSpeedMatchGame(isPro: boolean = false) {
         if (!isPlaying) return;
 
         // Prevent input on First Symbol (Corrupt Telemetry Prevention)
-        if (!previousSymbol) return;
+        if (!previousSymbol || isProcessingGuess.current) return;
+        isProcessingGuess.current = true;
 
         const now = Date.now();
         const rt = now - lastStimulusTime.current;
@@ -215,6 +223,11 @@ export function useSpeedMatchGame(isPro: boolean = false) {
         setPreviousSymbol(prev);
         const next = generateSymbol(prev);
         setCurrentSymbol(next);
+
+        // Throttle input slightly to allow UI to reflect state
+        setTimeout(() => {
+            isProcessingGuess.current = false;
+        }, 50);
     };
 
     // Auto-Stop
@@ -226,7 +239,9 @@ export function useSpeedMatchGame(isPro: boolean = false) {
     }, [timeRemaining, isPlaying]);
 
     useEffect(() => {
+        isMounted.current = true;
         return () => {
+            isMounted.current = false;
             if (timerRef.current) clearInterval(timerRef.current);
         };
     }, []);

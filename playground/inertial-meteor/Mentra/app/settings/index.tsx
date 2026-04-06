@@ -9,7 +9,7 @@ import Purchases from 'react-native-purchases';
 import { ThemedText } from '@/components/themed-text';
 import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
-import { I18n } from '@/services/i18n';
+import { I18n, useI18n } from '@/services/i18n';
 import { Storage } from '@/services/storage';
 
 import { AppHeader } from '@/components/ui/AppHeader';
@@ -20,7 +20,7 @@ import { SectionTitle } from '@/components/ui/Typography';
 const IS_DEV = __DEV__;
 
 export default function SettingsScreen() {
-    const [_, forceUpdate] = useState(0);
+    const { t, lang } = useI18n();
 
     const [isPro, setIsPro] = useState(false);
     const [isRestoring, setIsRestoring] = useState(false);
@@ -28,14 +28,8 @@ export default function SettingsScreen() {
     const version = Application.nativeApplicationVersion || '1.0.0';
     const build = Application.nativeBuildVersion || '1';
 
-    useEffect(() => {
-        const unsub = I18n.subscribe(() => forceUpdate(n => n + 1));
-        return unsub;
-    }, []);
-
     const handleLanguageChange = async () => {
-        const current = I18n.getLanguage();
-        const next = current === 'en' ? 'tr' : 'en';
+        const next = lang === 'en' ? 'tr' : 'en';
         await I18n.setLanguage(next);
     };
 
@@ -59,12 +53,12 @@ export default function SettingsScreen() {
             const customerInfo = await Purchases.restorePurchases();
             if (typeof customerInfo.entitlements.active['Mentra Pro'] !== "undefined") {
                 setIsPro(true);
-                Alert.alert(I18n.t('alertRestored'), I18n.t('alertRestoredMsg'));
+                Alert.alert(t('alertRestored'), t('alertRestoredMsg'));
             } else {
-                Alert.alert(I18n.t('alertNoPurchases'), I18n.t('alertNoPurchasesMsg'));
+                Alert.alert(t('alertNoPurchases'), t('alertNoPurchasesMsg'));
             }
         } catch (e: any) {
-            Alert.alert(I18n.t('alertRestoreFailed'), e.message);
+            Alert.alert(t('alertRestoreFailed'), e.message);
         } finally {
             setIsRestoring(false);
         }
@@ -80,12 +74,12 @@ export default function SettingsScreen() {
 
     const handleReset = () => {
         Alert.alert(
-            I18n.t('resetData'),
-            I18n.t('resetConfirm'),
+            t('resetData'),
+            t('resetConfirm'),
             [
-                { text: I18n.t('cancel'), style: 'cancel' },
+                { text: t('cancel'), style: 'cancel' },
                 {
-                    text: I18n.t('confirm'),
+                    text: t('confirm'),
                     style: 'destructive',
                     onPress: async () => {
                         await Storage.resetAllData();
@@ -99,7 +93,7 @@ export default function SettingsScreen() {
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
-            <AppHeader title={I18n.t('settings')} showBack />
+            <AppHeader title={t('settings')} showBack />
 
             <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
 
@@ -108,10 +102,10 @@ export default function SettingsScreen() {
                     <View style={styles.section}>
                         <Card style={[styles.proCard, { padding: 0, overflow: 'hidden' }]}>
                             <ListRow
-                                title={I18n.t('upgradeProTitle')}
-                                subtitle={I18n.t('upgradeProSubtitle')}
-                                icon={<Shield fill={Colors.mentra.brandAccent} size={20} color={Colors.mentra.bg} />}
-                                onPress={() => router.push('/paywall/onboarding' as any)}
+                                title={t('upgradeProTitle')}
+                                subtitle={t('upgradeProSubtitle')}
+                                icon={<Shield size={20} color={Colors.mentra.bg} fill={Colors.mentra.brandAccent} />}
+                                onPress={() => router.push('/paywall/onboarding')}
                                 style={{ backgroundColor: 'rgba(74, 222, 128, 0.1)' }}
                             />
                         </Card>
@@ -120,15 +114,15 @@ export default function SettingsScreen() {
 
                 {/* Subscriptions */}
                 <View style={styles.section}>
-                    <SectionTitle title={I18n.t('subscriptionLabel')} />
+                    <SectionTitle title={t('subscriptionLabel')} />
                     <Card style={{ padding: 0, overflow: 'hidden' }}>
                         <ListRow
-                            title={isRestoring ? I18n.t('restoring') : I18n.t('paywallRestore')}
+                            title={isRestoring ? t('restoring') : t('paywallRestore')}
                             icon={<Zap size={20} color={Colors.mentra.brandAccent} />}
                             onPress={handleRestore}
                         />
                         <ListRow
-                            title={I18n.t('manageSubscription')}
+                            title={t('manageSubscription')}
                             icon={<Globe size={20} color={Colors.mentra.brandSecondary} />}
                             onPress={handleManageSub}
                             showChevron={false}
@@ -140,9 +134,9 @@ export default function SettingsScreen() {
                 <View style={styles.section}>
                     <Card style={{ padding: 0, overflow: 'hidden' }}>
                         <ListRow
-                            title={I18n.t('language')}
+                            title={t('language')}
                             icon={<Globe size={20} color={Colors.mentra.brandPrimary} />}
-                            rightElement={<ThemedText style={styles.valueText}>{I18n.getLanguage().toUpperCase()}</ThemedText>}
+                            rightElement={<ThemedText style={styles.valueText}>{lang.toUpperCase()}</ThemedText>}
                             onPress={handleLanguageChange}
                         />
                     </Card>
@@ -150,10 +144,10 @@ export default function SettingsScreen() {
 
                 {/* About Section */}
                 <View style={styles.section}>
-                    <SectionTitle title={I18n.t('about')} />
+                    <SectionTitle title={t('about')} />
                     <Card style={{ padding: 0, overflow: 'hidden' }}>
                         <ListRow
-                            title={I18n.t('version')}
+                            title={t('version')}
                             icon={<Info size={20} color={Colors.mentra.brandPrimary} />}
                             rightElement={<ThemedText style={styles.valueText}>{version} ({build})</ThemedText>}
                             showChevron={false}
@@ -161,7 +155,7 @@ export default function SettingsScreen() {
                         <View style={styles.warningBox}>
                             <AlertTriangle size={16} color={Colors.mentra.warning} style={{ marginTop: 2 }} />
                             <ThemedText style={styles.warningText}>
-                                {I18n.t('medicalWarning')}
+                                {t('medicalWarning')}
                             </ThemedText>
                         </View>
                     </Card>
@@ -169,20 +163,20 @@ export default function SettingsScreen() {
 
                 {/* Legal Section */}
                 <View style={styles.section}>
-                    <SectionTitle title={I18n.t('legal')} />
+                    <SectionTitle title={t('legal')} />
                     <Card style={{ padding: 0, overflow: 'hidden' }}>
                         <ListRow
-                            title={I18n.t('privacy')}
+                            title={t('privacy')}
                             icon={<Shield size={20} color={Colors.mentra.brandSecondary} />}
                             onPress={() => router.push('/legal/privacy')}
                         />
                         <ListRow
-                            title={I18n.t('terms')}
+                            title={t('terms')}
                             icon={<FileText size={20} color={Colors.mentra.brandSecondary} />}
                             onPress={() => router.push('/legal/terms')}
                         />
                         <ListRow
-                            title={I18n.t('disclaimer')}
+                            title={t('disclaimer')}
                             icon={<AlertTriangle size={20} color={Colors.mentra.danger} />}
                             onPress={() => router.push('/legal/disclaimer')}
                         />
@@ -193,7 +187,7 @@ export default function SettingsScreen() {
                 <View style={[styles.section, { marginTop: Metrics.spacing.l }]}>
                     <Card variant="outline" style={{ borderColor: Colors.mentra.danger, padding: 0, overflow: 'hidden' }}>
                         <ListRow
-                            title={I18n.t('resetData')}
+                            title={t('resetData')}
                             icon={<Trash2 size={20} color={Colors.mentra.danger} />}
                             onPress={handleReset}
                             showChevron={false}
@@ -207,7 +201,7 @@ export default function SettingsScreen() {
                         <SectionTitle title="DEVELOPER FORCE" />
                         <Card style={{ padding: 0, overflow: 'hidden' }}>
                             <ListRow
-                                title={I18n.t('debugLab')}
+                                title={t('debugLab')}
                                 icon={<Info size={20} color={Colors.mentra.muted} />}
                                 onPress={() => router.push('/debug/engine')}
                             />
@@ -215,7 +209,7 @@ export default function SettingsScreen() {
                     </View>
                 )}
 
-                <ThemedText style={styles.footer}>{I18n.t('footerBrand')}</ThemedText>
+                <ThemedText style={styles.footer}>{t('footerBrand')}</ThemedText>
             </ScrollView>
         </View>
     );

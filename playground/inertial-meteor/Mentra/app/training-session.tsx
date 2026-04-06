@@ -1,3 +1,4 @@
+import { useI18n } from '@/services/i18n';
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { router } from 'expo-router';
@@ -6,7 +7,7 @@ import { Play, CheckCircle2, Zap, Brain } from 'lucide-react-native';
 
 import { AppHeader } from '@/components/ui/AppHeader';
 import { Card, Section } from '@/components/ui/Cards';
-import { PrimaryButton, SecondaryButton } from '@/components/ui/Buttons';
+import { PrimaryButton } from '@/components/ui/Buttons';
 import { SectionTitle } from '@/components/ui/Typography';
 import { ProgressBar } from '@/components/ui/Progress';
 import { Colors } from '@/constants/Colors';
@@ -41,6 +42,7 @@ const SESSION_STEPS = [
 
 export default function TrainingSessionScreen() {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
+    const { t } = useI18n();
 
     const handleStartGame = () => {
         const route = SESSION_STEPS[currentStepIndex].route;
@@ -63,14 +65,14 @@ export default function TrainingSessionScreen() {
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
-            <AppHeader title="Today's Session" showBack={true} />
+            <AppHeader title={t('tsTitle' as any) || "Today's Session"} showBack={true} />
 
             <ScrollView contentContainerStyle={styles.content}>
 
                 {/* Progress Header */}
                 <Section style={styles.progressSection}>
                     <View style={styles.progressHeader}>
-                        <SectionTitle title="Session Progress" />
+                        <SectionTitle title={t('tsProgress' as any) || 'Session Progress'} />
                         <ThemedText style={styles.progressText}>
                             {Math.min(currentStepIndex + 1, SESSION_STEPS.length)} / {SESSION_STEPS.length}
                         </ThemedText>
@@ -104,7 +106,7 @@ export default function TrainingSessionScreen() {
                                     rightElement={
                                         isActive ? (
                                             <View style={styles.activeBadge}>
-                                                <ThemedText style={styles.activeBadgeText}>UP NEXT</ThemedText>
+                                                <ThemedText style={styles.activeBadgeText}>{t('tsUpNext') || 'UP NEXT'}</ThemedText>
                                             </View>
                                         ) : undefined
                                     }
@@ -121,14 +123,14 @@ export default function TrainingSessionScreen() {
             <View style={styles.footer}>
                 {!isFinished ? (
                     <PrimaryButton
-                        title={`Start ${SESSION_STEPS[currentStepIndex].title}`}
+                        title={`${t('tsStart' as any) || 'Start'} ${SESSION_STEPS[currentStepIndex].title}`}
                         icon={<Play size={18} color={Colors.mentra.surface} />}
                         onPress={handleStartGame}
                         fullWidth
                     />
                 ) : (
                     <PrimaryButton
-                        title="Complete Session"
+                        title={t('tsCompleteSession' as any) || 'Complete Session'}
                         icon={<CheckCircle2 size={18} color={Colors.mentra.surface} />}
                         onPress={handleFinish}
                         fullWidth

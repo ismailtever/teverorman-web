@@ -12,11 +12,11 @@ import { BrainCircuit, CheckCircle2, ShieldCheck, Sparkles, Zap, ChevronRight } 
 
 import { Colors } from '@/constants/Colors';
 import { Storage } from '@/services/storage';
-import { I18n, LANG_META, Lang } from '@/services/i18n';
+import { I18n, useI18n, LANG_META, Lang } from '@/services/i18n';
 
 const { width } = Dimensions.get('window');
 
-// ─── Challenge Options ──────────────────────────────────────────────────────
+// ─── Challenge Options ─────────────────────────────────────────────────────
 const CHALLENGES = [
     { key: 'brainFog',     emoji: '🌫️', color: '#6366F1', bg: '#EDECFD' },
     { key: 'stress',       emoji: '😤', color: '#EF4444', bg: '#FEF2F2' },
@@ -36,9 +36,9 @@ const IDENTITY_OPTIONS = [
     { key: 'idConsistent',  emoji: '🔄' },
 ] as const;
 
-const LANG_OPTIONS: Lang[] = ['en', 'tr', 'zh', 'ar', 'fr', 'de', 'hi'];
+const LANG_OPTIONS: Lang[] = ['en', 'tr', 'zh', 'ar', 'fr', 'de', 'hi', 'es', 'nl', 'it', 'ja', 'ko', 'fi', 'fa'];
 
-// ─── Step dots ──────────────────────────────────────────────────────────────
+// ─── Step dots ─────────────────────────────────────────────────────────────
 const StepDots = memo(({ total, current }: { total: number; current: number }) => {
     return (
         <View style={styles.stepDots}>
@@ -50,22 +50,21 @@ const StepDots = memo(({ total, current }: { total: number; current: number }) =
 });
 
 export default function OnboardingScreen() {
+    const { t, lang } = useI18n();
     const [step, setStep] = useState(0);
     const [name, setName] = useState('');
     const [challenge, setChallenge] = useState<ChallengeKey | null>(null);
     const [identity, setIdentity] = useState<string>('idStructured');
-    const [selectedLang, setSelectedLang] = useState<Lang>(I18n.getLanguage() as Lang);
+    const [selectedLang, setSelectedLang] = useState<Lang>(lang);
 
+    // Sync local selectedLang when global lang changes (e.g. from handleLangSelect)
     useEffect(() => {
-        const unsub = I18n.subscribe(() => {
-            setSelectedLang(I18n.getLanguage() as Lang);
-        });
-        return unsub;
-    }, []);
+        setSelectedLang(lang);
+    }, [lang]);
 
     const handleLangSelect = async (code: Lang) => {
         await I18n.setLanguage(code);
-        setSelectedLang(code);
+        // lang will update via hook, which triggers the useEffect above
     };
 
     const handleNext = async () => {
@@ -88,11 +87,11 @@ export default function OnboardingScreen() {
                     consistencyScore: 100,
                     flowDays: 1,
                     primaryChallenge: challenge ?? 'focus',
-                    preferredLang: selectedLang,
+                    preferredLang: lang,
                 });
                 router.replace('/(tabs)');
             } catch (e) {
-                Alert.alert(I18n.t('error'), I18n.t('couldNotSave'));
+                Alert.alert(t('error'), t('couldNotSave'));
             }
         }
     };
@@ -108,7 +107,7 @@ export default function OnboardingScreen() {
                             </LinearGradient>
                         </View>
                         <Text style={styles.bigTitle}>Mentra</Text>
-                        <Text style={styles.bigSub}>Choose your language</Text>
+                        <Text style={styles.bigSub}>{t('onboardingLanguageTitle')}</Text>
                         <View style={styles.langGrid}>
                             {LANG_OPTIONS.map((code) => {
                                 const meta = LANG_META[code];
@@ -141,18 +140,18 @@ export default function OnboardingScreen() {
                         <View style={[styles.stepIconBox, { backgroundColor: Colors.mentra.brandPrimary + '15' }]}>
                             <ShieldCheck size={40} color={Colors.mentra.brandPrimary} />
                         </View>
-                        <Text style={styles.stepTitle}>{I18n.t('onboardingMissionTitle' as any)}</Text>
-                        <Text style={styles.stepSub}>{I18n.t('onboardingMissionDesc' as any)}</Text>
+                        <Text style={styles.stepTitle}>{t('onboardingMissionTitle')}</Text>
+                        <Text style={styles.stepSub}>{t('onboardingMissionDesc')}</Text>
                         
                         <View style={styles.scienceCard}>
-                             <Text style={styles.scienceLabel}>{I18n.t('onboardingScienceFoundations' as any)}</Text>
+                             <Text style={styles.scienceLabel}>{t('onboardingScienceFoundations')}</Text>
                              <View style={styles.scienceRow}>
                                 <Zap size={16} color={Colors.mentra.brandSecondary} />
-                                <Text style={styles.scienceText}>{I18n.t('onboardingScienceStanford' as any)}</Text>
+                                <Text style={styles.scienceText}>{t('onboardingScienceStanford')}</Text>
                              </View>
                              <View style={styles.scienceRow}>
                                 <Sparkles size={16} color={Colors.mentra.brandPrimary} />
-                                <Text style={styles.scienceText}>{I18n.t('onboardingScienceIISc' as any)}</Text>
+                                <Text style={styles.scienceText}>{t('onboardingScienceIISc')}</Text>
                              </View>
                         </View>
                     </Animated.View>
@@ -164,13 +163,13 @@ export default function OnboardingScreen() {
                         <View style={[styles.stepIconBox, { backgroundColor: '#E8F5F0' }]}>
                             <Text style={{ fontSize: 36 }}>👋</Text>
                         </View>
-                        <Text style={styles.stepTitle}>{I18n.t('welcomeOnboarding')}</Text>
-                        <Text style={styles.stepSub}>{I18n.t('setupProfile')}</Text>
+                        <Text style={styles.stepTitle}>{t('welcomeOnboarding')}</Text>
+                        <Text style={styles.stepSub}>{t('setupProfile')}</Text>
                         <View style={styles.inputCard}>
-                            <Text style={styles.inputLabel}>{I18n.t('whatsYourName')}</Text>
+                            <Text style={styles.inputLabel}>{t('whatsYourName')}</Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder={I18n.t('enterName')}
+                                placeholder={t('enterName')}
                                 placeholderTextColor={Colors.mentra.muted}
                                 value={name}
                                 onChangeText={setName}
@@ -188,8 +187,8 @@ export default function OnboardingScreen() {
                         <View style={[styles.stepIconBox, { backgroundColor: '#EDECFD' }]}>
                             <Text style={{ fontSize: 36 }}>🎯</Text>
                         </View>
-                        <Text style={styles.stepTitle}>{I18n.t('challengeTitle')}</Text>
-                        <Text style={styles.stepSub}>{I18n.t('challengeSub')}</Text>
+                        <Text style={styles.stepTitle}>{t('challengeTitle')}</Text>
+                        <Text style={styles.stepSub}>{t('challengeSub')}</Text>
                         <View style={styles.challengeGrid}>
                             {CHALLENGES.map((c) => {
                                 const isSelected = challenge === c.key;
@@ -205,7 +204,7 @@ export default function OnboardingScreen() {
                                     >
                                         <Text style={styles.challengeEmoji}>{c.emoji}</Text>
                                         <Text style={[styles.challengeLabel, isSelected && { color: c.color, fontWeight: '800' }]}>
-                                            {I18n.t(labelKey)}
+                                            {t(labelKey)}
                                         </Text>
                                         {isSelected && (
                                             <View style={[styles.challengeCheck, { backgroundColor: c.color }]}>
@@ -225,8 +224,8 @@ export default function OnboardingScreen() {
                         <View style={[styles.stepIconBox, { backgroundColor: '#E8F5F0' }]}>
                             <BrainCircuit size={32} color={Colors.mentra.brandPrimary} />
                         </View>
-                        <Text style={styles.stepTitle}>{I18n.t('coreIdentityTitle')}</Text>
-                        <Text style={styles.stepSub}>{I18n.t('whoToBecome')}</Text>
+                        <Text style={styles.stepTitle}>{t('coreIdentityTitle')}</Text>
+                        <Text style={styles.stepSub}>{t('whoToBecome')}</Text>
                         <View style={styles.identityList}>
                             {IDENTITY_OPTIONS.map(({ key, emoji }) => {
                                 const isSelected = identity === key;
@@ -238,7 +237,7 @@ export default function OnboardingScreen() {
                                     >
                                         <Text style={{ fontSize: 22 }}>{emoji}</Text>
                                         <Text style={[styles.identityText, isSelected && { color: Colors.mentra.brandPrimary, fontWeight: '800' }]}>
-                                            {I18n.t(key as any)}
+                                            {t(key as any)}
                                         </Text>
                                         {isSelected && (
                                             <CheckCircle2 size={18} color={Colors.mentra.brandPrimary} style={styles.rowCheck} />
@@ -259,7 +258,7 @@ export default function OnboardingScreen() {
         step === 3 ? challenge !== null :
         true;
 
-    const ctaLabel = step === 4 ? I18n.t('buildStructureBtn') : I18n.t('continue');
+    const ctaLabel = step === 4 ? t('buildStructureBtn') : t('continue');
 
     return (
         <View style={styles.container}>
@@ -282,7 +281,7 @@ export default function OnboardingScreen() {
                         </Pressable>
                         {step > 0 && (
                             <Pressable onPress={() => setStep(s => s - 1)} style={styles.backBtn}>
-                                <Text style={styles.backBtnText}>← {I18n.t('cancel')}</Text>
+                                <Text style={styles.backBtnText}>← {t('cancel')}</Text>
                             </Pressable>
                         )}
                     </Animated.View>

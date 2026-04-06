@@ -72,10 +72,10 @@ export default function DiscountOfferPaywall() {
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                 <View style={styles.heroSection}>
                     <View style={styles.discountBadge}>
-                        <ThemedText style={styles.discountBadgeText}>Limited partner offer</ThemedText>
+                        <ThemedText style={styles.discountBadgeText}>{I18n.t('paywallDiscountBadge')}</ThemedText>
                     </View>
-                    <ThemedText style={styles.headline}>Finish the week strong.</ThemedText>
-                    <ThemedText style={styles.subHeadline}>A structured mind compounds.</ThemedText>
+                    <ThemedText style={styles.headline}>{I18n.t('paywallDiscountTitle')}</ThemedText>
+                    <ThemedText style={styles.subHeadline}>{I18n.t('paywallDiscountSubtitle')}</ThemedText>
                     <ThemedText style={[styles.subHeadline, { marginTop: 8, fontSize: 13, color: Colors.mentra.paywall.accent, fontWeight: '500' }]}>
                         {I18n.t('paywallValueFrame')}
                     </ThemedText>

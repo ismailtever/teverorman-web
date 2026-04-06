@@ -5,6 +5,7 @@ import { AlertTriangle } from 'lucide-react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Metrics } from '@/constants/Theme';
 import { Colors } from '@/constants/Colors';
+import { I18n } from '@/services/i18n';
 
 export default function DisclaimerScreen() {
     return (
@@ -13,7 +14,7 @@ export default function DisclaimerScreen() {
             <ScrollView contentContainerStyle={styles.content}>
                 <View style={{ alignItems: 'center', marginBottom: 30 }}>
                     <AlertTriangle size={48} color={Colors.mentra.danger} />
-                    <ThemedText type="title" style={{ marginTop: 20, textAlign: 'center' }}>Not Medical Advice</ThemedText>
+                    <ThemedText type="title" style={{ marginTop: 20, textAlign: 'center' }}>{I18n.t('legalDisclaimer')}</ThemedText>
                 </View>
 
                 <ThemedText style={styles.p}>
@@ -21,7 +22,7 @@ export default function DisclaimerScreen() {
                 </ThemedText>
 
                 <View style={styles.box}>
-                    <ThemedText type="defaultSemiBold" style={{ color: Colors.mentra.danger }}>IMPORTANT:</ThemedText>
+                    <ThemedText type="defaultSemiBold" style={{ color: Colors.mentra.danger }}>{I18n.t('legalImportant')}</ThemedText>
                     <ThemedText style={styles.p}>
                         Mentra is NOT a medical device. It should NOT be used to diagnose, treat, cure, or prevent any disease, medical condition, or mental health disorder (such as ADHD, Snoezelen, or Concussion).
                     </ThemedText>

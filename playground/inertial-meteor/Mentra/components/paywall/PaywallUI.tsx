@@ -5,21 +5,24 @@ import { X, Check } from 'lucide-react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
-import { I18n } from '@/services/i18n';
+import { useI18n } from '@/services/i18n';
 
 const { width } = Dimensions.get('window');
 
 // 1. Header
-export const PaywallHeader = ({ onClose }: { onClose: () => void }) => (
-    <View style={styles.header}>
-        <Pressable onPress={onClose} style={styles.closeBtn} hitSlop={Metrics.hitSlop}>
-            <X color={Colors.mentra.paywall.text} size={24} />
-        </Pressable>
-        <View style={styles.proBadge}>
-            <ThemedText style={styles.proBadgeText}>Mentra PRO</ThemedText>
+export const PaywallHeader = ({ onClose }: { onClose: () => void }) => {
+    const { t } = useI18n();
+    return (
+        <View style={styles.header}>
+            <Pressable onPress={onClose} style={styles.closeBtn} hitSlop={Metrics.hitSlop}>
+                <X color={Colors.mentra.paywall.text} size={24} />
+            </Pressable>
+            <View style={styles.proBadge}>
+                <ThemedText style={styles.proBadgeText}>{t('mentraBrand')} PRO</ThemedText>
+            </View>
         </View>
-    </View>
-);
+    );
+};
 
 // 2. Hero Brain Glow
 export const HeroBrainGlow = () => (
@@ -35,7 +38,7 @@ export const HeroBrainGlow = () => (
 export const PaywallFeatureRow = ({ text }: { text: string }) => (
     <View style={styles.featureRow}>
         <View style={styles.checkContainer}>
-            <Check size={16} color={Colors.mentra.paywall.primary} strokeWidth={3} />
+            <Check size={16} color={Colors.mentra.paywall.primary} {...({ strokeWidth: 3 } as any)} />
         </View>
         <ThemedText style={styles.featureText}>{text}</ThemedText>
     </View>
@@ -53,6 +56,7 @@ interface PaywallPricingCardProps {
 }
 
 export const PaywallPricingCard = ({ title, price, description, secondaryPrice, isBestValue, isSelected, onPress }: PaywallPricingCardProps) => {
+    const { t } = useI18n();
     return (
         <Pressable onPress={onPress} style={{ marginBottom: Metrics.spacing.m }}>
             <BlurView
@@ -66,7 +70,7 @@ export const PaywallPricingCard = ({ title, price, description, secondaryPrice, 
                 {isBestValue && (
                     <View style={[styles.bestValueBadge, isSelected && { backgroundColor: Colors.mentra.paywall.accent }]}>
                         <ThemedText style={[styles.bestValueText, isSelected && { color: Colors.mentra.paywall.backgroundAlt }]}>
-                            {I18n.t('bestValue')}
+                            {t('bestValue')}
                         </ThemedText>
                     </View>
                 )}
@@ -84,26 +88,32 @@ export const PaywallPricingCard = ({ title, price, description, secondaryPrice, 
 };
 
 // 5. Footer Links
-export const PaywallFooterLinks = ({ onRestore, onTerms, onPrivacy }: { onRestore: () => void, onTerms: () => void, onPrivacy: () => void }) => (
-    <View style={styles.footerLinks}>
-        <Pressable onPress={onRestore}>
-            <ThemedText style={styles.footerLinkText}>{I18n.t('footerRestore')}</ThemedText>
-        </Pressable>
-        <Pressable onPress={onTerms}>
-            <ThemedText style={styles.footerLinkText}>{I18n.t('footerTerms')}</ThemedText>
-        </Pressable>
-        <Pressable onPress={onPrivacy}>
-            <ThemedText style={styles.footerLinkText}>{I18n.t('footerPrivacy')}</ThemedText>
-        </Pressable>
-    </View>
-);
+export const PaywallFooterLinks = ({ onRestore, onTerms, onPrivacy }: { onRestore: () => void, onTerms: () => void, onPrivacy: () => void }) => {
+    const { t } = useI18n();
+    return (
+        <View style={styles.footerLinks}>
+            <Pressable onPress={onRestore}>
+                <ThemedText style={styles.footerLinkText}>{t('footerRestore')}</ThemedText>
+            </Pressable>
+            <Pressable onPress={onTerms}>
+                <ThemedText style={styles.footerLinkText}>{t('footerTerms')}</ThemedText>
+            </Pressable>
+            <Pressable onPress={onPrivacy}>
+                <ThemedText style={styles.footerLinkText}>{t('footerPrivacy')}</ThemedText>
+            </Pressable>
+        </View>
+    );
+};
 
 // 6. Brand Footer
-export const PaywallBrandFooter = () => (
-    <View style={styles.brandFooterContainer}>
-        <ThemedText style={styles.brandFooter}>{I18n.t('footerBrand')}</ThemedText>
-    </View>
-);
+export const PaywallBrandFooter = () => {
+    const { t } = useI18n();
+    return (
+        <View style={styles.brandFooterContainer}>
+            <ThemedText style={styles.brandFooter}>{t('footerBrand')}</ThemedText>
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     header: {

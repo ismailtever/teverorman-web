@@ -54,10 +54,7 @@ export function CognitiveRadar({ data, size = 300 }: CognitiveRadarProps) {
             return (
                 <Polygon
                     key={lvlIndex}
-                    points={points}
-                    stroke="rgba(255,255,255,0.1)"
-                    strokeWidth="1"
-                    fill="none"
+                    {...({ points: points, stroke: "rgba(255,255,255,0.1)", strokeWidth: "1", fill: "none" } as any)}
                 />
             );
         });
@@ -77,20 +74,10 @@ export function CognitiveRadar({ data, size = 300 }: CognitiveRadarProps) {
             return (
                 <G key={i}>
                     <Line
-                        x1={center}
-                        y1={center}
-                        x2={x}
-                        y2={y}
-                        stroke="rgba(255,255,255,0.1)"
-                        strokeWidth="1"
+                        {...({ x1: center, y1: center, x2: x, y2: y, stroke: "rgba(255,255,255,0.1)", strokeWidth: "1" } as any)}
                     />
                     <SvgText
-                        x={labelX}
-                        y={labelY}
-                        fill="rgba(255,255,255,0.6)"
-                        fontSize="10"
-                        textAnchor="middle"
-                        alignmentBaseline="middle"
+                        {...({ x: labelX, y: labelY, fill: "rgba(255,255,255,0.6)", fontSize: "10", textAnchor: "middle", alignmentBaseline: "middle" } as any)}
                     >
                         {AXIS_LABELS[i].toUpperCase()}
                     </SvgText>
@@ -112,11 +99,7 @@ export function CognitiveRadar({ data, size = 300 }: CognitiveRadarProps) {
 
                 {/* Data Polygon */}
                 <Polygon
-                    points={points}
-                    fill={Colors.mentra.brandPrimary}
-                    fillOpacity="0.4"
-                    stroke={Colors.mentra.brandPrimary}
-                    strokeWidth="2"
+                    {...({ points: points, fill: Colors.mentra.brandPrimary, fillOpacity: "0.4", stroke: Colors.mentra.brandPrimary, strokeWidth: "2" } as any)}
                 />
 
                 {/* Comparison/Mock Average (Gray) if needed */}

@@ -3,7 +3,8 @@ import { View, Text, ScrollView, Pressable, StyleSheet, TextInput } from 'react-
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Search, Lock, Clock, ChevronRight, Sparkles } from 'lucide-react-native';
+import { Sparkles, BrainCircuit, Lock, ChevronRight, Zap, Target, Search, Clock } from 'lucide-react-native';
+import { I18n, useI18n } from '@/services/i18n';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
@@ -11,124 +12,9 @@ import * as Haptics from 'expo-haptics';
 import { Colors } from '@/constants/Colors';
 
 
-const CATEGORIES = [
-  { id: 'all',        label: 'All',        emoji: '✨' },
-  { id: 'focus',      label: 'Focus',      emoji: '🎯' },
-  { id: 'memory',     label: 'Memory',     emoji: '🧠' },
-  { id: 'speed',      label: 'Speed',      emoji: '⚡' },
-  { id: 'sleep',      label: 'Sleep',      emoji: '🌙' },
-  { id: 'resilience', label: 'Resilience', emoji: '🛡️' },
-];
 
-interface Pack {
-  id: string; title: string; desc: string; category: string;
-  duration: string; difficulty: 'Easy' | 'Medium' | 'Hard';
-  emoji: string; color: string; bg: string; gradient: [string, string];
-  isPro: boolean; route?: string; featured?: boolean;
-  brainBenefit: string;
-  isPhased?: boolean;
-}
 
-const PACKS: Pack[] = [
-  {
-    id: 'grid-focus', title: 'Grid Focus', desc: 'Schulte table training. Find sequential numbers to expand peripheral vision and rebuild sustained attention.',
-    category: 'focus', duration: '3-5 min', difficulty: 'Medium',
-    emoji: '🎯', color: Colors.mentra.brandPrimary, bg: '#E8F5F0', gradient: ['#194031', '#20503D'],
-    isPro: false, route: '/game/grid-focus', featured: true,
-    brainBenefit: 'Prefrontal cortex · Attention networks',
-  },
-  {
-    id: 'memory-grid', title: 'Memory Grid', desc: 'Watch the illuminated sequence and replay it. Trains working memory and pattern encoding in the hippocampus.',
-    category: 'memory', duration: '4-6 min', difficulty: 'Medium',
-    emoji: '🧠', color: '#6366F1', bg: '#EDECFD', gradient: ['#4F46E5', '#7C3AED'],
-    isPro: false, route: '/game/memory-grid',
-    brainBenefit: 'Hippocampus · Working memory',
-  },
-  {
-    id: 'speed-match', title: 'Speed Match', desc: 'Does the shape match the previous one? Trains rapid pattern recognition and decision speed under pressure.',
-    category: 'speed', duration: '3-4 min', difficulty: 'Hard',
-    emoji: '⚡', color: '#10B981', bg: '#ECFDF5', gradient: ['#059669', '#10B981'],
-    isPro: false, route: '/game/speed-match',
-    brainBenefit: 'Processing speed · Inhibitory control',
-    isPhased: true,
-  },
-  {
-    id: 'morning-reset', title: 'Morning Reset', desc: 'A structured cognitive activation routine. Box breathing + grid focus + intention setting for peak morning state.',
-    category: 'focus', duration: '12 min', difficulty: 'Easy',
-    emoji: '🌅', color: '#F59E0B', bg: '#FFFBEB', gradient: ['#D97706', '#F59E0B'],
-    isPro: false, route: '/training/daily-session',
-    brainBenefit: 'Dopamine · Prefrontal activation',
-  },
-  {
-    id: 'deep-focus', title: 'Deep Focus Protocol', desc: 'Advanced 18-minute concentration block. Trains sustained attention at the edge of cognitive capacity.',
-    category: 'focus', duration: '18 min', difficulty: 'Hard',
-    emoji: '🔬', color: '#6366F1', bg: '#EDECFD', gradient: ['#4F46E5', '#6366F1'],
-    isPro: true,
-    brainBenefit: 'Default mode network · Task switching',
-  },
-  {
-    id: 'sleep-prep', title: 'Sleep Wind-Down', desc: 'Calm your cognitive load before bed. Progressive muscle relaxation + breathing + mental decompression.',
-    category: 'sleep', duration: '10 min', difficulty: 'Easy',
-    emoji: '🌙', color: '#3B82F6', bg: '#DBEAFE', gradient: ['#1D4ED8', '#3B82F6'],
-    isPro: true,
-    brainBenefit: 'Cortisol reduction · Sleep architecture',
-  },
-  {
-    id: 'stress-reset', title: 'Anxiety Drop', desc: 'CBT-based cognitive reframing + 4-7-8 breathing. Disrupt the anxiety loop in under 15 minutes.',
-    category: 'resilience', duration: '15 min', difficulty: 'Medium',
-    emoji: '🌊', color: '#8B5CF6', bg: '#F5F3FF', gradient: ['#7C3AED', '#8B5CF6'],
-    isPro: true,
-    brainBenefit: 'Amygdala regulation · HRV improvement',
-  },
-  {
-    id: 'impulse-control',
-    title: 'Impulse Control', desc: 'Train your brain\'s \"stop\" signal. Resist social media notification bait while tapping real brain stimuli. Rebuilds prefrontal inhibitory control.',
-    category: 'focus', duration: '3-4 min', difficulty: 'Medium',
-    emoji: '🛑', color: Colors.mentra.danger, bg: '#FEF2F2', gradient: ['#DC2626', '#EF4444'],
-    isPro: false, route: '/game/impulse-control',
-    brainBenefit: 'Prefrontal cortex · Inhibitory control',
-    isPhased: true,
-  },
-  {
-    id: 'deep-focus',
-    title: 'Deep Focus Timer', desc: 'Monotasking timer with progressive difficulty. Trains sustained attention — the skill social media steals most.',
-    category: 'focus', duration: '5-30 min', difficulty: 'Medium',
-    emoji: '🎯', color: '#6366F1', bg: '#EDECFD', gradient: ['#4F46E5', '#6366F1'],
-    isPro: false, route: '/game/deep-focus',
-    brainBenefit: 'Sustained attention · Default mode network',
-  },
-  {
-    id: 'dopamine-reset',
-    title: 'Dopamine Reset', desc: 'Break the scroll urge in real-time. Identify your trigger, rate the craving, then rewire with a 60-second neurological reset.',
-    category: 'resilience', duration: '3-5 min', difficulty: 'Easy',
-    emoji: '🔄', color: '#8B5CF6', bg: '#F5F3FF', gradient: ['#7C3AED', '#8B5CF6'],
-    isPro: false, route: '/game/dopamine-reset',
-    brainBenefit: 'Dopamine regulation · Habit loop breaking',
-  },
-  {
-    id: 'memory-palace', title: 'Memory Palace', desc: 'Build a mental spatial map to anchor memories. Method-of-loci technique used by world memory champions.',
-    category: 'memory', duration: '20 min', difficulty: 'Hard',
-    emoji: '🏛️', color: '#EC4899', bg: '#FCE7F3', gradient: ['#DB2777', '#EC4899'],
-    isPro: true,
-    brainBenefit: 'Spatial memory · Long-term encoding',
-  },
-  {
-    id: 'impulse-control', title: 'Impulse Control', desc: 'Rebuild the prefrontal "stop" network weakened by infinite scrolling. Go on green, stop on red. Used in clinical neuroscience research.',
-    category: 'focus', duration: '3-4 min', difficulty: 'Hard',
-    emoji: '🛑', color: '#EF4444', bg: '#FEF2F2', gradient: ['#DC2626', '#EF4444'],
-    isPro: false, route: '/game/impulse-control',
-    brainBenefit: 'Prefrontal inhibitory control · Stop signal',
-  },
-  {
-    id: 'deep-focus', title: 'Deep Focus Builder', desc: 'The antidote to TikTok Brain. Train sustained attention from 10 to 30 seconds — the exact capacity destroyed by short-form video.',
-    category: 'focus', duration: '5-7 min', difficulty: 'Medium',
-    emoji: '🎯', color: Colors.mentra.brandPrimary, bg: '#E8F5F0', gradient: ['#194031', '#20503D'],
-    isPro: false, route: '/game/deep-focus',
-    brainBenefit: 'Sustained attention · Prefrontal-parietal network',
-  },
-];
-
-function FeaturedBanner({ pack }: { pack: Pack }) {
+function FeaturedBanner({ pack }: { pack: any }) {
   return (
     <Animated.View entering={FadeInDown.springify()} style={styles.featuredWrapper}>
       <Pressable
@@ -140,7 +26,7 @@ function FeaturedBanner({ pack }: { pack: Pack }) {
           <View style={styles.featuredTop}>
             <View style={styles.featuredTagRow}>
               <Sparkles size={11} color={Colors.mentra.brandSecondary} />
-              <Text style={styles.featuredTag}>FEATURED · FREE</Text>
+              <Text style={styles.featuredTag}>{I18n.t('exploreFeaturedBadge')}</Text>
             </View>
             <Text style={{ fontSize: 36 }}>{pack.emoji}</Text>
           </View>
@@ -154,7 +40,7 @@ function FeaturedBanner({ pack }: { pack: Pack }) {
               <Text style={styles.featuredMetaText}>{pack.brainBenefit}</Text>
             </View>
             <View style={styles.featuredBtn}>
-              <Text style={[styles.featuredBtnText, { color: pack.color }]}>Try Free</Text>
+              <Text style={[styles.featuredBtnText, { color: pack.color }]}>{I18n.t('exploreTryFree')}</Text>
             </View>
           </View>
         </LinearGradient>
@@ -163,7 +49,7 @@ function FeaturedBanner({ pack }: { pack: Pack }) {
   );
 }
 
-function PackCard({ pack, index }: { pack: Pack; index: number }) {
+function PackCard({ pack, index }: { pack: any; index: number }) {
   const handlePress = () => {
     if (pack.isPhased) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
@@ -190,7 +76,7 @@ function PackCard({ pack, index }: { pack: Pack; index: number }) {
             <Text style={[styles.packTitle, pack.isPhased && { color: Colors.mentra.textDim }]} numberOfLines={1}>{pack.title}</Text>
             {pack.isPhased ? (
               <View style={[styles.packDiff, { borderColor: Colors.mentra.brandPrimary, backgroundColor: Colors.mentra.brandPrimary + '15' }]}>
-                <Text style={[styles.packDiffText, { color: Colors.mentra.brandPrimary }]}>ELITE LAB</Text>
+                <Text style={[styles.packDiffText, { color: Colors.mentra.brandPrimary }]}>{I18n.t('exploreEliteBadge')}</Text>
               </View>
             ) : (
               <View style={[styles.packDiff, { borderColor: diffColors[pack.difficulty] }]}>
@@ -199,7 +85,7 @@ function PackCard({ pack, index }: { pack: Pack; index: number }) {
             )}
           </View>
           <Text style={styles.packDesc} numberOfLines={2}>
-            {pack.isPhased ? 'Experimental: Scientific research trial in progress. Unlocking in the next research wave.' : pack.desc}
+            {pack.isPhased ? I18n.t('experimentalFeature') : pack.desc}
           </Text>
           <View style={styles.packMeta}>
             <Clock size={11} color={Colors.mentra.muted} />
@@ -217,8 +103,102 @@ function PackCard({ pack, index }: { pack: Pack; index: number }) {
 
 export default function ExploreScreen() {
   const insets = useSafeAreaInsets();
+  const { lang, t } = useI18n();
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
+
+  const CATEGORIES = React.useMemo(() => [
+    { id: 'all',        label: t('catAll'),        emoji: '✨' },
+    { id: 'focus',      label: t('catFocus'),      emoji: '🎯' },
+    { id: 'memory',     label: t('catMemory'),     emoji: '🧠' },
+    { id: 'speed',      label: t('catSpeed'),      emoji: '⚡' },
+    { id: 'sleep',      label: t('catSleep'),      emoji: '🌙' },
+    { id: 'resilience', label: t('catResilience'), emoji: '🛡️' },
+  ], [lang]);
+
+  const PACKS = React.useMemo(() => [
+    {
+      id: 'grid-focus', title: t('gameGridFocus'), desc: t('gfHowTo'),
+      category: t('catFocus'), duration: '3-5 min', difficulty: 'Medium',
+      emoji: '🎯', color: Colors.mentra.brandPrimary, bg: '#E8F5F0', gradient: ['#194031', '#20503D'],
+      isPro: false, route: '/game/grid-focus', featured: true,
+      brainBenefit: t('prefrontalInhibition'),
+    },
+    {
+      id: 'memory-grid', title: t('gameMemoryGrid'), desc: t('memoryGridDesc'),
+      category: t('catMemory'), duration: '4-6 min', difficulty: 'Medium',
+      emoji: '🧠', color: '#6366F1', bg: '#EDECFD', gradient: ['#4F46E5', '#7C3AED'],
+      isPro: false, route: '/game/memory-grid',
+      brainBenefit: t('memory'),
+    },
+    {
+      id: 'speed-match', title: t('gameSpeedMatch'), desc: t('speedMatchDesc'),
+      category: t('catSpeed'), duration: '3-4 min', difficulty: 'Hard',
+      emoji: '⚡', color: '#10B981', bg: '#ECFDF5', gradient: ['#059669', '#10B981'],
+      isPro: false, route: '/game/speed-match',
+      brainBenefit: t('speed'),
+      isPhased: true,
+    },
+    {
+      id: 'morning-reset', title: t('morningResetTitle'), desc: t('morningResetDescLong'),
+      category: t('catFocus'), duration: '12 min', difficulty: 'Easy',
+      emoji: '🌅', color: '#F59E0B', bg: '#FFFBEB', gradient: ['#D97706', '#F59E0B'],
+      isPro: false, route: '/training/daily-session',
+      brainBenefit: t('dopamineBaseline'),
+    },
+    {
+      id: 'deep-focus-pro', title: t('deepFocusTitle'), desc: t('deepFocusDescLong'),
+      category: t('catFocus'), duration: '18 min', difficulty: 'Hard',
+      emoji: '🔬', color: '#6366F1', bg: '#EDECFD', gradient: ['#4F46E5', '#6366F1'],
+      isPro: true,
+      brainBenefit: t('focus'),
+    },
+    {
+      id: 'sleep-prep', title: t('sleepWindDownTitle'), desc: t('sleepWindDownDescLong'),
+      category: t('catSleep'), duration: '10 min', difficulty: 'Easy',
+      emoji: '🌙', color: '#3B82F6', bg: '#DBEAFE', gradient: ['#1D4ED8', '#3B82F6'],
+      isPro: true,
+      brainBenefit: t('catSleep'),
+    },
+    {
+      id: 'stress-reset', title: t('anxietyDropTitle'), desc: t('anxietyDropDesc'),
+      category: t('catResilience'), duration: '15 min', difficulty: 'Medium',
+      emoji: '🌊', color: '#8B5CF6', bg: '#F5F3FF', gradient: ['#7C3AED', '#8B5CF6'],
+      isPro: true,
+      brainBenefit: t('catResilience'),
+    },
+    {
+      id: 'impulse-control',
+      title: t('impulseControlTitle'), desc: t('impulseControlDescLong'),
+      category: t('catFocus'), duration: '3-4 min', difficulty: 'Medium',
+      emoji: '🛑', color: Colors.mentra.danger, bg: '#FEF2F2', gradient: ['#DC2626', '#EF4444'],
+      isPro: false, route: '/game/impulse-control',
+      brainBenefit: t('prefrontalInhibition'),
+    },
+    {
+      id: 'deep-focus-timer',
+      title: t('deepFocusTimerTitle'), desc: t('deepFocusTimerDescLong'),
+      category: t('catFocus'), duration: '5-30 min', difficulty: 'Medium',
+      emoji: '🎯', color: '#6366F1', bg: '#EDECFD', gradient: ['#4F46E5', '#6366F1'],
+      isPro: false, route: '/game/deep-focus',
+      brainBenefit: t('focus'),
+    },
+    {
+      id: 'dopamine-reset',
+      title: t('gameDopamineReset'), desc: t('drResetCompleteSub'),
+      category: t('catResilience'), duration: '3-5 min', difficulty: 'Easy',
+      emoji: '🔄', color: '#8B5CF6', bg: '#F5F3FF', gradient: ['#7C3AED', '#8B5CF6'],
+      isPro: false, route: '/game/dopamine-reset',
+      brainBenefit: t('dopamineBaseline'),
+    },
+    {
+      id: 'memory-palace', title: t('memoryPalaceTitle'), desc: t('memoryPalaceDesc'),
+      category: t('catMemory'), duration: '20 min', difficulty: 'Hard',
+      emoji: '🏛️', color: '#EC4899', bg: '#FCE7F3', gradient: ['#DB2777', '#EC4899'],
+      isPro: true,
+      brainBenefit: t('scienceBehindGrounding'),
+    },
+  ], [lang]);
 
   const featured = PACKS.find(p => p.featured);
   const filtered = PACKS.filter(p => {
@@ -232,15 +212,15 @@ export default function ExploreScreen() {
       <StatusBar style="dark" />
 
       <View style={styles.screenHeader}>
-        <Text style={styles.screenTitle}>Explore</Text>
-        <Text style={styles.screenSub}>Science-backed cognitive training</Text>
+        <Text style={styles.screenTitle}>{I18n.t('exploreTitle')}</Text>
+        <Text style={styles.screenSub}>{I18n.t('exploreSub')}</Text>
       </View>
 
       {/* Search */}
       <View style={styles.searchBar}>
         <Search size={18} color={Colors.mentra.textDim} />
         <TextInput
-          style={styles.searchInput} placeholder="Search programs..."
+          style={styles.searchInput} placeholder={I18n.t('searchPlaceholder')}
           placeholderTextColor={Colors.mentra.muted} value={search} onChangeText={setSearch}
           selectionColor={Colors.mentra.brandPrimary}
         />
@@ -267,7 +247,7 @@ export default function ExploreScreen() {
         {/* Pack list */}
         {filtered.map((pack, i) => <PackCard key={pack.id} pack={pack} index={i} />)}
         {filtered.length === 0 && (
-          <View style={styles.empty}><Text style={styles.emptyText}>No programs found.</Text></View>
+          <View style={styles.empty}><Text style={styles.emptyText}>{I18n.t('exploreEmpty')}</Text></View>
         )}
 
         <View style={{ height: 120 }} />

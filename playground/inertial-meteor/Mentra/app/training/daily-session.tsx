@@ -10,7 +10,7 @@ import { Card, StatCard } from '@/components/ui/Cards';
 import { PrimaryButton, SecondaryButton } from '@/components/ui/Buttons';
 import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
-import { I18n } from '@/services/i18n';
+import { useI18n } from '@/services/i18n';
 import { getPremiumStatus } from '@/services/purchases';
 
 // Core Engine
@@ -37,6 +37,7 @@ const PhaseMap = {
 };
 
 export default function DailySessionScreen() {
+    const { t } = useI18n();
     const [isPro, setIsPro] = useState(false);
 
     useEffect(() => {
@@ -90,21 +91,21 @@ export default function DailySessionScreen() {
         <Animated.View entering={FadeInUp} exiting={FadeOutDown} style={styles.introContainer}>
             <View style={styles.activationCard}>
                 <TrendingUp size={48} color={Colors.mentra.brandPrimary} style={{ marginBottom: Metrics.spacing.l }} />
-                <ThemedText style={styles.themeBadge}>WEEKLY THEME: {weeklyTheme.toUpperCase()}</ThemedText>
-                <ThemedText style={styles.title}>Concept Activation</ThemedText>
+                <ThemedText style={styles.themeBadge}>{t('dailyThemePrefix')} {weeklyTheme.toUpperCase()}</ThemedText>
+                <ThemedText style={styles.title}>{t('dailyActivationTitle')}</ThemedText>
                 <ThemedText style={styles.subtitle}>
-                    Today we train working memory and processing speed under mild time pressure. Stay calm and focus on accuracy.
+                    {t('dailyActivationSubtitle')}
                 </ThemedText>
 
                 <View style={styles.phaseBreakdown}>
-                    <ThemedText style={styles.phaseItem}>Phase 1: Working Memory Warm-up</ThemedText>
-                    <ThemedText style={styles.phaseItem}>Phase 2: Accelerated Memory (Core)</ThemedText>
-                    <ThemedText style={styles.phaseItem}>Phase 3: Reaction Burst (Speed)</ThemedText>
+                    <ThemedText style={styles.phaseItem}>{t('dailyPhase1')}</ThemedText>
+                    <ThemedText style={styles.phaseItem}>{t('dailyPhase2')}</ThemedText>
+                    <ThemedText style={styles.phaseItem}>{t('dailyPhase3')}</ThemedText>
                 </View>
             </View>
 
             <PrimaryButton
-                title="Begin Session"
+                title={t('dailyBeginBtn')}
                 onPress={() => setPhase('warmup')}
                 style={{ width: '80%', marginTop: 20 }}
             />
@@ -119,7 +120,7 @@ export default function DailySessionScreen() {
             <Animated.View entering={FadeInUp} style={styles.introContainer}>
                 <View style={styles.headerBox}>
                     <Brain size={48} color={Colors.mentra.brandPrimary} style={{ marginBottom: Metrics.spacing.m }} />
-                    <ThemedText style={styles.title}>Session Complete</ThemedText>
+                    <ThemedText style={styles.title}>{t('dailyCompleteTitle')}</ThemedText>
                     <Card style={styles.insightBox} variant="outline">
                         <BarChart2 size={24} color={Colors.mentra.brandAccent} style={{ marginBottom: 8 }} />
                         <ThemedText style={styles.insight}>{insight}</ThemedText>
@@ -128,19 +129,19 @@ export default function DailySessionScreen() {
 
                 <Card variant="outline" style={styles.metricsCard}>
                     <View style={styles.scoreRow}>
-                        <ThemedText style={styles.scoreLabel}>Cognitive Output</ThemedText>
+                        <ThemedText style={styles.scoreLabel}>{t('dailyCognitiveOutput')}</ThemedText>
                         <ThemedText style={styles.scoreValue}>{totalScore}</ThemedText>
                     </View>
 
                     <View style={styles.statsGrid}>
                         <StatCard
-                            title="Accuracy"
+                            title={t('accuracy')}
                             value={`${Math.round(avgAcc * 100)}%`}
                             icon={<CheckCircle size={18} color={Colors.mentra.success} />}
                             trendPositive={avgAcc >= 0.85}
                         />
                         <StatCard
-                            title="Reaction"
+                            title={t('reaction')}
                             value={`${(avgRt / 1000).toFixed(2)}s`}
                             icon={<Zap size={18} color={Colors.mentra.warning} />}
                             trendPositive={avgRt < 800}
@@ -149,7 +150,7 @@ export default function DailySessionScreen() {
                 </Card>
 
                 <PrimaryButton
-                    title="Finish"
+                    title={t('finishBtn') || 'Finish'}
                     onPress={() => router.replace('/(tabs)/training')}
                     style={{ width: '80%', marginTop: Metrics.spacing.xl }}
                 />
@@ -175,7 +176,7 @@ export default function DailySessionScreen() {
 
                     {engine.isReverse && (
                         <ThemedText style={{ color: Colors.mentra.brandAccent, fontWeight: 'bold', marginBottom: 20 }}>
-                            REVERSE PATTERN
+                            {t('dailyReversePattern')}
                         </ThemedText>
                     )}
 
@@ -196,7 +197,7 @@ export default function DailySessionScreen() {
                                     key={index}
                                     onPress={() => engine.handleCellPress(index)}
                                     disabled={engine.gameState !== 'recall'}
-                                    style={({ pressed }) => [
+                                    style={({ pressed }: { pressed: boolean }) => [
                                         styles.cell,
                                         {
                                             width: cellSize,
@@ -233,7 +234,7 @@ export default function DailySessionScreen() {
 
                     <View style={[styles.controls, { marginTop: 60 }]}>
                         <AnimatedPressable
-                            style={({ pressed }) => [
+                            style={({ pressed }: { pressed: boolean }) => [
                                 styles.gameBtn,
                                 {
                                     borderColor: Colors.mentra.danger,
@@ -243,11 +244,11 @@ export default function DailySessionScreen() {
                             ]}
                             onPress={() => peakEngine.handleGuess(false)}
                         >
-                            <ThemedText style={{ color: Colors.mentra.danger, fontSize: 24, fontWeight: '800' }}>NO</ThemedText>
+                            <ThemedText style={{ color: Colors.mentra.danger, fontSize: 24, fontWeight: '800' }}>{t('speedMatchNo')}</ThemedText>
                         </AnimatedPressable>
 
                         <AnimatedPressable
-                            style={({ pressed }) => [
+                            style={({ pressed }: { pressed: boolean }) => [
                                 styles.gameBtn,
                                 {
                                     borderColor: Colors.mentra.success,
@@ -257,7 +258,7 @@ export default function DailySessionScreen() {
                             ]}
                             onPress={() => peakEngine.handleGuess(true)}
                         >
-                            <ThemedText style={{ color: Colors.mentra.success, fontSize: 24, fontWeight: '800' }}>YES</ThemedText>
+                            <ThemedText style={{ color: Colors.mentra.success, fontSize: 24, fontWeight: '800' }}>{t('speedMatchYes')}</ThemedText>
                         </AnimatedPressable>
                     </View>
                 </View>
