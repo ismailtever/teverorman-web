@@ -490,4 +490,6 @@ function makeStyles(C: ReturnType<typeof useMentraTheme>) {
         introCard: { backgroundColor: C.surface, padding: 20, borderRadius: 16, borderWidth: 1, borderColor: C.border },
         introHowTo: { fontSize: 15, color: C.text, lineHeight: 24, textAlign: 'center' },
         introStartBtn: { width: '100%', backgroundColor: C.brandPrimary, borderRadius: 16, paddingVertical: 18, alignItems: 'center', shadowColor: C.brandPrimary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 6 },
-        introStartBtnText: { color: '#FFF', fontSize: 17, fontWeight: '8
+        introStartBtnText: { color: '#FFF', fontSize: 17, fontWeight: '800', letterSpacing: 1 },
+    });
+}

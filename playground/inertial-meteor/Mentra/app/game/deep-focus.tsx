@@ -373,4 +373,12 @@ const styles = StyleSheet.create({
   mainControlBtn: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16 },
   doneBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 14 },
   doneTitle: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  doneTask: { fontSize: 14, color: Colors.mentra.textDim, textAlign: 'c
+  doneTask: { fontSize: 14, color: Colors.mentra.textDim, textAlign: 'center' },
+  doneStats: { flexDirection: 'row', gap: 12 },
+  doneStat: { flex: 1, backgroundColor: Colors.mentra.surface, borderRadius: 16, padding: 16, alignItems: 'center', borderWidth: 1, borderColor: Colors.mentra.border },
+  doneStatVal: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text },
+  doneStatLabel: { fontSize: 10, color: Colors.mentra.textDim, fontWeight: '600', marginTop: 2 },
+  doneTip: { fontSize: 13, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 20 },
+  backLink: { paddingVertical: 8 },
+  backLinkText: { color: Colors.mentra.textDim, fontSize: 14, fontWeight: '600' },
+});

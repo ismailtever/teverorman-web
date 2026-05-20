@@ -313,4 +313,3 @@ const styles = StyleSheet.create({
     entryMiniTag: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
     entryMiniTagText: { fontSize: 10, fontWeight: '600' },
 });
-                  

@@ -115,4 +115,33 @@ export const AppButton = ({
                         </ThemedText>
                     </View>
                 )}
-            </Touchabl
+            </TouchableOpacity>
+        </Animated.View>
+    );
+};
+
+export const PrimaryButton = (props: Omit<ButtonProps, 'variant'>) => <AppButton variant="primary" {...props} />;
+export const SecondaryButton = (props: Omit<ButtonProps, 'variant'>) => <AppButton variant="secondary" {...props} />;
+export const GhostButton = (props: Omit<ButtonProps, 'variant'>) => <AppButton variant="ghost" {...props} />;
+
+const styles = StyleSheet.create({
+    button: {
+        borderRadius: Metrics.radius.xl,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+    },
+    contentContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    iconContainer: {
+        marginRight: 8,
+    },
+    text: {
+        fontWeight: '600',
+        letterSpacing: 0.3,
+    }
+});

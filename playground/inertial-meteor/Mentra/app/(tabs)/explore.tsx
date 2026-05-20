@@ -386,4 +386,6 @@ const styles = StyleSheet.create({
   diffBadge: { borderRadius: 6, borderWidth: 1, paddingHorizontal: 6, paddingVertical: 2 },
   diffBadgeText: { fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
 
-  emptyState: { alignItems: 'center', paddin
+  emptyState: { alignItems: 'center', paddingVertical: 60 },
+  emptyText: { fontSize: 16 },
+});

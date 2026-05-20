@@ -257,4 +257,3 @@ const styles = StyleSheet.create({
     bootcampPlayBtn: { backgroundColor: '#FFF', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20 },
     bootcampPlayText: { fontSize: 13, fontWeight: '800' },
 });
-                                                                                                                                                      

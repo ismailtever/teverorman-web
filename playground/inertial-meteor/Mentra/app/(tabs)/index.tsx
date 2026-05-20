@@ -357,4 +357,10 @@ function makeStyles(C: ReturnType<typeof import('@/hooks/useMentraTheme').useMen
     insightText: { fontSize: 14, lineHeight: 22, fontStyle: 'italic' },
 
     // Upsell
-    upsellBanner: { borderRadius: 14, borderWidth: 1, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, mar
+    upsellBanner: { borderRadius: 14, borderWidth: 1, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, marginTop: 4 },
+    upsellTitle: { fontSize: 14, fontWeight: '700' },
+    upsellSub: { fontSize: 12 },
+    upsellBtn: { borderRadius: 10, paddingHorizontal: 14, paddingVertical: 8 },
+    upsellBtnText: { fontSize: 13, fontWeight: '700', color: '#FFF' },
+  });
+}

@@ -209,4 +209,7 @@ const styles = StyleSheet.create({
         gap: 4
     },
     ethicalText: {
-      
+        fontSize: 13,
+        color: Colors.mentra.paywall.textDim
+    }
+});

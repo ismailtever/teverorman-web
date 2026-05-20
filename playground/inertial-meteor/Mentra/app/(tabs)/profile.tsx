@@ -275,4 +275,77 @@ export default function ProfileScreen() {
                         </View>
                     </View>
 
-                    <View style={[styles.divider, { backgroundColor: C.border }]} 
+                    <View style={[styles.divider, { backgroundColor: C.border }]} />
+                    <RowItem
+                        icon={<Bell size={20} color={C.textDim} />}
+                        label="Push Notifications"
+                        subLabel="Daily streak and check-in reminders"
+                        onPress={() => { Haptics.selectionAsync?.(); Linking.openSettings(); }}
+                    />
+                    <View style={[styles.divider, { backgroundColor: C.border }]} />
+                    <RowItem
+                        icon={<HelpCircle size={20} color={C.textDim} />}
+                        label="Help & Support"
+                        subLabel="Contact us or report a bug"
+                        onPress={() => Linking.openURL('mailto:support@mentra.app?subject=Mentra%20Support')}
+                    />
+                    <View style={[styles.divider, { backgroundColor: C.border }]} />
+                    <RowItem
+                        icon={<Info size={20} color={C.textDim} />}
+                        label="About Mentra"
+                        subLabel={I18n.t('footerBrand')}
+                        onPress={() => router.push('/legal/disclaimer' as any)}
+                    />
+                </View>
+
+                {/* ── Danger Zone ── */}
+                <View style={[styles.group, { marginTop: 8, backgroundColor: C.surface, borderColor: C.border }]}>
+                    <RowItem
+                        icon={<Database size={20} color={C.danger} />}
+                        label={I18n.t('resetData')}
+                        subLabel="Permanently delete all local data"
+                        onPress={handleResetData}
+                        danger
+                    />
+                    <View style={[styles.divider, { backgroundColor: C.border }]} />
+                    <RowItem
+                        icon={<LogOut size={20} color={C.danger} />}
+                        label="Sign Out"
+                        onPress={handleSignOut}
+                        danger
+                    />
+                </View>
+
+                <View style={{ height: 80 }} />
+            </ScrollView>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: { flex: 1 },
+    header: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 16 },
+    headerTitle: { fontSize: 32, fontWeight: '800', letterSpacing: -0.5 },
+    scroll: { paddingHorizontal: 20 },
+    sectionTitle: { fontSize: 13, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8, marginLeft: 4 },
+    group: { borderRadius: 16, borderWidth: 1, overflow: 'hidden', marginBottom: 24 },
+    divider: { height: 1, marginLeft: 56 },
+    profileCard: {
+        borderRadius: 20, padding: 20, flexDirection: 'row', alignItems: 'center', gap: 16, borderWidth: 1,
+        shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12, elevation: 3,
+    },
+    avatar: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center' },
+    avatarText: { fontSize: 24, fontWeight: '800', color: '#FFF' },
+    profileName: { fontSize: 18, fontWeight: '700' },
+    profileEmail: { fontSize: 13 },
+    proBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20 },
+    proBtnText: { fontSize: 12, fontWeight: '700' },
+    rowIcon: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+    rowLabel: { fontSize: 16, fontWeight: '600' },
+    rowSubLabel: { fontSize: 13, marginTop: 2 },
+    langRow: { flexDirection: 'row', alignItems: 'center', padding: 16, gap: 16 },
+    langSwitcher: { flexDirection: 'row', gap: 6 },
+    langBtn: { flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: 8, paddingVertical: 6, borderRadius: 10, borderWidth: 1 },
+    langFlag: { fontSize: 14 },
+    langBtnText: { fontSize: 11, fontWeight: '700' },
+});

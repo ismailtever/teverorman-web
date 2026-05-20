@@ -184,3 +184,25 @@ const styles = StyleSheet.create({
         color: Colors.mentra.text,
     },
     purposeCard: {
+        alignItems: 'center',
+        paddingVertical: Metrics.spacing.xxl,
+    },
+    iconCircle: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        backgroundColor: Colors.mentra.surface2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: Metrics.spacing.xl,
+    },
+    purposeDesc: {
+        fontSize: 16,
+        color: Colors.mentra.textDim,
+        textAlign: 'center',
+        lineHeight: 24,
+    },
+    footer: {
+        marginTop: 'auto',
+    }
+});

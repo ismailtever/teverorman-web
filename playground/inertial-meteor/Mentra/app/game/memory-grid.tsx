@@ -299,4 +299,39 @@ const styles = StyleSheet.create({
         marginBottom: Metrics.spacing.xl,
         width: '100%',
     },
-    howToPlayLabe
+    howToPlayLabel: {
+        fontSize: 12,
+        fontWeight: '700',
+        letterSpacing: 1,
+        marginBottom: 8,
+        textAlign: 'center',
+        textTransform: 'uppercase',
+    },
+    cardDesc: {
+        fontSize: 14,
+        textAlign: 'center',
+        lineHeight: 22,
+    },
+    successText: {
+        fontSize: 40,
+        fontWeight: '800',
+    },
+    footer: {
+        padding: Metrics.spacing.xl,
+        alignItems: 'center',
+    },
+    statBox: {
+        paddingVertical: Metrics.spacing.m,
+        paddingHorizontal: Metrics.spacing.xl,
+        alignItems: 'center',
+    },
+    statLabel: {
+        fontSize: 12,
+        fontWeight: '700',
+        letterSpacing: 1,
+    },
+    statValue: {
+        fontSize: 28,
+        fontWeight: '800',
+    },
+});

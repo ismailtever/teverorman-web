@@ -17,7 +17,6 @@ import { I18n } from '@/services/i18n';
 import { NeuroActivationWarmup } from '@/components/game/NeuroActivationWarmup';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
-import { Colors } from '@/constants/Colors';
 import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Storage } from '@/services/storage';
 import { AnalysisEngine, DEFAULT_COGNITIVE_PROFILE } from '@/services/engine/AnalysisEngine';
@@ -28,7 +27,7 @@ import { Streak } from '@/services/streak';
 const { width } = Dimensions.get('window');
 
 const GO_STIMULI = [
-  { emoji: '🧠', label: 'Brain Boost', color: Colors.mentra.brandPrimary, bg: '#E8F5F0', tap: true  },
+  { emoji: '🧠', label: 'Brain Boost', color: '#194031',                  bg: '#E8F5F0', tap: true  },
   { emoji: '⚡', label: 'Focus Up',    color: '#10B981',                  bg: '#ECFDF5', tap: true  },
   { emoji: '💡', label: 'Logic',       color: '#F59E0B',                  bg: '#FFFBEB', tap: true  },
   { emoji: '🎯', label: 'Sharp',       color: '#6366F1',                  bg: '#EDECFD', tap: true  },
@@ -328,10 +327,10 @@ export default function ImpulseControlGame() {
       <StatusBar style={C.statusBar} />
       <View style={styles.gameHeader}>
         <Pressable onPress={() => { clearAllTimers(); router.back(); }} style={styles.closeBtn}>
-          <X size={20} color={Colors.mentra.text} />
+          <X size={20} color={C.text} />
         </Pressable>
         <View style={styles.timerBox}>
-          <Text style={[styles.timerText, timeLeft <= 10 && { color: Colors.mentra.danger }]}>{timeLeft}s</Text>
+          <Text style={[styles.timerText, timeLeft <= 10 && { color: C.danger }]}>{timeLeft}s</Text>
         </View>
         <View style={styles.scoreBadge}><Text style={styles.scoreText}>{score}</Text></View>
       </View>
@@ -354,12 +353,12 @@ export default function ImpulseControlGame() {
         )}
         {feedback === 'correct' && (
           <Animated.View key="fb-correct" entering={FadeIn} exiting={FadeOut} style={styles.feedbackPos}>
-            <Text style={[styles.feedbackText, { color: Colors.mentra.success }]}>+10 ✓</Text>
+            <Text style={[styles.feedbackText, { color: C.success }]}>+10 ✓</Text>
           </Animated.View>
         )}
         {feedback === 'wrong' && (
           <Animated.View key="fb-wrong" entering={FadeIn} exiting={FadeOut} style={styles.feedbackPos}>
-            <Text style={[styles.feedbackText, { color: Colors.mentra.danger }]}>Bait! ✗</Text>
+            <Text style={[styles.feedbackText, { color: C.danger }]}>Bait! ✗</Text>
           </Animated.View>
         )}
       </Pressable>
@@ -372,82 +371,69 @@ export default function ImpulseControlGame() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.mentra.bg },
-  closeBtn: { padding: 10, backgroundColor: Colors.mentra.surface, borderRadius: 20, borderWidth: 1, borderColor: Colors.mentra.border },
-  gameHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 12 },
-  timerBox: { backgroundColor: Colors.mentra.surface, paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: Colors.mentra.border },
-  timerText: { fontSize: 16, fontWeight: '800', color: Colors.mentra.text },
-  scoreBadge: { backgroundColor: Colors.mentra.brandPrimary + '18', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20 },
-  scoreText: { fontSize: 16, fontWeight: '800', color: Colors.mentra.brandPrimary },
-  instruction: { textAlign: 'center', fontSize: 18, fontWeight: '700', color: Colors.mentra.text, marginVertical: 8, paddingHorizontal: 20, minHeight: 28 },
-  stimArea: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  stimCard: {
-    width: width * 0.65, padding: 32, borderRadius: 28, alignItems: 'center', gap: 10, borderWidth: 2,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 8,
-  },
-  stimEmoji: { fontSize: 56 },
-  stimLabel: { fontSize: 18, fontWeight: '800', textAlign: 'center' },
-  stimBaitTag: { backgroundColor: '#EF444420', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, marginTop: 4 },
-  stimBaitText: { fontSize: 10, fontWeight: '800', color: Colors.mentra.danger, letterSpacing: 1 },
-  feedbackPos: { position: 'absolute', top: '15%' },
-  feedbackText: { fontSize: 26, fontWeight: '900' },
-  progressBar: { height: 4, backgroundColor: Colors.mentra.border, marginHorizontal: 20, borderRadius: 2, marginBottom: 6 },
-  progressFill: { height: 4, backgroundColor: Colors.mentra.brandPrimary, borderRadius: 2 },
-  roundText: { textAlign: 'center', fontSize: 12, color: Colors.mentra.textDim, marginBottom: 16 },
-  introBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32, gap: 0 },
-  introIconBox: { width: 96, height: 96, borderRadius: 28, backgroundColor: '#FEF2F2', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
-  introTitle: { fontSize: 30, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  instructionsBox: {
-    backgroundColor: Colors.mentra.surface,
-    padding: Metrics.spacing.m,
-    borderRadius: Metrics.radius.m,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: Colors.mentra.border,
-  },
-  cardDesc: {
-    fontSize: 14,
-    color: Colors.mentra.textDim,
-    lineHeight: 20,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 8,
-  },
-  sectionLabel: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: Colors.mentra.brandPrimary,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
-  scienceBox: {
-    backgroundColor: Colors.mentra.brandAccent + '08',
-    padding: Metrics.spacing.m,
-    borderRadius: Metrics.radius.m,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: Colors.mentra.brandAccent + '15',
-  },
-  scienceWhat: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: Colors.mentra.text,
-    marginBottom: 4,
-  },
-  scienceWhy: {
-    fontSize: 13,
-    color: Colors.mentra.textDim,
-    lineHeight: 18,
-  },
-  startBtn: { backgroundColor: Colors.mentra.brandPrimary, paddingVertical: 16, paddingHorizontal: 40, borderRadius: 16, marginTop: 8, shadowColor: Colors.mentra.brandPrimary, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 12, width: '100%', alignItems: 'center' },
-  startBtnText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
-  resultsBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 16 },
-  resultsEmoji: { fontSize: 60 },
-  resultsTitle: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  gradeBox: { width: '100%', borderRadius: 20, borderWidth: 2, padding: 20, alignItems: 'center', gap: 4, backgroundColor: Colors.mentra.surface },
-  gradeLabel: { fontSize: 14, fontWeight: '800', letterSpacing: 1, textTransform: 'uppercase' },
-  inhibScore: { fontSize: 52, fontWeight: '900', color: Colors.mentra.text, letterS
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: C.bg },
+    closeBtn: { padding: 10, backgroundColor: C.surface, borderRadius: 20, borderWidth: 1, borderColor: C.border },
+    gameHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 12 },
+    timerBox: { backgroundColor: C.surface, paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: C.border },
+    timerText: { fontSize: 16, fontWeight: '800', color: C.text },
+    scoreBadge: { backgroundColor: C.brandPrimary + '18', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20 },
+    scoreText: { fontSize: 16, fontWeight: '800', color: C.brandPrimary },
+    instruction: { textAlign: 'center', fontSize: 18, fontWeight: '700', color: C.text, marginVertical: 8, paddingHorizontal: 20, minHeight: 28 },
+    stimArea: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+    stimCard: {
+      width: width * 0.65, padding: 32, borderRadius: 28, alignItems: 'center', gap: 10, borderWidth: 2,
+      shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 8,
+    },
+    stimEmoji: { fontSize: 56 },
+    stimLabel: { fontSize: 18, fontWeight: '800', textAlign: 'center' },
+    stimBaitTag: { backgroundColor: '#EF444420', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, marginTop: 4 },
+    stimBaitText: { fontSize: 10, fontWeight: '800', color: C.danger, letterSpacing: 1 },
+    feedbackPos: { position: 'absolute', top: '15%' as any },
+    feedbackText: { fontSize: 26, fontWeight: '900' },
+    progressBar: { height: 4, backgroundColor: C.border, marginHorizontal: 20, borderRadius: 2, marginBottom: 6 },
+    progressFill: { height: 4, backgroundColor: C.brandPrimary, borderRadius: 2 },
+    roundText: { textAlign: 'center', fontSize: 12, color: C.textDim, marginBottom: 16 },
+    introBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32, gap: 0 },
+    introIconBox: { width: 96, height: 96, borderRadius: 28, backgroundColor: '#FEF2F2', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+    introTitle: { fontSize: 30, fontWeight: '900', color: C.text, letterSpacing: -0.5 },
+    instructionsBox: {
+      backgroundColor: C.surface,
+      padding: Metrics.spacing.m,
+      borderRadius: Metrics.radius.m,
+      width: '100%',
+      borderWidth: 1,
+      borderColor: C.border,
+    },
+    cardDesc: { fontSize: 14, color: C.textDim, lineHeight: 20 },
+    sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 },
+    sectionLabel: { fontSize: 11, fontWeight: '800', color: C.brandPrimary, letterSpacing: 1, textTransform: 'uppercase' },
+    scienceBox: {
+      backgroundColor: C.brandPrimary + '08',
+      padding: Metrics.spacing.m,
+      borderRadius: Metrics.radius.m,
+      width: '100%',
+      borderWidth: 1,
+      borderColor: C.brandPrimary + '15',
+    },
+    scienceWhat: { fontSize: 15, fontWeight: '700', color: C.text, marginBottom: 4 },
+    scienceWhy: { fontSize: 13, color: C.textDim, lineHeight: 18 },
+    startBtn: { backgroundColor: C.brandPrimary, paddingVertical: 16, paddingHorizontal: 40, borderRadius: 16, marginTop: 8, shadowColor: C.brandPrimary, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 12, width: '100%', alignItems: 'center' },
+    startBtnText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
+    resultsBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 16 },
+    resultsEmoji: { fontSize: 60 },
+    resultsTitle: { fontSize: 28, fontWeight: '900', color: C.text, letterSpacing: -0.5 },
+    gradeBox: { width: '100%', borderRadius: 20, borderWidth: 2, padding: 20, alignItems: 'center', gap: 4, backgroundColor: C.surface },
+    gradeLabel: { fontSize: 14, fontWeight: '800', letterSpacing: 1, textTransform: 'uppercase' },
+    inhibScore: { fontSize: 52, fontWeight: '900', color: C.text, letterSpacing: -2 },
+    inhibLabel: { fontSize: 12, color: C.textDim },
+    statsRow: { flexDirection: 'row', gap: 16 },
+    statItem: { flex: 1, alignItems: 'center', backgroundColor: C.surface, borderRadius: 14, padding: 14, borderWidth: 1, borderColor: C.border },
+    statVal: { fontSize: 24, fontWeight: '900', color: C.text },
+    statLabel: { fontSize: 11, color: C.textDim, marginTop: 2 },
+    resultsTip: { fontSize: 13, color: C.textDim, textAlign: 'center', lineHeight: 20 },
+    backLink: { paddingVertical: 8 },
+    backLinkText: { color: C.textDim, fontSize: 14, fontWeight: '600' },
+  });
+}

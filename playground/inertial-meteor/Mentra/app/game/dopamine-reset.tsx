@@ -399,4 +399,14 @@ const styles = StyleSheet.create({
   stepDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: Colors.mentra.border },
   stepDotActive: { width: 24, backgroundColor: Colors.mentra.brandPrimary },
   stepDotDone: { backgroundColor: Colors.mentra.success },
-  scienceSmall: { fontSize: 11, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 18, fontStyle: 'italic', paddingH
+  scienceSmall: { fontSize: 11, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 18, fontStyle: 'italic', paddingHorizontal: 16 },
+
+  doneBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 14 },
+  doneTitle: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
+  doneSub: { fontSize: 15, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 24 },
+  doneCard: { flexDirection: 'row', gap: 10, backgroundColor: Colors.mentra.success + '12', padding: 16, borderRadius: 14, width: '100%', alignItems: 'flex-start' },
+  doneCardText: { fontSize: 13, color: Colors.mentra.text, lineHeight: 22, flex: 1 },
+  doneTip: { fontSize: 13, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 20 },
+  backLink: { paddingVertical: 8 },
+  backLinkText: { color: Colors.mentra.textDim, fontSize: 14, fontWeight: '600' },
+});

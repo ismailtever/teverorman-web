@@ -187,3 +187,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    focusLabel: {
+        fontSize: 14,
+        fontWeight: '700',
+        marginBottom: 6,
+    },
+    focusBarBg: {
+        height: 6,
+        borderRadius: 3,
+        overflow: 'hidden',
+    },
+    focusBarFill: {
+        height: '100%',
+    },
+    actions: {
+        marginTop: Metrics.spacing.s,
+    }
+});
