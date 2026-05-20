@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Colors } from '@/constants/Colors';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 
 /*
   =============================================================================
@@ -28,7 +28,6 @@ export function useInterstitialAd() {
         if (!IS_ADS_ENABLED) return;
         return new Promise<void>((resolve) => {
             console.log("[AdMob] Displaying Interstitial Ad");
-            // App would pause here
             setTimeout(() => {
                 console.log("[AdMob] Interstitial Ad Closed");
                 resolve();
@@ -40,6 +39,9 @@ export function useInterstitialAd() {
 }
 
 export function BannerAdPlaceholder() {
+    const C = useMentraTheme();
+    const styles = makeStyles(C);
+
     if (!IS_ADS_ENABLED) return null;
 
     return (
@@ -49,22 +51,24 @@ export function BannerAdPlaceholder() {
     );
 }
 
-const styles = StyleSheet.create({
-    bannerContainer: {
-        width: '100%',
-        height: 50,
-        backgroundColor: Colors.mentra.surface2,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        borderColor: Colors.mentra.border,
-        marginVertical: 10
-    },
-    bannerText: {
-        fontSize: 12,
-        color: Colors.mentra.muted,
-        fontWeight: 'bold',
-        textTransform: 'uppercase'
-    }
-});
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+    return StyleSheet.create({
+        bannerContainer: {
+            width: '100%',
+            height: 50,
+            backgroundColor: C.surface2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderTopWidth: 1,
+            borderBottomWidth: 1,
+            borderColor: C.border,
+            marginVertical: 10
+        },
+        bannerText: {
+            fontSize: 12,
+            color: C.muted,
+            fontWeight: 'bold',
+            textTransform: 'uppercase'
+        }
+    });
+}

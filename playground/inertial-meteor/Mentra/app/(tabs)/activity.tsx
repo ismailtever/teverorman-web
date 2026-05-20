@@ -1,363 +1,114 @@
-import React, { useState, useCallback } from 'react';
-import {
-  View, Text, StyleSheet, ScrollView, Dimensions,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { useFocusEffect } from 'expo-router';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import {
-  Flame, Trophy, Brain,
-  Clock, BarChart2, Award, BrainCircuit, Sparkles, Activity, ShieldPlus
-} from 'lucide-react-native';
-import { I18n } from '@/services/i18n';
-import { ThemedText } from '@/components/themed-text';
+import { Activity, Calendar, Trophy, Zap, Clock } from 'lucide-react-native';
+
+import { AppHeader } from '@/components/ui/AppHeader';
+import { Card, StatCard, Section } from '@/components/ui/Cards';
+import { SectionTitle } from '@/components/ui/Typography';
+import { ListRow } from '@/components/ui/ListRow';
+import { ProgressBar } from '@/components/ui/Progress';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Metrics } from '@/constants/Theme';
+import { ThemedText } from '@/components/themed-text';
 
-import { Colors } from '@/constants/Colors';
-import { Storage } from '@/services/storage';
-import { Streak, StreakData } from '@/services/streak';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const { width } = Dimensions.get('window');
-
-// ─── Mock weekly data (replace with real Storage calls) ────────────────────
-const WEEK_DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-const WEEK_SCORES = [72, 78, 65, 82, 79, 0, 88]; // 0 = no session
-
-const DOMAIN_PROGRESS = [
-  { key: 'Focus',      color: Colors.mentra.brandPrimary, emoji: '🎯', before: 48, after: 55, change: +7  },
-  { key: 'Memory',     color: '#6366F1',                  emoji: '🧠', before: 68, after: 72, change: +4  },
-  { key: 'Speed',      color: '#10B981',                  emoji: '⚡', before: 70, after: 68, change: -2  },
-  { key: 'Logic',      color: '#F59E0B',                  emoji: '💡', before: 38, after: 41, change: +3  },
-  { key: 'Resilience', color: '#8B5CF6',                  emoji: '🛡️', before: 55, after: 60, change: +5  },
+// Mock data for the activity list
+const RECENT_SESSIONS = [
+    { id: '1', title: 'Deep Focus Morning', duration: '15 min', score: 92, date: 'Today' },
+    { id: '2', title: 'Quick Speed Drill', duration: '5 min', score: 88, date: 'Yesterday' },
+    { id: '3', title: 'Memory Grid Pro', duration: '10 min', score: 95, date: 'Tuesday' },
+    { id: '4', title: 'Relaxation Session', duration: '12 min', score: 100, date: 'Monday' },
 ];
 
-const ACHIEVEMENTS = [
-  { emoji: '🔥', title: '7-Day Streak',       desc: 'Trained 7 days in a row',          unlocked: true  },
-  { emoji: '🧠', title: 'Memory Master',      desc: 'Scored 90+ on Memory Grid',         unlocked: true  },
-  { emoji: '⚡', title: 'Speed Demon',         desc: 'Sub-500ms average reaction time',   unlocked: false },
-  { emoji: '🏆', title: 'Elite Focus',         desc: 'Reached Elite tier in Grid Focus',  unlocked: false },
-  { emoji: '📅', title: '30-Day Veteran',      desc: 'Completed 30 sessions',             unlocked: false },
-  { emoji: '🌙', title: 'Night Owl',           desc: '10 sessions after 9pm',             unlocked: false },
-];
-
-// ─── Weekly Activity Bar Chart ──────────────────────────────────────────────
-function WeeklyChart() {
-  const max = Math.max(...WEEK_SCORES, 1);
-  const today = new Date().getDay(); // 0=Sun
-  const mapped = [1,2,3,4,5,6,0]; // Mon-Sun
-
-  return (
-    <Animated.View entering={FadeInDown.delay(80).springify()} style={styles.chartCard}>
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>THIS WEEK</Text>
-        <Text style={styles.sectionMeta}>Avg score: {Math.round(WEEK_SCORES.filter(s=>s>0).reduce((a,b)=>a+b,0)/WEEK_SCORES.filter(s=>s>0).length)}</Text>
-      </View>
-      <View style={styles.chartRow}>
-        {WEEK_DAYS.map((day, i) => {
-          const score = WEEK_SCORES[i];
-          const barH = score > 0 ? Math.max((score / max) * 80, 8) : 4;
-          const isToday = mapped[i] === today;
-          const isActive = score > 0;
-          return (
-            <View key={i} style={styles.barCol}>
-              <Text style={[styles.barScore, !isActive && { opacity: 0 }]}>{score}</Text>
-              <View style={styles.barBg}>
-                <View style={[
-                  styles.barFill,
-                  { height: barH, backgroundColor: isToday ? Colors.mentra.brandPrimary : isActive ? Colors.mentra.brandSecondary : Colors.mentra.border }
-                ]} />
-              </View>
-              <Text style={[styles.barDay, isToday && { color: Colors.mentra.brandPrimary, fontWeight: '800' }]}>{day}</Text>
-            </View>
-          );
-        })}
-      </View>
-    </Animated.View>
-  );
-}
-
-// ─── Analyst Report (Wave 4) ────────────────────────────────────────────────
-function AnalystReport() {
-  return (
-    <Animated.View entering={FadeInDown.delay(100).springify()} style={styles.analystCard}>
-      <View style={styles.sectionHeader}>
-        <View style={styles.analystBadge}>
-          <Sparkles size={11} color="#FFF" />
-          <Text style={styles.analystBadgeText}>{I18n.t('analystPro') || 'ANALYST PRO'}</Text>
-        </View>
-        <Text style={styles.sectionMeta}>{I18n.t('latestUpdate') || 'Latest Update'}</Text>
-      </View>
-      <Text style={styles.analystTitle}>{I18n.t('scientistObservations') || "Cognitive Scientist's Observations"}</Text>
-      <View style={styles.observationRow}>
-        <View style={[styles.obsIcon, { backgroundColor: '#E8F5F0' }]}><ShieldPlus size={14} color={Colors.mentra.brandPrimary} /></View>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.obsLabel}>{I18n.t('prefrontalInhibition') || 'Prefrontal Inhibition'}</Text>
-          <Text style={styles.obsText}>{I18n.t('prefrontalInhibitionDesc') || 'Your \"stop-signal\" networks are showing 12% increased density after the last 5 sessions.'}</Text>
-        </View>
-      </View>
-      <View style={styles.observationRow}>
-        <View style={[styles.obsIcon, { backgroundColor: '#F5F3FF' }]}><Activity size={14} color="#8B5CF6" /></View>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.obsLabel}>{I18n.t('dopamineBaseline') || 'Dopamine Baseline'}</Text>
-          <Text style={styles.obsText}>{I18n.t('dopamineBaselineDesc') || 'Dopamine receptor sensitivity is stabilizing.'}</Text>
-        </View>
-      </View>
-      <View style={styles.analystFooter}>
-        <Text style={styles.analystFooterText}>{I18n.t('deepProfilingComplete') || 'Deep analytical profiling complete.'}</Text>
-      </View>
-    </Animated.View>
-  );
-}
-
-// ─── Stats Strip ────────────────────────────────────────────────────────────
-function StatsStrip({ streak }: { streak: StreakData }) {
-  const stats = [
-    { icon: <Flame size={18} color="#F59E0B" />, val: streak.current, label: 'Streak' },
-    { icon: <Trophy size={18} color="#6366F1" />, val: streak.longest, label: 'Best' },
-    { icon: <BarChart2 size={18} color={Colors.mentra.brandPrimary} />, val: 18, label: 'Sessions' },
-    { icon: <Clock size={18} color='#10B981' />, val: '3.6h', label: 'Trained' },
-  ];
-  return (
-    <Animated.View entering={FadeInDown.delay(40).springify()} style={styles.statsStrip}>
-      {stats.map((s, i) => (
-        <React.Fragment key={i}>
-          <View style={styles.statItem}>
-            {s.icon}
-            <Text style={styles.statVal}>{s.val}</Text>
-            <Text style={styles.statLabel}>{s.label}</Text>
-          </View>
-          {i < stats.length - 1 && <View style={styles.statDivider} />}
-        </React.Fragment>
-      ))}
-    </Animated.View>
-  );
-}
-
-// ─── Domain Progress ────────────────────────────────────────────────────────
-function DomainProgress() {
-  return (
-    <Animated.View entering={FadeInDown.delay(140).springify()}>
-      <View style={[styles.sectionHeader, { marginBottom: 12 }]}>
-        <Text style={styles.sectionTitle}>DOMAIN CHANGES (30 DAYS)</Text>
-      </View>
-      {DOMAIN_PROGRESS.map((d) => (
-        <View key={d.key} style={styles.domainRow}>
-          <Text style={{ fontSize: 18, width: 26 }}>{d.emoji}</Text>
-          <View style={{ flex: 1 }}>
-            <View style={styles.domainLabelRow}>
-              <Text style={styles.domainKey}>{d.key}</Text>
-              <Text style={[styles.domainChange, { color: d.change >= 0 ? Colors.mentra.success : Colors.mentra.danger }]}>
-                {d.change >= 0 ? `+${d.change}` : d.change}
-              </Text>
-            </View>
-            <View style={styles.domainBarBg}>
-              {/* Before bar (ghost) */}
-              <View style={[styles.domainBarGhost, { width: `${d.before}%` }]} />
-              {/* After bar */}
-              <View style={[styles.domainBarFill, { width: `${d.after}%`, backgroundColor: d.color }]} />
-            </View>
-            <View style={styles.domainNumbers}>
-              <Text style={styles.domainNum}>{d.before} → </Text>
-              <Text style={[styles.domainNum, { fontWeight: '800', color: d.color }]}>{d.after}</Text>
-            </View>
-          </View>
-        </View>
-      ))}
-    </Animated.View>
-  );
-}
-
-// ─── Achievements ────────────────────────────────────────────────────────────
-function AchievementsGrid() {
-  return (
-    <Animated.View entering={FadeInDown.delay(200).springify()}>
-      <View style={[styles.sectionHeader, { marginBottom: 12 }]}>
-        <Text style={styles.sectionTitle}>ACHIEVEMENTS</Text>
-        <Text style={styles.sectionMeta}>{ACHIEVEMENTS.filter(a => a.unlocked).length}/{ACHIEVEMENTS.length} unlocked</Text>
-      </View>
-      <View style={styles.achieveGrid}>
-        {ACHIEVEMENTS.map((a, i) => (
-          <View key={i} style={[styles.achieveCard, !a.unlocked && styles.achieveCardLocked]}>
-            <Text style={[styles.achieveEmoji, !a.unlocked && { opacity: 0.3 }]}>{a.emoji}</Text>
-            <Text style={[styles.achieveTitle, !a.unlocked && { color: Colors.mentra.muted }]}>{a.title}</Text>
-            <Text style={styles.achieveDesc} numberOfLines={2}>{a.desc}</Text>
-            {a.unlocked && (
-              <View style={styles.achieveUnlockedDot} />
-            )}
-          </View>
-        ))}
-      </View>
-    </Animated.View>
-  );
-}
-
-// ─── Recent Sessions ─────────────────────────────────────────────────────────
-const RECENT = [
-  { title: 'Daily Training', domains: 'Memory · Speed', score: 88, mins: 12, daysAgo: 0 },
-  { title: 'Grid Focus',     domains: 'Focus',          score: 920, mins: 4,  daysAgo: 1, fpq: true },
-  { title: 'Memory Grid',    domains: 'Memory',         score: 76,  mins: 5,  daysAgo: 1 },
-  { title: 'Daily Training', domains: 'Memory · Speed', score: 79,  mins: 11, daysAgo: 2 },
-  { title: 'Speed Match',    domains: 'Speed',          score: 84,  mins: 3,  daysAgo: 3 },
-];
-
-function RecentSessions() {
-  const dayLabel = (d: number) => d === 0 ? 'Today' : d === 1 ? 'Yesterday' : `${d} days ago`;
-  return (
-    <Animated.View entering={FadeInDown.delay(240).springify()}>
-      <View style={[styles.sectionHeader, { marginBottom: 12 }]}>
-        <Text style={styles.sectionTitle}>RECENT SESSIONS</Text>
-      </View>
-      {RECENT.map((s, i) => (
-        <View key={i} style={styles.sessionRow}>
-          <View style={styles.sessionIconBox}>
-            <Brain size={18} color={Colors.mentra.brandPrimary} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.sessionTitle}>{s.title}</Text>
-            <Text style={styles.sessionMeta}>{s.domains} · {s.mins} min · {dayLabel(s.daysAgo)}</Text>
-          </View>
-          <View style={{ alignItems: 'flex-end' }}>
-            <Text style={styles.sessionScore}>{s.score}{s.fpq ? ' FPQ' : ''}</Text>
-          </View>
-        </View>
-      ))}
-    </Animated.View>
-  );
-}
-
-// ─── Screen ──────────────────────────────────────────────────────────────────
 export default function ActivityScreen() {
-  const insets = useSafeAreaInsets();
-  const [streak, setStreak] = useState<StreakData>({ current: 0, longest: 0, lastPlayed: null, playedToday: false, isAtRisk: false });
+    const C = useMentraTheme();
+    const styles = makeStyles(C);
 
-  useFocusEffect(useCallback(() => {
-    Streak.get().then(setStreak);
-  }, []));
+    return (
+        <View style={styles.container}>
+            <StatusBar style={C.statusBar} />
+            <AppHeader title="Your Activity" />
 
-  return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <StatusBar style="dark" />
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.headerTitle}>Progress</Text>
-          <Text style={styles.headerSub}>Your cognitive journey</Text>
+            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+
+                {/* Weekly Summary Card */}
+                <Section style={styles.summarySection}>
+                    <SectionTitle title="Weekly Summary" />
+                    <Card variant="default" style={styles.summaryCard}>
+                        <View style={styles.summaryHeader}>
+                            <Trophy size={28} color={C.brandAccent} />
+                            <View style={styles.summaryTitleContainer}>
+                                <SectionTitle title="Great work, Athlete!" subtitle="You're on track to beat last week." />
+                            </View>
+                        </View>
+
+                        <View style={styles.progressContainer}>
+                            <View style={styles.progressLabels}>
+                                <ThemedText style={{ color: C.textDim }}>Goal: 5 Sessions</ThemedText>
+                                <ThemedText style={{ color: C.textDim, fontWeight: '700' }}>4/5</ThemedText>
+                            </View>
+                            <ProgressBar progress={0.8} color={C.brandPrimary} />
+                        </View>
+
+                        <View style={styles.statsGrid}>
+                            <StatCard
+                                title="Time"
+                                value="42m"
+                                icon={<Clock size={18} color={C.brandSecondary} />}
+                                style={styles.flexCard}
+                            />
+                            <StatCard
+                                title="Days"
+                                value="4"
+                                icon={<Calendar size={18} color={C.brandAccent} />}
+                                style={styles.flexCard}
+                            />
+                        </View>
+                    </Card>
+                </Section>
+
+                {/* Recent Sessions List */}
+                <Section style={styles.listSection}>
+                    <SectionTitle
+                        title="Recent Sessions"
+                        action={<Activity size={24} color={C.text} />}
+                    />
+                    <Card variant="outline" style={styles.listCard}>
+                        {RECENT_SESSIONS.map((session, index) => (
+                            <ListRow
+                                key={session.id}
+                                icon={<Zap size={20} color={C.brandPrimary} />}
+                                title={session.title}
+                                subtitle={`${session.date} • ${session.duration}`}
+                                rightElement={<ThemedText style={{ color: C.textDim, fontWeight: '600' }}>{`${session.score} XP`}</ThemedText>}
+                                showChevron
+                                style={index !== RECENT_SESSIONS.length - 1 ? styles.borderBottom : undefined}
+                                onPress={() => { }}
+                            />
+                        ))}
+                    </Card>
+                </Section>
+
+                <View style={{ height: 40 }} />
+            </ScrollView>
         </View>
-        <View style={styles.headerBadge}>
-          <Award size={16} color={Colors.mentra.brandPrimary} />
-          <Text style={styles.headerBadgeText}>Level 4</Text>
-        </View>
-      </View>
-
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-        <StatsStrip streak={streak} />
-        <AnalystReport />
-        <WeeklyChart />
-
-        <View style={styles.card}>
-          <DomainProgress />
-        </View>
-
-        <View style={styles.card}>
-          <AchievementsGrid />
-        </View>
-
-        <View style={styles.card}>
-          <RecentSessions />
-        </View>
-
-        <View style={{ height: 120 }} />
-      </ScrollView>
-    </View>
-  );
+    );
 }
 
-// ─── Styles ──────────────────────────────────────────────────────────────────
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.mentra.bg },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingHorizontal: 20, paddingTop: 8, paddingBottom: 12 },
-  headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.mentra.text, letterSpacing: -0.5 },
-  headerSub: { fontSize: 13, color: Colors.mentra.textDim, marginTop: 2 },
-  headerBadge: { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: Colors.mentra.brandPrimary + '14', paddingHorizontal: 12, paddingVertical: 7, borderRadius: 20 },
-  headerBadgeText: { fontSize: 13, fontWeight: '700', color: Colors.mentra.brandPrimary },
-  scroll: { paddingHorizontal: 20 },
-
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  sectionTitle: { fontSize: 11, fontWeight: '800', color: Colors.mentra.textDim, letterSpacing: 1.5 },
-  sectionMeta: { fontSize: 12, fontWeight: '600', color: Colors.mentra.textDim },
-
-  statsStrip: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: Colors.mentra.surface, borderRadius: 20, padding: 16,
-    borderWidth: 1, borderColor: Colors.mentra.border, marginBottom: 12,
-  },
-  statItem: { flex: 1, alignItems: 'center', gap: 4 },
-  statVal: { fontSize: 20, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  statLabel: { fontSize: 10, fontWeight: '600', color: Colors.mentra.textDim, letterSpacing: 0.3 },
-  statDivider: { width: 1, height: 36, backgroundColor: Colors.mentra.border },
-
-  // Weekly chart
-  chartCard: {
-    backgroundColor: Colors.mentra.surface, borderRadius: 20, padding: 18,
-    borderWidth: 1, borderColor: Colors.mentra.border, marginBottom: 12,
-  },
-  chartRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 16, height: 110 },
-  barCol: { flex: 1, alignItems: 'center', gap: 4 },
-  barScore: { fontSize: 9, fontWeight: '700', color: Colors.mentra.textDim },
-  barBg: { flex: 1, width: 28, justifyContent: 'flex-end', backgroundColor: Colors.mentra.surface2, borderRadius: 8, overflow: 'hidden' },
-  barFill: { width: '100%', borderRadius: 8 },
-  barDay: { fontSize: 11, fontWeight: '600', color: Colors.mentra.textDim },
-
-  card: {
-    backgroundColor: Colors.mentra.surface, borderRadius: 20, padding: 18,
-    borderWidth: 1, borderColor: Colors.mentra.border, marginBottom: 12,
-  },
-
-  // Domain progress
-  domainRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 16 },
-  domainLabelRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
-  domainKey: { fontSize: 13, fontWeight: '700', color: Colors.mentra.text },
-  domainChange: { fontSize: 13, fontWeight: '800' },
-  domainBarBg: { height: 8, backgroundColor: Colors.mentra.surface2, borderRadius: 4, position: 'relative', marginBottom: 4 },
-  domainBarGhost: { position: 'absolute', height: 8, backgroundColor: Colors.mentra.border, borderRadius: 4 },
-  domainBarFill: { position: 'absolute', height: 8, borderRadius: 4 },
-  domainNumbers: { flexDirection: 'row' },
-  domainNum: { fontSize: 11, color: Colors.mentra.textDim },
-
-  // Achievements
-  achieveGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  achieveCard: {
-    width: (width - 88) / 3, padding: 12, borderRadius: 14,
-    backgroundColor: Colors.mentra.surface2, alignItems: 'center', gap: 4,
-    borderWidth: 1, borderColor: Colors.mentra.border, position: 'relative',
-  },
-  achieveCardLocked: { backgroundColor: Colors.mentra.bg },
-  achieveEmoji: { fontSize: 22 },
-  achieveTitle: { fontSize: 10, fontWeight: '800', color: Colors.mentra.text, textAlign: 'center' },
-  achieveDesc: { fontSize: 9, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 13 },
-  achieveUnlockedDot: { position: 'absolute', top: 6, right: 6, width: 8, height: 8, borderRadius: 4, backgroundColor: Colors.mentra.success },
-
-  // Recent sessions
-  sessionRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: Colors.mentra.border },
-  sessionIconBox: { width: 36, height: 36, borderRadius: 10, backgroundColor: Colors.mentra.brandPrimary + '14', alignItems: 'center', justifyContent: 'center' },
-  sessionTitle: { fontSize: 14, fontWeight: '700', color: Colors.mentra.text },
-  sessionMeta: { fontSize: 11, color: Colors.mentra.textDim, marginTop: 2 },
-  sessionScore: { fontSize: 15, fontWeight: '800', color: Colors.mentra.brandPrimary },
-
-  // Analyst Card
-  analystCard: {
-    backgroundColor: Colors.mentra.surface, borderRadius: 24, padding: 20,
-    borderWidth: 1.5, borderColor: Colors.mentra.brandAccent + '30', marginBottom: 12,
-    shadowColor: Colors.mentra.brandAccent, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 12,
-  },
-  analystBadge: { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: Colors.mentra.brandAccent, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10 },
-  analystBadgeText: { fontSize: 9, fontWeight: '800', color: '#FFF', letterSpacing: 1 },
-  analystTitle: { fontSize: 18, fontWeight: '800', color: Colors.mentra.text, marginTop: 14, marginBottom: 16 },
-  observationRow: { flexDirection: 'row', gap: 12, marginBottom: 16 },
-  obsIcon: { width: 32, height: 32, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  obsLabel: { fontSize: 13, fontWeight: '700', color: Colors.mentra.text, marginBottom: 2 },
-  obsText: { fontSize: 11, color: Colors.mentra.textDim, lineHeight: 16 },
-  analystFooter: { borderTopWidth: 1, borderTopColor: Colors.mentra.border, paddingTop: 12, alignItems: 'center' },
-  analystFooterText: { fontSize: 10, fontWeight: '700', color: Colors.mentra.brandAccent, letterSpacing: 0.5 },
-});
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+    return StyleSheet.create({
+        container: { flex: 1, backgroundColor: C.bg },
+        scrollContent: { paddingTop: Metrics.spacing.m, paddingBottom: Metrics.spacing.xxl },
+        summarySection: { paddingHorizontal: Metrics.spacing.l },
+        summaryCard: { marginTop: Metrics.spacing.s },
+        summaryHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: Metrics.spacing.l },
+        summaryTitleContainer: { marginLeft: Metrics.spacing.m, flex: 1 },
+        progressContainer: { marginBottom: Metrics.spacing.l },
+        progressLabels: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: Metrics.spacing.xs },
+        statsGrid: { flexDirection: 'row', gap: Metrics.spacing.m },
+        flexCard: { flex: 1, padding: Metrics.spacing.m, backgroundColor: C.surface2 },
+        listSection: { paddingHorizontal: Metrics.spacing.l, marginTop: Metrics.spacing.m },
+        listCard: { padding: 0, overflow: 'hidden', marginTop: Metrics.spacing.s },
+        borderBottom: { borderBottomWidth: 1, borderBottomColor: C.divider },
+    });
+}

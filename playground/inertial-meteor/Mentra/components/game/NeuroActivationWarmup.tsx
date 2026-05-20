@@ -1,17 +1,22 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { View, StyleSheet, Dimensions, Pressable, Modal } from 'react-native';
-import Animated, { 
-  FadeIn, FadeOut, 
-  useSharedValue, useAnimatedStyle, 
-  withRepeat, withTiming, withSequence, Easing 
+import Animated, {
+  FadeIn, FadeOut,
+  useSharedValue, useAnimatedStyle,
+  withRepeat, withTiming, withSequence, Easing
 } from 'react-native-reanimated';
 import { I18n } from '@/services/i18n';
-import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
 import { Wind, Activity, CheckCircle2, Sparkles } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
+
+// This modal always renders on a dark overlay (#0F172A), so we use
+// fixed "dark-mode" brand colours regardless of the app's current theme.
+const OVERLAY_PRIMARY = '#4ADE80';  // mint — visible on dark bg
+const OVERLAY_ACCENT  = '#A3C4B5';  // soft green
+const OVERLAY_SUCCESS = '#10B981';
 
 interface Props {
   visible: boolean;
@@ -58,11 +63,11 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete, tutorialText, 
           finish();
           return 0;
         }
-        
+
         // Phase shifts for 30s total
         if (prev === 21) setPhase(2);
         if (prev === 11) setPhase(3);
-        
+
         return prev - 1;
       });
     }, 1000);
@@ -108,10 +113,10 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete, tutorialText, 
         </View>
 
         <View style={styles.content}>
-          <Animated.View 
-            key={isComplete ? 'complete' : 'playing'} 
-            entering={FadeIn} 
-            exiting={FadeOut} 
+          <Animated.View
+            key={isComplete ? 'complete' : 'playing'}
+            entering={FadeIn}
+            exiting={FadeOut}
             style={{ width: '100%', alignItems: 'center' }}
           >
             {!isComplete ? (
@@ -124,25 +129,25 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete, tutorialText, 
                     <View style={styles.breatheArea}>
                       <Animated.View style={[styles.breatheCircle, animeCircleStyle]} />
                       <View style={styles.breatheCore}>
-                        <Wind size={40} color={Colors.mentra.brandPrimary} />
+                        <Wind size={40} color={OVERLAY_PRIMARY} />
                       </View>
                       <ThemedText style={styles.phaseLabel}>{I18n.t('warmupBreathLabel')}</ThemedText>
                       <ThemedText style={styles.instruction}>{I18n.t('warmupBreathInstruct')}</ThemedText>
                     </View>
                   ) : phase === 2 ? (
                     <View style={styles.motorArea}>
-                      <Activity size={40} color={Colors.mentra.brandAccent} />
+                      <Activity size={40} color={OVERLAY_ACCENT} />
                       <ThemedText style={styles.phaseLabel}>{I18n.t('warmupMotorLabel')}</ThemedText>
                       <ThemedText style={styles.instruction}>{I18n.t('warmupMotorInstruct')}</ThemedText>
-                      
+
                       <View style={styles.tapTargets}>
-                        <Pressable 
+                        <Pressable
                           onPress={() => setTaps(t => t + 1)}
                           style={({ pressed }: { pressed: boolean }) => [styles.tapBtn, pressed && styles.tapBtnPressed]}
                         >
                            <ThemedText style={styles.tapText}>L</ThemedText>
                         </Pressable>
-                        <Pressable 
+                        <Pressable
                           onPress={() => setTaps(t => t + 1)}
                           style={({ pressed }: { pressed: boolean }) => [styles.tapBtn, styles.tapBtnRight, pressed && styles.tapBtnPressed]}
                         >
@@ -153,7 +158,7 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete, tutorialText, 
                   ) : (
                     <View style={styles.tutorialArea}>
                        <Animated.View entering={FadeIn.delay(300)} style={styles.tutorialIcon}>
-                          <Sparkles size={48} color={Colors.mentra.brandPrimary} />
+                          <Sparkles size={48} color={OVERLAY_PRIMARY} />
                        </Animated.View>
                        <ThemedText style={styles.phaseLabel}>{I18n.t('howToPlay')}</ThemedText>
                        <ThemedText style={styles.tutorialText}>{tutorialText || I18n.t('descDefault')}</ThemedText>
@@ -163,10 +168,10 @@ export const NeuroActivationWarmup = memo(({ visible, onComplete, tutorialText, 
               </View>
             ) : (
               <View style={styles.completeContainer}>
-                <CheckCircle2 size={80} color={Colors.mentra.success} />
+                <CheckCircle2 size={80} color={OVERLAY_SUCCESS} />
                 <ThemedText style={styles.completeTitle}>{I18n.t('warmupComplete')}</ThemedText>
                 <View style={styles.shieldBadge}>
-                   <Sparkles size={14} color={Colors.mentra.brandPrimary} />
+                   <Sparkles size={14} color={OVERLAY_PRIMARY} />
                    <ThemedText style={styles.shieldText}>CEREBRAL SHIELD ACTIVE</ThemedText>
                 </View>
               </View>
@@ -201,7 +206,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: Colors.mentra.brandPrimary,
+    backgroundColor: OVERLAY_PRIMARY,
   },
   timerText: {
     color: '#FFF',
@@ -245,7 +250,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: Colors.mentra.brandPrimary,
+    backgroundColor: OVERLAY_PRIMARY,
   },
   breatheCore: {
     width: 100,
@@ -263,7 +268,7 @@ const styles = StyleSheet.create({
   phaseLabel: {
     fontSize: 12,
     fontWeight: '800',
-    color: Colors.mentra.brandPrimary,
+    color: OVERLAY_PRIMARY,
     letterSpacing: 2,
     textTransform: 'uppercase',
     marginTop: 20,
@@ -285,12 +290,12 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: Colors.mentra.brandPrimary + '22',
+    backgroundColor: OVERLAY_PRIMARY + '22',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: Colors.mentra.brandPrimary + '44',
+    borderColor: OVERLAY_PRIMARY + '44',
   },
   tutorialText: {
     fontSize: 18,
@@ -309,16 +314,16 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 2,
-    borderColor: Colors.mentra.brandAccent,
+    borderColor: OVERLAY_ACCENT,
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 10,
   },
   tapBtnPressed: {
-    backgroundColor: Colors.mentra.brandAccent + '33',
+    backgroundColor: OVERLAY_ACCENT + '33',
   },
   tapBtnRight: {
-    borderColor: Colors.mentra.brandPrimary,
+    borderColor: OVERLAY_PRIMARY,
   },
   tapText: {
     color: '#FFF',
@@ -340,17 +345,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     display: 'flex',
-    backgroundColor: Colors.mentra.brandPrimary + '22',
+    backgroundColor: OVERLAY_PRIMARY + '22',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: Colors.mentra.brandPrimary + '44',
+    borderColor: OVERLAY_PRIMARY + '44',
   },
   shieldText: {
     fontSize: 11,
     fontWeight: '800',
-    color: Colors.mentra.brandPrimary,
+    color: OVERLAY_PRIMARY,
     letterSpacing: 1,
     marginLeft: 8,
   }

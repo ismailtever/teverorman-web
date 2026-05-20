@@ -223,7 +223,7 @@ export default function DopamineResetGame() {
               <Pressable
                 key={n}
                 onPress={() => { setUrgeLevel(n); Haptics.selectionAsync(); }}
-                style={[styles.urgeBtn, urgeLevel === n && { backgroundColor: Colors.mentra.brandPrimary }]}
+                style={[styles.urgeBtn, urgeLevel === n && { backgroundColor: C.brandPrimary }]}
               >
                 <Text style={[styles.urgeBtnText, urgeLevel === n && { color: '#FFF' }]}>{n}</Text>
               </Pressable>
@@ -246,7 +246,7 @@ export default function DopamineResetGame() {
                 <Text style={styles.exTitle}>{ex.title}</Text>
                 <Text style={styles.exDur}>{ex.duration}</Text>
               </View>
-              {selectedExercise.title === ex.title && <ChevronRight size={18} color={Colors.mentra.brandPrimary} />}
+              {selectedExercise.title === ex.title && <ChevronRight size={18} color={C.brandPrimary} />}
             </Pressable>
           ))}
           <Pressable onPress={() => { setStepIdx(0); setPhase('reset'); }} style={styles.startBtn}>
@@ -293,7 +293,7 @@ export default function DopamineResetGame() {
           You just chose your prefrontal cortex over your dopamine loop.{'\n'}That's neuroplasticity in action.
         </Text>
         <View style={styles.doneCard}>
-          <TrendingDown size={16} color={Colors.mentra.success} />
+          <TrendingDown size={16} color={C.success} />
           <Text style={styles.doneCardText}>
             Trigger: <Text style={{ fontWeight: '700' }}>{selectedTrigger?.label}</Text>{'\n'}
             Urge level was: <Text style={{ fontWeight: '700' }}>{urgeLevel}/10</Text>{'\n'}
@@ -314,99 +314,101 @@ export default function DopamineResetGame() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.mentra.bg },
-  scroll: { padding: 24, paddingBottom: 60 },
-  closeBtn: { margin: 20, width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: Colors.mentra.border, backgroundColor: Colors.mentra.surface, alignItems: 'center', justifyContent: 'center' },
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: C.bg },
+    scroll: { padding: 24, paddingBottom: 60 },
+    closeBtn: { margin: 20, width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: C.border, backgroundColor: C.surface, alignItems: 'center', justifyContent: 'center' },
 
-  introBox: { alignItems: 'center', gap: 0 },
-  introEmoji: { fontSize: 64, marginBottom: 16 },
-  introTitle: { fontSize: 30, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  instructionsBox: {
-    backgroundColor: Colors.mentra.surface,
-    padding: Metrics.spacing.m,
-    borderRadius: Metrics.radius.m,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: Colors.mentra.border,
-  },
-  cardDesc: {
-    fontSize: 14,
-    color: Colors.mentra.textDim,
-    lineHeight: 20,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 8,
-  },
-  sectionLabel: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: Colors.mentra.brandPrimary,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
-  scienceBox: {
-    backgroundColor: Colors.mentra.brandAccent + '08',
-    padding: Metrics.spacing.m,
-    borderRadius: Metrics.radius.m,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: Colors.mentra.brandAccent + '15',
-  },
-  scienceWhat: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: Colors.mentra.text,
-    marginBottom: 4,
-  },
-  scienceWhy: {
-    fontSize: 13,
-    color: Colors.mentra.textDim,
-    lineHeight: 18,
-  },
-  startBtn: { backgroundColor: Colors.mentra.brandPrimary, paddingVertical: 16, paddingHorizontal: 32, borderRadius: 16, alignItems: 'center', width: '100%' },
-  startBtnText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
+    introBox: { alignItems: 'center', gap: 0 },
+    introEmoji: { fontSize: 64, marginBottom: 16 },
+    introTitle: { fontSize: 30, fontWeight: '900', color: C.text, letterSpacing: -0.5 },
+    instructionsBox: {
+      backgroundColor: C.surface,
+      padding: Metrics.spacing.m,
+      borderRadius: Metrics.radius.m,
+      width: '100%',
+      borderWidth: 1,
+      borderColor: C.border,
+    },
+    cardDesc: {
+      fontSize: 14,
+      color: C.textDim,
+      lineHeight: 20,
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      marginBottom: 8,
+    },
+    sectionLabel: {
+      fontSize: 11,
+      fontWeight: '800',
+      color: C.brandPrimary,
+      letterSpacing: 1,
+      textTransform: 'uppercase',
+    },
+    scienceBox: {
+      backgroundColor: C.brandSecondary + '18',
+      padding: Metrics.spacing.m,
+      borderRadius: Metrics.radius.m,
+      width: '100%',
+      borderWidth: 1,
+      borderColor: C.brandSecondary + '30',
+    },
+    scienceWhat: {
+      fontSize: 15,
+      fontWeight: '700',
+      color: C.text,
+      marginBottom: 4,
+    },
+    scienceWhy: {
+      fontSize: 13,
+      color: C.textDim,
+      lineHeight: 18,
+    },
+    startBtn: { backgroundColor: C.brandPrimary, paddingVertical: 16, paddingHorizontal: 32, borderRadius: 16, alignItems: 'center', width: '100%' },
+    startBtnText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
 
-  phaseTitle: { fontSize: 26, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  phaseSub: { fontSize: 14, color: Colors.mentra.textDim, lineHeight: 22 },
-  triggerCard: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16, backgroundColor: Colors.mentra.surface, borderRadius: 16, borderWidth: 2, borderColor: 'transparent' },
-  triggerCardActive: { borderColor: Colors.mentra.brandPrimary, backgroundColor: Colors.mentra.brandPrimary + '08' },
-  triggerEmoji: { fontSize: 24 },
-  triggerLabel: { fontSize: 16, fontWeight: '700', color: Colors.mentra.text },
-  triggerDesc: { fontSize: 12, color: Colors.mentra.textDim },
+    phaseTitle: { fontSize: 26, fontWeight: '900', color: C.text, letterSpacing: -0.5 },
+    phaseSub: { fontSize: 14, color: C.textDim, lineHeight: 22 },
+    triggerCard: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16, backgroundColor: C.surface, borderRadius: 16, borderWidth: 2, borderColor: 'transparent' },
+    triggerCardActive: { borderColor: C.brandPrimary, backgroundColor: C.brandPrimary + '18' },
+    triggerEmoji: { fontSize: 24 },
+    triggerLabel: { fontSize: 16, fontWeight: '700', color: C.text },
+    triggerDesc: { fontSize: 12, color: C.textDim },
 
-  urgeRow: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
-  urgeBtn: { width: 44, height: 44, borderRadius: 12, borderWidth: 1, borderColor: Colors.mentra.border, backgroundColor: Colors.mentra.surface, alignItems: 'center', justifyContent: 'center' },
-  urgeBtnText: { fontSize: 14, fontWeight: '700', color: Colors.mentra.text },
-  urgeHint: { fontSize: 13, color: Colors.mentra.textDim, lineHeight: 20 },
-  setupLabel: { fontSize: 11, fontWeight: '800', color: Colors.mentra.textDim, letterSpacing: 1.5 },
-  exCard: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16, backgroundColor: Colors.mentra.surface, borderRadius: 16, borderWidth: 2, borderColor: 'transparent' },
-  exCardActive: { borderColor: Colors.mentra.brandPrimary, backgroundColor: Colors.mentra.brandPrimary + '08' },
-  exEmoji: { fontSize: 24 },
-  exTitle: { fontSize: 16, fontWeight: '700', color: Colors.mentra.text },
-  exDur: { fontSize: 12, color: Colors.mentra.textDim },
+    urgeRow: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
+    urgeBtn: { width: 44, height: 44, borderRadius: 12, borderWidth: 1, borderColor: C.border, backgroundColor: C.surface, alignItems: 'center', justifyContent: 'center' },
+    urgeBtnText: { fontSize: 14, fontWeight: '700', color: C.text },
+    urgeHint: { fontSize: 13, color: C.textDim, lineHeight: 20 },
+    setupLabel: { fontSize: 11, fontWeight: '800', color: C.textDim, letterSpacing: 1.5 },
+    exCard: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16, backgroundColor: C.surface, borderRadius: 16, borderWidth: 2, borderColor: 'transparent' },
+    exCardActive: { borderColor: C.brandPrimary, backgroundColor: C.brandPrimary + '18' },
+    exEmoji: { fontSize: 24 },
+    exTitle: { fontSize: 16, fontWeight: '700', color: C.text },
+    exDur: { fontSize: 12, color: C.textDim },
 
-  resetBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32, gap: 20 },
-  resetEmoji: { fontSize: 64 },
-  resetTitle: { fontSize: 24, fontWeight: '900', color: Colors.mentra.text },
-  stepBox: { width: '100%', backgroundColor: Colors.mentra.surface, borderRadius: 20, padding: 28, alignItems: 'center', gap: 12, borderWidth: 1, borderColor: Colors.mentra.border },
-  stepNum: { fontSize: 11, fontWeight: '800', color: Colors.mentra.textDim, letterSpacing: 1 },
-  stepText: { fontSize: 22, fontWeight: '700', color: Colors.mentra.text, textAlign: 'center', lineHeight: 32 },
-  stepDots: { flexDirection: 'row', gap: 8 },
-  stepDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: Colors.mentra.border },
-  stepDotActive: { width: 24, backgroundColor: Colors.mentra.brandPrimary },
-  stepDotDone: { backgroundColor: Colors.mentra.success },
-  scienceSmall: { fontSize: 11, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 18, fontStyle: 'italic', paddingHorizontal: 16 },
+    resetBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32, gap: 20 },
+    resetEmoji: { fontSize: 64 },
+    resetTitle: { fontSize: 24, fontWeight: '900', color: C.text },
+    stepBox: { width: '100%', backgroundColor: C.surface, borderRadius: 20, padding: 28, alignItems: 'center', gap: 12, borderWidth: 1, borderColor: C.border },
+    stepNum: { fontSize: 11, fontWeight: '800', color: C.textDim, letterSpacing: 1 },
+    stepText: { fontSize: 22, fontWeight: '700', color: C.text, textAlign: 'center', lineHeight: 32 },
+    stepDots: { flexDirection: 'row', gap: 8 },
+    stepDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: C.border },
+    stepDotActive: { width: 24, backgroundColor: C.brandPrimary },
+    stepDotDone: { backgroundColor: C.success },
+    scienceSmall: { fontSize: 11, color: C.textDim, textAlign: 'center', lineHeight: 18, fontStyle: 'italic', paddingHorizontal: 16 },
 
-  doneBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 14 },
-  doneTitle: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  doneSub: { fontSize: 15, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 24 },
-  doneCard: { flexDirection: 'row', gap: 10, backgroundColor: Colors.mentra.success + '12', padding: 16, borderRadius: 14, width: '100%', alignItems: 'flex-start' },
-  doneCardText: { fontSize: 13, color: Colors.mentra.text, lineHeight: 22, flex: 1 },
-  doneTip: { fontSize: 13, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 20 },
-  backLink: { paddingVertical: 8 },
-  backLinkText: { color: Colors.mentra.textDim, fontSize: 14, fontWeight: '600' },
-});
+    doneBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 14 },
+    doneTitle: { fontSize: 28, fontWeight: '900', color: C.text, letterSpacing: -0.5 },
+    doneSub: { fontSize: 15, color: C.textDim, textAlign: 'center', lineHeight: 24 },
+    doneCard: { flexDirection: 'row', gap: 10, backgroundColor: C.success + '18', padding: 16, borderRadius: 14, width: '100%', alignItems: 'flex-start' },
+    doneCardText: { fontSize: 13, color: C.text, lineHeight: 22, flex: 1 },
+    doneTip: { fontSize: 13, color: C.textDim, textAlign: 'center', lineHeight: 20 },
+    backLink: { paddingVertical: 8 },
+    backLinkText: { color: C.textDim, fontSize: 14, fontWeight: '600' },
+  });
+}

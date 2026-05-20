@@ -1,5 +1,4 @@
 import { Dimensions, Platform } from 'react-native';
-import { Colors } from './Colors';
 
 const { width, height } = Dimensions.get('window');
 
@@ -33,13 +32,14 @@ export const Metrics = {
   hitSlop: { top: 10, bottom: 10, left: 10, right: 10 },
 };
 
+// Typography: size/weight only — color is applied by each component via C.* tokens
 export const Typography = {
-  h1: { fontSize: 32, fontWeight: '800' as const, letterSpacing: -0.5, color: Colors.mentra.text },
-  h2: { fontSize: 24, fontWeight: '700' as const, letterSpacing: -0.3, color: Colors.mentra.text },
-  h3: { fontSize: 20, fontWeight: '700' as const, color: Colors.mentra.text },
-  body: { fontSize: 16, lineHeight: 24, color: Colors.mentra.textDim },
-  callout: { fontSize: 14, fontWeight: '600' as const, color: Colors.mentra.text },
-  caption: { fontSize: 12, color: Colors.mentra.textDim, letterSpacing: 0.5 },
+  h1: { fontSize: 32, fontWeight: '800' as const, letterSpacing: -0.5 },
+  h2: { fontSize: 24, fontWeight: '700' as const, letterSpacing: -0.3 },
+  h3: { fontSize: 20, fontWeight: '700' as const },
+  body: { fontSize: 16, lineHeight: 24 },
+  callout: { fontSize: 14, fontWeight: '600' as const },
+  caption: { fontSize: 12, letterSpacing: 0.5 },
   // Platform safe monospace
   mono: { fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace', fontSize: 12 },
 };
@@ -52,14 +52,14 @@ export const Fonts = {
 
 export const Shadows = {
   glow: {
-    shadowColor: Colors.mentra.brandAccent,
+    shadowColor: '#4ADE80', // brandAccent — same in both modes
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 16,
     elevation: 8,
   },
   card: {
-    shadowColor: Colors.mentra.text,
+    shadowColor: '#0F1A16', // dark neutral — works for card lift on both modes
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 16,

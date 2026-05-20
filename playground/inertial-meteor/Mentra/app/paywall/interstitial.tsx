@@ -6,8 +6,8 @@ import Animated, { FadeInUp, SlideInDown } from 'react-native-reanimated';
 import { X, Check } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
-import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { getPremiumStatus, restoreFlow, purchasePlan, fetchOfferingsSafe, OfferingsData } from '@/services/purchases';
 
 const { width, height } = Dimensions.get('window');
@@ -16,6 +16,8 @@ const { width, height } = Dimensions.get('window');
 // Shown contextually, e.g. after failing a session or exiting a free feature.
 
 export default function InterstitialPaywall() {
+    const C = useMentraTheme();
+    const styles = makeStyles(C);
     const [offerings, setOfferings] = useState<OfferingsData | null>(null);
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState(false);
@@ -90,7 +92,7 @@ export default function InterstitialPaywall() {
                         <View style={styles.features}>
                             {features.map((f, i) => (
                                 <Animated.View key={i} entering={FadeInUp.delay(300 + i * 100)} style={styles.featureRow}>
-                                    <Check size={18} color={Colors.mentra.brandPrimary} />
+                                    <Check size={18} color={C.brandPrimary} />
                                     <Text style={styles.featureText}>{f}</Text>
                                 </Animated.View>
                             ))}
@@ -114,7 +116,7 @@ export default function InterstitialPaywall() {
                     </Animated.View>
                 ) : (
                     <View style={[styles.card, { height: 400, justifyContent: 'center' }]}>
-                        <ActivityIndicator size="large" color={Colors.mentra.brandPrimary} />
+                        <ActivityIndicator size="large" color={C.brandPrimary} />
                     </View>
                 )}
             </ImageBackground>
@@ -122,35 +124,37 @@ export default function InterstitialPaywall() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#000' },
-    overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.6)' },
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+    return StyleSheet.create({
+        container: { flex: 1, backgroundColor: '#000' },
+        overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.6)' },
 
-    closeBtn: { position: 'absolute', top: 50, right: 20, zIndex: 10, padding: 8 },
+        closeBtn: { position: 'absolute', top: 50, right: 20, zIndex: 10, padding: 8 },
 
-    card: {
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        backgroundColor: Colors.mentra.bg,
-        borderTopLeftRadius: 32, borderTopRightRadius: 32,
-        padding: 24, paddingBottom: 50,
-        alignItems: 'center'
-    },
+        card: {
+            position: 'absolute', bottom: 0, left: 0, right: 0,
+            backgroundColor: C.bg,
+            borderTopLeftRadius: 32, borderTopRightRadius: 32,
+            padding: 24, paddingBottom: 50,
+            alignItems: 'center'
+        },
 
-    badge: { fontSize: 11, fontWeight: '800', color: Colors.mentra.brandPrimary, letterSpacing: 1.5, marginBottom: 12 },
-    title: { fontSize: 28, fontWeight: '800', color: Colors.mentra.text, textAlign: 'center', marginBottom: 12, letterSpacing: -0.5 },
-    subtext: { fontSize: 15, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 22, paddingHorizontal: 12, marginBottom: 32 },
+        badge: { fontSize: 11, fontWeight: '800', color: C.brandPrimary, letterSpacing: 1.5, marginBottom: 12 },
+        title: { fontSize: 28, fontWeight: '800', color: C.text, textAlign: 'center', marginBottom: 12, letterSpacing: -0.5 },
+        subtext: { fontSize: 15, color: C.textDim, textAlign: 'center', lineHeight: 22, paddingHorizontal: 12, marginBottom: 32 },
 
-    features: { width: '100%', gap: 14, marginBottom: 40 },
-    featureRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-    featureText: { fontSize: 15, color: Colors.mentra.text, fontWeight: '500' },
+        features: { width: '100%', gap: 14, marginBottom: 40 },
+        featureRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+        featureText: { fontSize: 15, color: C.text, fontWeight: '500' },
 
-    ctaBtn: {
-        width: '100%', backgroundColor: Colors.mentra.brandPrimary,
-        paddingVertical: 18, borderRadius: 16, alignItems: 'center',
-        shadowColor: Colors.mentra.brandPrimary, shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16,
-    },
-    ctaText: { color: '#FFF', fontSize: 17, fontWeight: '700' },
+        ctaBtn: {
+            width: '100%', backgroundColor: C.brandPrimary,
+            paddingVertical: 18, borderRadius: 16, alignItems: 'center',
+            shadowColor: C.brandPrimary, shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16,
+        },
+        ctaText: { color: '#FFF', fontSize: 17, fontWeight: '700' },
 
-    priceHints: { fontSize: 12, color: Colors.mentra.muted, marginTop: 12 },
-    restoreText: { fontSize: 13, color: Colors.mentra.textDim, fontWeight: '600', textDecorationLine: 'underline' }
-});
+        priceHints: { fontSize: 12, color: C.muted, marginTop: 12 },
+        restoreText: { fontSize: 13, color: C.textDim, fontWeight: '600', textDecorationLine: 'underline' }
+    });
+}

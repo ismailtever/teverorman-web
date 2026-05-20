@@ -7,7 +7,7 @@ import { Alert, ScrollView, StyleSheet, View, Linking, Platform } from 'react-na
 import Purchases from 'react-native-purchases';
 
 import { ThemedText } from '@/components/themed-text';
-import { Colors } from '@/constants/Colors';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Metrics } from '@/constants/Theme';
 import { I18n } from '@/services/i18n';
 import { Storage } from '@/services/storage';
@@ -20,8 +20,8 @@ import { SectionTitle } from '@/components/ui/Typography';
 const IS_DEV = __DEV__;
 
 export default function SettingsScreen() {
+    const C = useMentraTheme();
     const [_, forceUpdate] = useState(0);
-
     const [isPro, setIsPro] = useState(false);
     const [isRestoring, setIsRestoring] = useState(false);
 
@@ -96,9 +96,11 @@ export default function SettingsScreen() {
         );
     };
 
+    const styles = makeStyles(C);
+
     return (
         <View style={styles.container}>
-            <StatusBar style="dark" />
+            <StatusBar style={C.statusBar} />
             <AppHeader title={I18n.t('settings')} showBack />
 
             <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
@@ -110,7 +112,7 @@ export default function SettingsScreen() {
                             <ListRow
                                 title={I18n.t('upgradeProTitle')}
                                 subtitle={I18n.t('upgradeProSubtitle')}
-                                icon={<Shield fill={Colors.mentra.brandAccent} size={20} color={Colors.mentra.bg} />}
+                                icon={<Shield fill={C.brandAccent} size={20} color={C.bg} />}
                                 onPress={() => router.push('/paywall/onboarding' as any)}
                                 style={{ backgroundColor: 'rgba(74, 222, 128, 0.1)' }}
                             />
@@ -124,12 +126,12 @@ export default function SettingsScreen() {
                     <Card style={{ padding: 0, overflow: 'hidden' }}>
                         <ListRow
                             title={isRestoring ? I18n.t('restoring') : I18n.t('paywallRestore')}
-                            icon={<Zap size={20} color={Colors.mentra.brandAccent} />}
+                            icon={<Zap size={20} color={C.brandAccent} />}
                             onPress={handleRestore}
                         />
                         <ListRow
                             title={I18n.t('manageSubscription')}
-                            icon={<Globe size={20} color={Colors.mentra.brandSecondary} />}
+                            icon={<Globe size={20} color={C.brandSecondary} />}
                             onPress={handleManageSub}
                             showChevron={false}
                         />
@@ -141,7 +143,7 @@ export default function SettingsScreen() {
                     <Card style={{ padding: 0, overflow: 'hidden' }}>
                         <ListRow
                             title={I18n.t('language')}
-                            icon={<Globe size={20} color={Colors.mentra.brandPrimary} />}
+                            icon={<Globe size={20} color={C.brandPrimary} />}
                             rightElement={<ThemedText style={styles.valueText}>{I18n.getLanguage().toUpperCase()}</ThemedText>}
                             onPress={handleLanguageChange}
                         />
@@ -154,12 +156,12 @@ export default function SettingsScreen() {
                     <Card style={{ padding: 0, overflow: 'hidden' }}>
                         <ListRow
                             title={I18n.t('version')}
-                            icon={<Info size={20} color={Colors.mentra.brandPrimary} />}
+                            icon={<Info size={20} color={C.brandPrimary} />}
                             rightElement={<ThemedText style={styles.valueText}>{version} ({build})</ThemedText>}
                             showChevron={false}
                         />
                         <View style={styles.warningBox}>
-                            <AlertTriangle size={16} color={Colors.mentra.warning} style={{ marginTop: 2 }} />
+                            <AlertTriangle size={16} color={C.warning} style={{ marginTop: 2 }} />
                             <ThemedText style={styles.warningText}>
                                 {I18n.t('medicalWarning')}
                             </ThemedText>
@@ -173,17 +175,17 @@ export default function SettingsScreen() {
                     <Card style={{ padding: 0, overflow: 'hidden' }}>
                         <ListRow
                             title={I18n.t('privacy')}
-                            icon={<Shield size={20} color={Colors.mentra.brandSecondary} />}
+                            icon={<Shield size={20} color={C.brandSecondary} />}
                             onPress={() => router.push('/legal/privacy')}
                         />
                         <ListRow
                             title={I18n.t('terms')}
-                            icon={<FileText size={20} color={Colors.mentra.brandSecondary} />}
+                            icon={<FileText size={20} color={C.brandSecondary} />}
                             onPress={() => router.push('/legal/terms')}
                         />
                         <ListRow
                             title={I18n.t('disclaimer')}
-                            icon={<AlertTriangle size={20} color={Colors.mentra.danger} />}
+                            icon={<AlertTriangle size={20} color={C.danger} />}
                             onPress={() => router.push('/legal/disclaimer')}
                         />
                     </Card>
@@ -191,10 +193,10 @@ export default function SettingsScreen() {
 
                 {/* Data Zone */}
                 <View style={[styles.section, { marginTop: Metrics.spacing.l }]}>
-                    <Card variant="outline" style={{ borderColor: Colors.mentra.danger, padding: 0, overflow: 'hidden' }}>
+                    <Card variant="outline" style={{ borderColor: C.danger, padding: 0, overflow: 'hidden' }}>
                         <ListRow
                             title={I18n.t('resetData')}
-                            icon={<Trash2 size={20} color={Colors.mentra.danger} />}
+                            icon={<Trash2 size={20} color={C.danger} />}
                             onPress={handleReset}
                             showChevron={false}
                         />
@@ -208,7 +210,7 @@ export default function SettingsScreen() {
                         <Card style={{ padding: 0, overflow: 'hidden' }}>
                             <ListRow
                                 title={I18n.t('debugLab')}
-                                icon={<Info size={20} color={Colors.mentra.muted} />}
+                                icon={<Info size={20} color={C.muted} />}
                                 onPress={() => router.push('/debug/engine')}
                             />
                         </Card>
@@ -221,51 +223,53 @@ export default function SettingsScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.mentra.bg
-    },
-    scroll: {
-        padding: Metrics.spacing.l,
-        paddingBottom: 60,
-    },
-    section: {
-        marginBottom: Metrics.spacing.l
-    },
-    valueText: {
-        color: Colors.mentra.muted,
-        fontSize: 14,
-        fontWeight: '600',
-    },
-    proCard: {
-        borderColor: Colors.mentra.brandAccent,
-        borderWidth: 1,
-        shadowColor: Colors.mentra.brandAccent,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 10,
-        elevation: 6,
-    },
-    warningBox: {
-        flexDirection: 'row',
-        padding: Metrics.spacing.m,
-        backgroundColor: Colors.mentra.surface2,
-        borderTopWidth: 1,
-        borderTopColor: Colors.mentra.divider,
-        gap: 12,
-    },
-    warningText: {
-        flex: 1,
-        fontSize: 13,
-        color: Colors.mentra.textDim,
-        lineHeight: 18,
-    },
-    footer: {
-        textAlign: 'center',
-        color: Colors.mentra.muted,
-        marginTop: Metrics.spacing.xl,
-        fontSize: 12,
-        fontWeight: '500'
-    }
-});
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+    return StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: C.bg,
+        },
+        scroll: {
+            padding: Metrics.spacing.l,
+            paddingBottom: 60,
+        },
+        section: {
+            marginBottom: Metrics.spacing.l,
+        },
+        valueText: {
+            color: C.muted,
+            fontSize: 14,
+            fontWeight: '600',
+        },
+        proCard: {
+            borderColor: C.brandAccent,
+            borderWidth: 1,
+            shadowColor: C.brandAccent,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.15,
+            shadowRadius: 10,
+            elevation: 6,
+        },
+        warningBox: {
+            flexDirection: 'row',
+            padding: Metrics.spacing.m,
+            backgroundColor: C.surface2,
+            borderTopWidth: 1,
+            borderTopColor: C.divider,
+            gap: 12,
+        },
+        warningText: {
+            flex: 1,
+            fontSize: 13,
+            color: C.textDim,
+            lineHeight: 18,
+        },
+        footer: {
+            textAlign: 'center',
+            color: C.muted,
+            marginTop: Metrics.spacing.xl,
+            fontSize: 12,
+            fontWeight: '500',
+        },
+    });
+}

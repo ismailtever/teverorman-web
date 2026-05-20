@@ -2,47 +2,66 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform, View, StyleSheet } from 'react-native';
 import { HapticTab } from '@/components/haptic-tab';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { Home, Compass, Activity, BookOpen, User, BrainCircuit } from 'lucide-react-native';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
+import { Home, Activity, BookOpen, User, BrainCircuit } from 'lucide-react-native';
 import { BlurView } from 'expo-blur';
 
+// ─── Active indicator dot under focused tab icon ──────────────────────────────
+function TabDot({ focused, color }: { focused: boolean; color: string }) {
+  if (!focused) return null;
+  return (
+    <View style={{
+      position: 'absolute',
+      bottom: -6,
+      width: 4,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: color,
+    }} />
+  );
+}
+
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const C = useMentraTheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.mentra.brandPrimary,
-        tabBarInactiveTintColor: isDark
-          ? Colors.mentra.darkTokens.textDim
-          : Colors.mentra.textDim,
+        tabBarActiveTintColor: C.brandPrimary,
+        tabBarInactiveTintColor: C.muted,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarShowLabel: true,
-        tabBarLabelStyle: { fontSize: 10, fontWeight: '600', marginBottom: 2 },
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: '700',
+          marginBottom: Platform.OS === 'ios' ? 0 : 4,
+          letterSpacing: 0.2,
+        },
+        tabBarItemStyle: {
+          paddingTop: 8,
+        },
         tabBarStyle: Platform.select({
           ios: {
             position: 'absolute',
             borderTopWidth: 0,
             backgroundColor: 'transparent',
-            height: 84,
+            height: 88,
           },
           default: {
-            backgroundColor: isDark
-              ? Colors.mentra.darkTokens.surface
-              : Colors.mentra.surface,
-            borderTopWidth: 1,
-            borderTopColor: isDark ? Colors.mentra.darkTokens.border : Colors.mentra.border,
+            backgroundColor: C.surface,
+            borderTopWidth: StyleSheet.hairlineWidth,
+            borderTopColor: C.border,
             height: 64,
+            elevation: 0,
+            shadowOpacity: 0,
           },
         }),
         tabBarBackground: () =>
           Platform.OS === 'ios' ? (
             <BlurView
-              tint={isDark ? 'dark' : 'light'}
-              intensity={90}
+              tint={C.isDark ? 'systemChromeMaterialDark' : 'systemChromeMaterial'}
+              intensity={100}
               style={StyleSheet.absoluteFill}
             />
           ) : undefined,
@@ -53,7 +72,10 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color, focused }) => (
-            <Home size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+            <View style={{ alignItems: 'center' }}>
+              <Home size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+              <TabDot focused={focused} color={color} />
+            </View>
           ),
         }}
       />
@@ -62,16 +84,22 @@ export default function TabLayout() {
         options={{
           title: 'Coach',
           tabBarIcon: ({ color, focused }) => (
-            <BrainCircuit size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+            <View style={{ alignItems: 'center' }}>
+              <BrainCircuit size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+              <TabDot focused={focused} color={color} />
+            </View>
           ),
         }}
       />
       <Tabs.Screen
         name="training"
         options={{
-          title: 'Brain',
+          title: 'Train',
           tabBarIcon: ({ color, focused }) => (
-            <Activity size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+            <View style={{ alignItems: 'center' }}>
+              <Activity size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+              <TabDot focused={focused} color={color} />
+            </View>
           ),
         }}
       />
@@ -80,7 +108,10 @@ export default function TabLayout() {
         options={{
           title: 'Journal',
           tabBarIcon: ({ color, focused }) => (
-            <BookOpen size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+            <View style={{ alignItems: 'center' }}>
+              <BookOpen size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+              <TabDot focused={focused} color={color} />
+            </View>
           ),
         }}
       />
@@ -89,7 +120,10 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
-            <User size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+            <View style={{ alignItems: 'center' }}>
+              <User size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+              <TabDot focused={focused} color={color} />
+            </View>
           ),
         }}
       />

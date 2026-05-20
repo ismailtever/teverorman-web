@@ -185,8 +185,8 @@ export default function DeepFocusGame() {
         <Animated.View entering={FadeIn.springify()} style={styles.setupContent}>
           <View style={styles.scienceBox}>
             <View style={styles.sectionHeader}>
-              <BrainCircuit size={14} color={Colors.mentra.brandAccent} />
-              <ThemedText style={[styles.sectionLabel, { color: Colors.mentra.brandAccent }]}>
+              <BrainCircuit size={14} color={C.brandSecondary} />
+              <ThemedText style={[styles.sectionLabel, { color: C.brandSecondary }]}>
                 {I18n.t('scienceBehind')}
               </ThemedText>
             </View>
@@ -201,7 +201,7 @@ export default function DeepFocusGame() {
           <TextInput
             style={styles.taskInput}
             placeholder="e.g. Read 20 pages, Write report intro..."
-            placeholderTextColor={Colors.mentra.muted}
+            placeholderTextColor={C.muted}
             value={task} onChangeText={setTask} multiline
           />
           <Text style={styles.setupLabel}>CHOOSE DURATION</Text>
@@ -247,11 +247,11 @@ export default function DeepFocusGame() {
         <View style={styles.doneStats}>
           <View style={styles.doneStat}><Text style={styles.doneStatVal}>{selectedDur.mins}</Text><Text style={styles.doneStatLabel}>minutes</Text></View>
           <View style={styles.doneStat}>
-            <Text style={[styles.doneStatVal, { color: focusScore >= 80 ? Colors.mentra.success : Colors.mentra.warning }]}>{focusScore}</Text>
+            <Text style={[styles.doneStatVal, { color: focusScore >= 80 ? C.success : C.warning }]}>{focusScore}</Text>
             <Text style={styles.doneStatLabel}>focus score</Text>
           </View>
           <View style={styles.doneStat}>
-            <Text style={[styles.doneStatVal, distractions > 0 ? { color: Colors.mentra.danger } : { color: Colors.mentra.success }]}>{distractions}</Text>
+            <Text style={[styles.doneStatVal, distractions > 0 ? { color: C.danger } : { color: C.success }]}>{distractions}</Text>
             <Text style={styles.doneStatLabel}>pauses</Text>
           </View>
         </View>
@@ -309,76 +309,78 @@ export default function DeepFocusGame() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.mentra.bg },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 12 },
-  headerTitle: { fontSize: 18, fontWeight: '800', color: Colors.mentra.text },
-  closeBtn: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: Colors.mentra.border, backgroundColor: Colors.mentra.surface, alignItems: 'center', justifyContent: 'center' },
-  closeBtnDark: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
-  setupContent: { flex: 1, paddingHorizontal: 24, paddingTop: 8, gap: 16 },
-  scienceBox: {
-    backgroundColor: Colors.mentra.brandAccent + '08',
-    padding: Metrics.spacing.m,
-    borderRadius: Metrics.radius.m,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: Colors.mentra.brandAccent + '15',
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 8,
-  },
-  sectionLabel: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: Colors.mentra.brandPrimary,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
-  scienceWhat: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: Colors.mentra.text,
-    marginBottom: 4,
-  },
-  scienceWhy: {
-    fontSize: 13,
-    color: Colors.mentra.textDim,
-    lineHeight: 18,
-  },
-  setupLabel: { fontSize: 11, fontWeight: '800', color: Colors.mentra.textDim, letterSpacing: 1.5 },
-  taskInput: { backgroundColor: Colors.mentra.surface, borderRadius: 14, borderWidth: 1, borderColor: Colors.mentra.border, padding: 14, fontSize: 15, color: Colors.mentra.text, minHeight: 72 },
-  durGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  durCard: { width: '47%', padding: 14, borderRadius: 14, borderWidth: 2, borderColor: Colors.mentra.border, backgroundColor: Colors.mentra.surface, alignItems: 'center', gap: 4 },
-  durLabel: { fontSize: 18, fontWeight: '800' },
-  durDesc: { fontSize: 11, color: Colors.mentra.textDim, fontWeight: '600' },
-  startBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 16, borderRadius: 16, marginTop: 4 },
-  startBtnText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
-  focusHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 12 },
-  distractionBadge: { backgroundColor: 'rgba(255,255,255,0.12)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 },
-  distractionText: { color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: '700' },
-  focusCenter: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 28 },
-  focusTask: { fontSize: 16, color: 'rgba(255,255,255,0.6)', fontWeight: '600', textAlign: 'center' },
-  timerCircle: { width: 200, height: 200, borderRadius: 100, borderWidth: 3, borderColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
-  timerCircleInner: { position: 'absolute', width: 180, height: 180, borderRadius: 90, backgroundColor: 'rgba(74,222,128,0.06)' },
-  timerDisplay: { fontSize: 52, fontWeight: '900', color: '#FFF', letterSpacing: -2 },
-  timerLabel: { fontSize: 11, fontWeight: '800', color: 'rgba(255,255,255,0.4)', letterSpacing: 2 },
-  focusQuote: { fontSize: 14, color: 'rgba(255,255,255,0.4)', textAlign: 'center', lineHeight: 22, fontStyle: 'italic', paddingHorizontal: 16 },
-  progressBg: { height: 3, backgroundColor: 'rgba(255,255,255,0.1)', marginHorizontal: 24, borderRadius: 2, marginBottom: 24 },
-  progressFill: { height: 3, borderRadius: 2 },
-  focusControls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 20, paddingBottom: 40 },
-  controlBtn: { width: 52, height: 52, borderRadius: 26, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
-  mainControlBtn: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16 },
-  doneBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 14 },
-  doneTitle: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  doneTask: { fontSize: 14, color: Colors.mentra.textDim, textAlign: 'center' },
-  doneStats: { flexDirection: 'row', gap: 12 },
-  doneStat: { flex: 1, backgroundColor: Colors.mentra.surface, borderRadius: 16, padding: 16, alignItems: 'center', borderWidth: 1, borderColor: Colors.mentra.border },
-  doneStatVal: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text },
-  doneStatLabel: { fontSize: 10, color: Colors.mentra.textDim, fontWeight: '600', marginTop: 2 },
-  doneTip: { fontSize: 13, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 20 },
-  backLink: { paddingVertical: 8 },
-  backLinkText: { color: Colors.mentra.textDim, fontSize: 14, fontWeight: '600' },
-});
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: C.bg },
+    header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 12 },
+    headerTitle: { fontSize: 18, fontWeight: '800', color: C.text },
+    closeBtn: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: C.border, backgroundColor: C.surface, alignItems: 'center', justifyContent: 'center' },
+    closeBtnDark: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
+    setupContent: { flex: 1, paddingHorizontal: 24, paddingTop: 8, gap: 16 },
+    scienceBox: {
+      backgroundColor: C.brandSecondary + '18',
+      padding: Metrics.spacing.m,
+      borderRadius: Metrics.radius.m,
+      width: '100%',
+      borderWidth: 1,
+      borderColor: C.brandSecondary + '30',
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      marginBottom: 8,
+    },
+    sectionLabel: {
+      fontSize: 11,
+      fontWeight: '800',
+      color: C.brandPrimary,
+      letterSpacing: 1,
+      textTransform: 'uppercase',
+    },
+    scienceWhat: {
+      fontSize: 15,
+      fontWeight: '700',
+      color: C.text,
+      marginBottom: 4,
+    },
+    scienceWhy: {
+      fontSize: 13,
+      color: C.textDim,
+      lineHeight: 18,
+    },
+    setupLabel: { fontSize: 11, fontWeight: '800', color: C.textDim, letterSpacing: 1.5 },
+    taskInput: { backgroundColor: C.surface, borderRadius: 14, borderWidth: 1, borderColor: C.border, padding: 14, fontSize: 15, color: C.text, minHeight: 72 },
+    durGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+    durCard: { width: '47%', padding: 14, borderRadius: 14, borderWidth: 2, borderColor: C.border, backgroundColor: C.surface, alignItems: 'center', gap: 4 },
+    durLabel: { fontSize: 18, fontWeight: '800' },
+    durDesc: { fontSize: 11, color: C.textDim, fontWeight: '600' },
+    startBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 16, borderRadius: 16, marginTop: 4 },
+    startBtnText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
+    focusHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 12 },
+    distractionBadge: { backgroundColor: 'rgba(255,255,255,0.12)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 },
+    distractionText: { color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: '700' },
+    focusCenter: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 28 },
+    focusTask: { fontSize: 16, color: 'rgba(255,255,255,0.6)', fontWeight: '600', textAlign: 'center' },
+    timerCircle: { width: 200, height: 200, borderRadius: 100, borderWidth: 3, borderColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
+    timerCircleInner: { position: 'absolute', width: 180, height: 180, borderRadius: 90, backgroundColor: 'rgba(74,222,128,0.06)' },
+    timerDisplay: { fontSize: 52, fontWeight: '900', color: '#FFF', letterSpacing: -2 },
+    timerLabel: { fontSize: 11, fontWeight: '800', color: 'rgba(255,255,255,0.4)', letterSpacing: 2 },
+    focusQuote: { fontSize: 14, color: 'rgba(255,255,255,0.4)', textAlign: 'center', lineHeight: 22, fontStyle: 'italic', paddingHorizontal: 16 },
+    progressBg: { height: 3, backgroundColor: 'rgba(255,255,255,0.1)', marginHorizontal: 24, borderRadius: 2, marginBottom: 24 },
+    progressFill: { height: 3, borderRadius: 2 },
+    focusControls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 20, paddingBottom: 40 },
+    controlBtn: { width: 52, height: 52, borderRadius: 26, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
+    mainControlBtn: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16 },
+    doneBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 14 },
+    doneTitle: { fontSize: 28, fontWeight: '900', color: C.text, letterSpacing: -0.5 },
+    doneTask: { fontSize: 14, color: C.textDim, textAlign: 'center' },
+    doneStats: { flexDirection: 'row', gap: 12 },
+    doneStat: { flex: 1, backgroundColor: C.surface, borderRadius: 16, padding: 16, alignItems: 'center', borderWidth: 1, borderColor: C.border },
+    doneStatVal: { fontSize: 28, fontWeight: '900', color: C.text },
+    doneStatLabel: { fontSize: 10, color: C.textDim, fontWeight: '600', marginTop: 2 },
+    doneTip: { fontSize: 13, color: C.textDim, textAlign: 'center', lineHeight: 20 },
+    backLink: { paddingVertical: 8 },
+    backLinkText: { color: C.textDim, fontSize: 14, fontWeight: '600' },
+  });
+}

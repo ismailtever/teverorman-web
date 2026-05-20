@@ -9,7 +9,7 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Play, Target, Wind, BookOpen, BarChart2,
-  Flame, TrendingUp, ChevronRight, Zap, Brain, Activity,
+  Flame, TrendingUp, ChevronRight, Zap, Brain, Activity, Sparkles,
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 
@@ -73,28 +73,33 @@ function MentraScoreCard({ score, streak }: { score: number; streak: number }) {
     score >= 70 ? I18n.t('scoreStrong') :
     score >= 50 ? I18n.t('scoreBuilding') :
     I18n.t('scoreStarting');
+  const tier = score >= 85 ? '🏆' : score >= 70 ? '⚡' : score >= 50 ? '🌱' : '🔰';
 
   return (
     <Animated.View entering={FadeInUp.springify()} style={s.scoreCard}>
       <LinearGradient
-        colors={['#194031', '#20503D']}
+        colors={C.isDark ? ['#0F2820', '#1A3D2E'] : ['#194031', '#20503D']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={StyleSheet.absoluteFill}
+        style={[StyleSheet.absoluteFill, { borderRadius: 24 }]}
       />
+      {/* Subtle top highlight */}
+      <View style={s.scoreHighlight} />
+
       <View style={s.scoreLeft}>
         <Text style={s.scoreLabel}>{I18n.t('mentraScoreLabel')}</Text>
         <Text style={s.scoreNumber}>{score}</Text>
+        <Text style={s.scoreStatus}>{tier} {scoreLabel}</Text>
         <View style={s.streakRow}>
-          <Flame size={14} color="#FDE68A" />
-          <Text style={s.streakText}>{I18n.t('dayStreakFormatter', { streak: String(streak) })}</Text>
+          <Flame size={13} color="#FDE68A" />
+          <Text style={s.streakText}>{streak} day streak</Text>
         </View>
-        <Text style={s.scoreStatus}>{scoreLabel} · {I18n.t('scoreTopPercent')}</Text>
       </View>
       <View style={s.scoreRight}>
         <View style={s.circleOuter}>
-          <View style={[s.circleInner, { opacity: percentage / 100 }]} />
-          <Text style={s.circleText}>{percentage}%</Text>
+          <View style={[s.circleInner, { opacity: Math.max(0.15, percentage / 100) }]} />
+          <Text style={s.circleText}>{percentage}</Text>
+          <Text style={s.circlePct}>%</Text>
         </View>
       </View>
     </Animated.View>
@@ -244,25 +249,12 @@ export default function HomeScreen() {
         <Text style={[s.sectionTitle, { color: C.textDim }]}>{I18n.t('thisWeekTitle')}</Text>
         <AnalyticsRow />
 
-        {/* ── Routines Strip ── */}
-        <View style={s.sectionRow}>
-          <Text style={[s.sectionTitle, { color: C.textDim }]}>Routines</Text>
-          <Pressable onPress={() => router.push('/(tabs)/explore' as any)}>
-            <Text style={[s.sectionLink, { color: C.brandPrimary }]}>See all</Text>
-          </Pressable>
-        </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.routinesStrip}>
-          {routines.map(r => (
-            <Pressable key={r.title} onPress={() => router.push(r.route as any)} style={[s.routineChip, { backgroundColor: r.bg }]}>
-              {r.icon}
-              <Text style={[s.routineChipText, { color: C.text }]}>{r.title}</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
-
         {/* ── Daily Insight ── */}
-        <Animated.View entering={FadeInDown.delay(280).springify()} style={[s.insightCard, { backgroundColor: C.brandPrimary + '10', borderColor: C.brandPrimary + '25' }]}>
-          <Text style={[s.insightLabel, { color: C.brandPrimary }]}>🧠  {I18n.t('dailyInsightLabel') ?? 'DAILY INSIGHT'}</Text>
+        <Animated.View entering={FadeInDown.delay(250).springify()} style={[s.insightCard, { backgroundColor: C.brandPrimary + '10', borderColor: C.brandPrimary + '20' }]}>
+          <View style={s.insightHeader}>
+            <Sparkles size={13} color={C.brandPrimary} />
+            <Text style={[s.insightLabel, { color: C.brandPrimary }]}>{I18n.t('dailyInsightLabel') ?? 'DAILY INSIGHT'}</Text>
+          </View>
           <Text style={[s.insightText, { color: C.text }]}>"The mind is like a muscle — it only grows under pressure and recovers through rest."</Text>
         </Animated.View>
 
@@ -302,17 +294,19 @@ function makeStyles(C: ReturnType<typeof import('@/hooks/useMentraTheme').useMen
     upgradePillText: { fontSize: 12, fontWeight: '700' },
 
     // Score card
-    scoreCard: { borderRadius: 24, padding: 20, flexDirection: 'row', marginBottom: 24, overflow: 'hidden' },
-    scoreLeft: { flex: 1 },
-    scoreLabel: { fontSize: 10, fontWeight: '800', color: 'rgba(255,255,255,0.6)', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4 },
-    scoreNumber: { fontSize: 52, fontWeight: '800', color: '#FFF', letterSpacing: -2 },
-    streakRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
-    streakText: { fontSize: 12, fontWeight: '600', color: 'rgba(255,255,255,0.8)' },
-    scoreRight: { justifyContent: 'center', alignItems: 'center' },
-    circleOuter: { width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(255,255,255,0.12)', justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: 'rgba(255,255,255,0.3)' },
-    circleInner: { position: 'absolute', width: 68, height: 68, borderRadius: 34, backgroundColor: 'rgba(255,255,255,0.2)' },
-    circleText: { fontSize: 18, fontWeight: '800', color: '#FFF', zIndex: 1 },
-    scoreStatus: { fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: '600', marginTop: 6 },
+    scoreCard: { borderRadius: 24, padding: 22, flexDirection: 'row', marginBottom: 24, overflow: 'hidden', minHeight: 130 },
+    scoreHighlight: { position: 'absolute', top: 0, left: 20, right: 20, height: 1, backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 1 },
+    scoreLeft: { flex: 1, justifyContent: 'center', gap: 4 },
+    scoreLabel: { fontSize: 10, fontWeight: '800', color: 'rgba(255,255,255,0.5)', letterSpacing: 1.5, textTransform: 'uppercase' },
+    scoreNumber: { fontSize: 56, fontWeight: '900', color: '#FFF', letterSpacing: -3, lineHeight: 60 },
+    scoreStatus: { fontSize: 13, color: 'rgba(255,255,255,0.75)', fontWeight: '700' },
+    streakRow: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 2 },
+    streakText: { fontSize: 12, fontWeight: '600', color: 'rgba(255,255,255,0.65)' },
+    scoreRight: { justifyContent: 'center', alignItems: 'center', paddingLeft: 16 },
+    circleOuter: { width: 84, height: 84, borderRadius: 42, backgroundColor: 'rgba(255,255,255,0.08)', justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.2)' },
+    circleInner: { position: 'absolute', width: 70, height: 70, borderRadius: 35, backgroundColor: 'rgba(255,255,255,0.15)' },
+    circleText: { fontSize: 22, fontWeight: '900', color: '#FFF', zIndex: 1, lineHeight: 26 },
+    circlePct: { fontSize: 11, fontWeight: '700', color: 'rgba(255,255,255,0.6)', zIndex: 1 },
 
     // Weakness / Growth Edge
     weaknessCard: { backgroundColor: C.surface, borderRadius: 20, padding: 20, borderWidth: 1, borderColor: C.brandPrimary + '40', marginBottom: 24, marginHorizontal: 4 },
@@ -352,9 +346,15 @@ function makeStyles(C: ReturnType<typeof import('@/hooks/useMentraTheme').useMen
     routineChipText: { fontSize: 13, fontWeight: '700' },
 
     // Insight
-    insightCard: { borderRadius: 14, borderWidth: 1, padding: 16, marginBottom: 20 },
-    insightLabel: { fontSize: 10, fontWeight: '800', letterSpacing: 1, marginBottom: 6 },
+    insightCard: { borderRadius: 16, borderWidth: 1, padding: 16, marginBottom: 20 },
+    insightHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 },
+    insightLabel: { fontSize: 10, fontWeight: '800', letterSpacing: 1.2 },
     insightText: { fontSize: 14, lineHeight: 22, fontStyle: 'italic' },
+
+    // Routines (kept for type-safety, no longer rendered)
+    routinesStrip: { gap: 10, paddingBottom: 4, marginBottom: 20 },
+    routineChip: { flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 10 },
+    routineChipText: { fontSize: 13, fontWeight: '700' },
 
     // Upsell
     upsellBanner: { borderRadius: 14, borderWidth: 1, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, marginTop: 4 },

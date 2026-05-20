@@ -3,9 +3,9 @@ import { View, StyleSheet, Pressable, Platform, Dimensions } from 'react-native'
 import { BlurView } from 'expo-blur';
 import { X, Check } from 'lucide-react-native';
 import { ThemedText } from '@/components/themed-text';
-import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
 import { I18n } from '@/services/i18n';
+import { PW } from '@/constants/PaywallColors';
 
 const { width } = Dimensions.get('window');
 
@@ -13,7 +13,7 @@ const { width } = Dimensions.get('window');
 export const PaywallHeader = ({ onClose }: { onClose: () => void }) => (
     <View style={styles.header}>
         <Pressable onPress={onClose} style={styles.closeBtn} hitSlop={Metrics.hitSlop}>
-            <X color={Colors.mentra.paywall.text} size={24} />
+            <X color={PW.text} size={24} />
         </Pressable>
         <View style={styles.proBadge}>
             <ThemedText style={styles.proBadgeText}>Mentra PRO</ThemedText>
@@ -35,7 +35,7 @@ export const HeroBrainGlow = () => (
 export const PaywallFeatureRow = ({ text }: { text: string }) => (
     <View style={styles.featureRow}>
         <View style={styles.checkContainer}>
-            <Check size={16} color={Colors.mentra.paywall.primary} strokeWidth={3} />
+            <Check size={16} color={PW.primary} strokeWidth={3} />
         </View>
         <ThemedText style={styles.featureText}>{text}</ThemedText>
     </View>
@@ -64,15 +64,15 @@ export const PaywallPricingCard = ({ title, price, description, secondaryPrice, 
                 ]}
             >
                 {isBestValue && (
-                    <View style={[styles.bestValueBadge, isSelected && { backgroundColor: Colors.mentra.paywall.accent }]}>
-                        <ThemedText style={[styles.bestValueText, isSelected && { color: Colors.mentra.paywall.backgroundAlt }]}>
+                    <View style={[styles.bestValueBadge, isSelected && { backgroundColor: PW.accent }]}>
+                        <ThemedText style={[styles.bestValueText, isSelected && { color: PW.backgroundAlt }]}>
                             {I18n.t('bestValue')}
                         </ThemedText>
                     </View>
                 )}
                 <View style={{ flex: 1, paddingRight: Metrics.spacing.s }}>
                     <ThemedText style={styles.pricingTitle}>{title}</ThemedText>
-                    <ThemedText style={[styles.pricingDesc, isSelected && { color: Colors.mentra.paywall.accent }]}>{description}</ThemedText>
+                    <ThemedText style={[styles.pricingDesc, isSelected && { color: PW.accent }]}>{description}</ThemedText>
                 </View>
                 <View style={styles.pricingPriceContainer}>
                     <ThemedText style={styles.pricingPrice}>{price}</ThemedText>
@@ -120,10 +120,10 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: Colors.mentra.paywall.glass.background,
+        backgroundColor: PW.glass.background,
         borderRadius: Metrics.radius.round,
         borderWidth: 1,
-        borderColor: Colors.mentra.paywall.glass.border,
+        borderColor: PW.glass.border,
     },
     proBadge: {
         backgroundColor: 'rgba(74, 222, 128, 0.1)',
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(74, 222, 128, 0.3)',
     },
     proBadgeText: {
-        color: Colors.mentra.paywall.accent,
+        color: PW.accent,
         fontWeight: '800',
         fontSize: 12,
         letterSpacing: 1,
@@ -153,8 +153,8 @@ const styles = StyleSheet.create({
     glowLayer: {
         position: 'absolute',
         borderRadius: 999,
-        backgroundColor: Colors.mentra.paywall.primary,
-        shadowColor: Colors.mentra.paywall.accent,
+        backgroundColor: PW.primary,
+        shadowColor: PW.accent,
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.8,
         shadowRadius: 50,
@@ -169,14 +169,14 @@ const styles = StyleSheet.create({
         width: 24,
         height: 24,
         borderRadius: 12,
-        backgroundColor: Colors.mentra.paywall.accent,
+        backgroundColor: PW.accent,
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: Metrics.spacing.m,
     },
     featureText: {
         fontSize: 16,
-        color: Colors.mentra.paywall.textDim,
+        color: PW.textDim,
         fontWeight: '500',
     },
     pricingCard: {
@@ -187,11 +187,11 @@ const styles = StyleSheet.create({
         borderRadius: Metrics.radius.xl,
         overflow: 'hidden',
         borderWidth: 1,
-        borderColor: Colors.mentra.paywall.glass.border,
-        backgroundColor: Colors.mentra.paywall.glass.background,
+        borderColor: PW.glass.border,
+        backgroundColor: PW.glass.background,
     },
     pricingCardSelected: {
-        borderColor: Colors.mentra.paywall.accent,
+        borderColor: PW.accent,
         borderWidth: 2,
         backgroundColor: 'rgba(74, 222, 128, 0.05)',
     },
@@ -199,14 +199,14 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         right: 0,
-        backgroundColor: Colors.mentra.paywall.textDim,
+        backgroundColor: PW.textDim,
         paddingHorizontal: Metrics.spacing.m,
         paddingVertical: 4,
         borderBottomLeftRadius: Metrics.radius.m,
         zIndex: 2,
     },
     bestValueText: {
-        color: Colors.mentra.paywall.backgroundAlt,
+        color: PW.backgroundAlt,
         fontSize: 11,
         fontWeight: '800',
         textTransform: 'uppercase',
@@ -215,12 +215,12 @@ const styles = StyleSheet.create({
     pricingTitle: {
         fontSize: 18,
         fontWeight: '800',
-        color: Colors.mentra.paywall.text,
+        color: PW.text,
         marginBottom: 4,
     },
     pricingDesc: {
         fontSize: 14,
-        color: Colors.mentra.paywall.textDim,
+        color: PW.textDim,
     },
     pricingPriceContainer: {
         alignItems: 'flex-end',
@@ -229,11 +229,11 @@ const styles = StyleSheet.create({
     pricingPrice: {
         fontSize: 22,
         fontWeight: '800',
-        color: Colors.mentra.paywall.text,
+        color: PW.text,
     },
     pricingSecondaryPrice: {
         fontSize: 12,
-        color: Colors.mentra.paywall.textDim,
+        color: PW.textDim,
         marginTop: 2,
     },
     footerLinks: {
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     },
     footerLinkText: {
         fontSize: 12,
-        color: Colors.mentra.paywall.textDim,
+        color: PW.textDim,
         textDecorationLine: 'underline',
     },
     brandFooterContainer: {
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     },
     brandFooter: {
         textAlign: 'center',
-        color: Colors.mentra.paywall.glass.border,
+        color: PW.glass.border,
         fontSize: 12,
         fontWeight: '700',
         letterSpacing: 0.5,

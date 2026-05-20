@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
 import { AppHeader } from '@/components/ui/AppHeader';
-import { Section } from '@/components/ui/Cards';
+import { Card, Section } from '@/components/ui/Cards';
 import { PrimaryButton, SecondaryButton } from '@/components/ui/Buttons';
 import { SectionTitle } from '@/components/ui/Typography';
 import { ProgressBar } from '@/components/ui/Progress';
-import { Colors } from '@/constants/Colors';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
 import { I18n } from '@/services/i18n';
 
 export default function CheckInScreen() {
+    const C = useMentraTheme();
     const [step, setStep] = useState(0);
     const [answers, setAnswers] = useState<Record<string, string>>({});
     const [_, forceUpdate] = useState(0);
@@ -48,25 +49,24 @@ export default function CheckInScreen() {
         if (step < CHECK_IN_STEPS.length - 1) {
             setStep(step + 1);
         } else {
-            // Finish check-in
             router.replace('/(tabs)');
         }
     };
 
     const currentStepData = CHECK_IN_STEPS[step];
-    const progress = ((step + 1) / CHECK_IN_STEPS.length) * 100;
+    const progress = ((step + 1) / CHECK_IN_STEPS.length);
     const canProceed = !!answers[currentStepData.id];
+    const styles = makeStyles(C);
 
     return (
         <View style={styles.container}>
-            <StatusBar style="dark" />
-
+            <StatusBar style={C.statusBar} />
             <AppHeader title="Daily Check-In" showBack={false} />
 
             <View style={styles.content}>
                 {/* Progress Indicator */}
                 <View style={styles.progressSection}>
-                    <ProgressBar progress={progress} color={Colors.mentra.brandAccent} />
+                    <ProgressBar progress={progress} color={C.brandAccent} />
                     <ThemedText style={styles.stepText}>{I18n.t('step')} {step + 1} {I18n.t('of')} {CHECK_IN_STEPS.length}</ThemedText>
                 </View>
 
@@ -84,7 +84,7 @@ export default function CheckInScreen() {
                                     onPress={() => handleSelect(option)}
                                     style={[
                                         styles.optionButton,
-                                        isSelected && styles.optionButtonSelected
+                                        isSelected && { borderColor: C.brandAccent, backgroundColor: C.surface2, borderWidth: 2 }
                                     ]}
                                     fullWidth
                                 />
@@ -104,51 +104,26 @@ export default function CheckInScreen() {
                         fullWidth
                     />
                 </View>
-
             </View>
         </View>
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.mentra.bg,
-    },
-    content: {
-        flex: 1,
-        padding: Metrics.spacing.l,
-    },
-    progressSection: {
-        marginBottom: Metrics.spacing.xxl,
-    },
-    stepText: {
-        marginTop: Metrics.spacing.s,
-        color: Colors.mentra.textDim,
-        fontSize: 14,
-        fontWeight: '500',
-        textAlign: 'right',
-    },
-    questionSection: {
-        marginTop: Metrics.spacing.l,
-    },
-    optionsContainer: {
-        marginTop: Metrics.spacing.xl,
-        gap: Metrics.spacing.m,
-    },
-    optionButton: {
-        justifyContent: 'flex-start',
-        paddingHorizontal: Metrics.spacing.l,
-        height: 64, // Large comfortable tap area
-        backgroundColor: Colors.mentra.surface,
-        borderColor: Colors.mentra.border,
-    },
-    optionButtonSelected: {
-        borderColor: Colors.mentra.brandAccent,
-        backgroundColor: Colors.mentra.surface2,
-        borderWidth: 2,
-    },
-    footer: {
-        paddingBottom: Metrics.spacing.xl,
-    }
-});
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+    return StyleSheet.create({
+        container: { flex: 1, backgroundColor: C.bg },
+        content: { flex: 1, padding: Metrics.spacing.l },
+        progressSection: { marginBottom: Metrics.spacing.xxl },
+        stepText: { marginTop: Metrics.spacing.s, color: C.textDim, fontSize: 14, fontWeight: '500', textAlign: 'right' },
+        questionSection: { marginTop: Metrics.spacing.l },
+        optionsContainer: { marginTop: Metrics.spacing.xl, gap: Metrics.spacing.m },
+        optionButton: {
+            justifyContent: 'flex-start',
+            paddingHorizontal: Metrics.spacing.l,
+            height: 64,
+            backgroundColor: C.surface,
+            borderColor: C.border,
+        },
+        footer: { paddingBottom: Metrics.spacing.xl },
+    });
+}

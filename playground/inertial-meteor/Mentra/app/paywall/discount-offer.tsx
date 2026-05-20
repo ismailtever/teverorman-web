@@ -5,8 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 
 import { ThemedText } from '@/components/themed-text';
 import { PrimaryButton, GhostButton } from '@/components/ui/Buttons';
-import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
+import { PW } from '@/constants/PaywallColors';
 import { I18n } from '@/services/i18n';
 
 import { usePaywall } from '@/components/paywall/usePaywall';
@@ -55,7 +55,7 @@ export default function DiscountOfferPaywall() {
     if (isLoading) {
         return (
             <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-                <ActivityIndicator size="large" color={Colors.mentra.paywall.accent} />
+                <ActivityIndicator size="large" color={PW.accent} />
             </View>
         );
     }
@@ -76,7 +76,7 @@ export default function DiscountOfferPaywall() {
                     </View>
                     <ThemedText style={styles.headline}>Finish the week strong.</ThemedText>
                     <ThemedText style={styles.subHeadline}>A structured mind compounds.</ThemedText>
-                    <ThemedText style={[styles.subHeadline, { marginTop: 8, fontSize: 13, color: Colors.mentra.paywall.accent, fontWeight: '500' }]}>
+                    <ThemedText style={[styles.subHeadline, { marginTop: 8, fontSize: 13, color: PW.accent, fontWeight: '500' }]}>
                         {I18n.t('paywallValueFrame')}
                     </ThemedText>
                 </View>
@@ -124,7 +124,7 @@ export default function DiscountOfferPaywall() {
                         onPress={() => handlePurchase()}
                         disabled={isPurchasing}
                         fullWidth
-                        style={{ backgroundColor: Colors.mentra.paywall.accent }}
+                        style={{ backgroundColor: PW.accent }}
                     />
 
                     <View style={styles.ethicalContainer}>
@@ -153,7 +153,7 @@ export default function DiscountOfferPaywall() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.mentra.paywall.backgroundAlt, // Different deep green
+        backgroundColor: PW.backgroundAlt, // Different deep green
     },
     scrollContent: {
         padding: Metrics.spacing.l,
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     },
     discountBadge: {
         alignSelf: 'flex-start',
-        backgroundColor: Colors.mentra.paywall.accent,
+        backgroundColor: PW.accent,
         paddingHorizontal: Metrics.spacing.s,
         paddingVertical: 4,
         borderRadius: Metrics.radius.s,
@@ -174,20 +174,20 @@ const styles = StyleSheet.create({
     discountBadgeText: {
         fontSize: 12,
         fontWeight: '800',
-        color: Colors.mentra.paywall.backgroundAlt,
+        color: PW.backgroundAlt,
         textTransform: 'uppercase',
         letterSpacing: 0.5,
     },
     headline: {
         fontSize: 34,
         fontWeight: '800',
-        color: Colors.mentra.paywall.text,
+        color: PW.text,
         marginBottom: Metrics.spacing.s,
         lineHeight: 40,
     },
     subHeadline: {
         fontSize: 16,
-        color: Colors.mentra.paywall.textDim,
+        color: PW.textDim,
         lineHeight: 24,
     },
     featuresSection: {
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     },
     socialProof: {
         fontSize: 12,
-        color: Colors.mentra.paywall.textDim,
+        color: PW.textDim,
         textAlign: 'center',
         marginTop: Metrics.spacing.m,
         fontStyle: 'italic'
@@ -213,6 +213,6 @@ const styles = StyleSheet.create({
     },
     ethicalText: {
         fontSize: 13,
-        color: Colors.mentra.paywall.textDim
+        color: PW.textDim
     }
 });

@@ -3,7 +3,7 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import Svg, { Polygon, Line, Circle, Text as SvgText, G } from 'react-native-svg';
 import Animated, { useSharedValue, useAnimatedProps, withTiming, Easing } from 'react-native-reanimated';
 
-import { Colors } from '@/constants/Colors';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { ThemedText } from './themed-text';
 import { CognitiveProfile } from '@/services/engine/types';
 
@@ -17,6 +17,7 @@ interface CognitiveRadarProps {
 const AXIS_LABELS = ['Memory', 'Focus', 'Speed', 'Flexibility', 'Problem']; // 5 axes
 
 export function CognitiveRadar({ data, size = 300 }: CognitiveRadarProps) {
+    const C = useMentraTheme();
     const center = size / 2;
     const radius = (size / 2) - 40; // Padding for labels
 
@@ -113,9 +114,9 @@ export function CognitiveRadar({ data, size = 300 }: CognitiveRadarProps) {
                 {/* Data Polygon */}
                 <Polygon
                     points={points}
-                    fill={Colors.mentra.brandPrimary}
+                    fill={C.brandPrimary}
                     fillOpacity="0.4"
-                    stroke={Colors.mentra.brandPrimary}
+                    stroke={C.brandPrimary}
                     strokeWidth="2"
                 />
 

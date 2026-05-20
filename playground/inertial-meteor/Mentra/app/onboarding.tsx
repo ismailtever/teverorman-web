@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/themed-text';
 import { PrimaryButton } from '@/components/ui/Buttons';
 import { Card } from '@/components/ui/Cards';
-import { Colors } from '@/constants/Colors';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Metrics } from '@/constants/Theme';
 import { Storage } from '@/services/storage';
 import { I18n } from '@/services/i18n';
@@ -24,6 +24,7 @@ const IDENTITY_LEVEL_MAP: Record<string, string> = {
 
 export default function OnboardingScreen() {
     const insets = useSafeAreaInsets();
+    const C = useMentraTheme();
     const [step, setStep] = useState(0);
     const [name, setName] = useState('');
     const [identity, setIdentity] = useState<keyof typeof import('@/locales/en.json')>('idStructured');
@@ -55,10 +56,11 @@ export default function OnboardingScreen() {
     };
 
     const isNextDisabled = step === 0 && name.trim().length === 0;
+    const styles = makeStyles(C);
 
     return (
         <View style={[styles.container, { paddingTop: insets.top }]}>
-            <StatusBar style="dark" />
+            <StatusBar style={C.statusBar} />
 
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -82,7 +84,7 @@ export default function OnboardingScreen() {
                             <TextInput
                                 style={styles.input}
                                 placeholder={I18n.t('enterName')}
-                                placeholderTextColor={Colors.mentra.muted}
+                                placeholderTextColor={C.muted}
                                 value={name}
                                 onChangeText={setName}
                                 autoFocus
@@ -93,7 +95,7 @@ export default function OnboardingScreen() {
                     {step === 1 && (
                         <Card variant="default" style={styles.purposeCard}>
                             <View style={styles.iconCircle}>
-                                <BrainCircuit size={40} color={Colors.mentra.brandPrimary} />
+                                <BrainCircuit size={40} color={C.brandPrimary} />
                             </View>
                             <ThemedText style={styles.purposeDesc}>
                                 {I18n.t('appPurposeDesc')}
@@ -107,11 +109,11 @@ export default function OnboardingScreen() {
                                 <Pressable key={idKey} onPress={() => setIdentity(idKey as any)}>
                                     <Card variant="default" style={[
                                         styles.goalCard,
-                                        identity === idKey && { borderColor: Colors.mentra.brandPrimary, borderWidth: 2, backgroundColor: Colors.mentra.surface2 }
+                                        identity === idKey && { borderColor: C.brandPrimary, borderWidth: 2, backgroundColor: C.surface2 }
                                     ]}>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <ThemedText style={[styles.goalText, identity === idKey && { fontWeight: '700' }]}>{I18n.t(idKey)}</ThemedText>
-                                            {identity === idKey && <ThemedText style={{ color: Colors.mentra.brandPrimary, fontWeight: 'bold' }}>✓</ThemedText>}
+                                            {identity === idKey && <ThemedText style={{ color: C.brandPrimary, fontWeight: 'bold' }}>✓</ThemedText>}
                                         </View>
                                     </Card>
                                 </Pressable>
@@ -133,76 +135,30 @@ export default function OnboardingScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.mentra.bg,
-    },
-    content: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: Metrics.spacing.xl,
-    },
-    header: {
-        marginBottom: Metrics.spacing.xxl,
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 32,
-        fontWeight: '800',
-        color: Colors.mentra.text,
-        textAlign: 'center',
-        marginBottom: Metrics.spacing.s,
-    },
-    subtitle: {
-        fontSize: 16,
-        color: Colors.mentra.textDim,
-        textAlign: 'center',
-    },
-    form: {
-        marginBottom: Metrics.spacing.xxl,
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: Colors.mentra.text,
-        marginBottom: Metrics.spacing.m,
-    },
-    input: {
-        fontSize: 20,
-        color: Colors.mentra.text,
-        paddingVertical: Metrics.spacing.m,
-        borderBottomWidth: 2,
-        borderBottomColor: Colors.mentra.border,
-    },
-    goalCard: {
-        borderWidth: 2,
-        borderColor: 'transparent',
-    },
-    goalText: {
-        fontSize: 18,
-        color: Colors.mentra.text,
-    },
-    purposeCard: {
-        alignItems: 'center',
-        paddingVertical: Metrics.spacing.xxl,
-    },
-    iconCircle: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        backgroundColor: Colors.mentra.surface2,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: Metrics.spacing.xl,
-    },
-    purposeDesc: {
-        fontSize: 16,
-        color: Colors.mentra.textDim,
-        textAlign: 'center',
-        lineHeight: 24,
-    },
-    footer: {
-        marginTop: 'auto',
-    }
-});
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+    return StyleSheet.create({
+        container: { flex: 1, backgroundColor: C.bg },
+        content: { flex: 1, justifyContent: 'center', padding: Metrics.spacing.xl },
+        header: { marginBottom: Metrics.spacing.xxl, alignItems: 'center' },
+        title: { fontSize: 32, fontWeight: '800', color: C.text, textAlign: 'center', marginBottom: Metrics.spacing.s },
+        subtitle: { fontSize: 16, color: C.textDim, textAlign: 'center' },
+        form: { marginBottom: Metrics.spacing.xxl },
+        label: { fontSize: 16, fontWeight: '600', color: C.text, marginBottom: Metrics.spacing.m },
+        input: {
+            fontSize: 20, color: C.text,
+            paddingVertical: Metrics.spacing.m,
+            borderBottomWidth: 2, borderBottomColor: C.border,
+        },
+        goalCard: { borderWidth: 2, borderColor: 'transparent' },
+        goalText: { fontSize: 18, color: C.text },
+        purposeCard: { alignItems: 'center', paddingVertical: Metrics.spacing.xxl },
+        iconCircle: {
+            width: 80, height: 80, borderRadius: 40,
+            backgroundColor: C.surface2,
+            justifyContent: 'center', alignItems: 'center',
+            marginBottom: Metrics.spacing.xl,
+        },
+        purposeDesc: { fontSize: 16, color: C.textDim, textAlign: 'center', lineHeight: 24 },
+        footer: { marginTop: 'auto' },
+    });
+}
