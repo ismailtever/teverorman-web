@@ -320,5 +320,6 @@
     "dimMemory": "MEMORY",
     "dimLogic": "LOGIC",
     "dimSpeed": "SPEED",
-    "dimResilience": "RESILIENCE"
+    "dimResilience": "RESILIENCE",
+    "dailyInsightQuote": "\"The mind is like a muscle — it only grows under pressure and recovers through rest.\""
 }

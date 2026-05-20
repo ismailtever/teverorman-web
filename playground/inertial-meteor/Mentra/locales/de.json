@@ -391,5 +391,6 @@
     "dimMemory": "GEDÄCHTNIS",
     "dimLogic": "LOGIK",
     "dimSpeed": "GESCHWINDIGKEIT",
-    "dimResilience": "RESILIENZ"
+    "dimResilience": "RESILIENZ",
+    "dailyInsightQuote": "\"Der Geist ist wie ein Muskel — er wächst nur unter Druck und erholt sich durch Ruhe.\""
 }

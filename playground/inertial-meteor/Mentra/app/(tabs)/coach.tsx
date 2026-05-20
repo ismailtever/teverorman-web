@@ -334,9 +334,12 @@ export default function CoachScreen() {
 
       {/* ── Limit warning banner ── */}
       {showLimitBanner && (
-        <Animated.View entering={FadeInDown.springify()} style={styles.limitBanner}>
+        <Animated.View entering={FadeInDown.springify()} style={[styles.limitBanner, {
+          backgroundColor: C.isDark ? 'rgba(245,158,11,0.12)' : '#FEF3C7',
+          borderBottomColor: C.isDark ? 'rgba(245,158,11,0.25)' : '#FDE68A',
+        }]}>
           <Sparkles size={14} color="#F59E0B" />
-          <Text style={styles.limitBannerText}>
+          <Text style={[styles.limitBannerText, { color: C.isDark ? '#FDE68A' : '#92400E' }]}>
             {remaining} free message{remaining !== 1 ? 's' : ''} left today.{' '}
           </Text>
           <Pressable onPress={() => router.push('/paywall/onboarding' as any)}>
@@ -511,15 +514,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#FEF3C7',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#FDE68A',
   },
   limitBannerText: {
     fontSize: 13,
-    color: '#92400E',
     fontWeight: '500',
     flex: 1,
   },

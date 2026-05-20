@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {
     View, Text, StyleSheet, ScrollView, Pressable,
-    Alert, Share, Linking,
+    Alert, Share, Linking, FlatList,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,7 +16,7 @@ import {
 import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Storage, UserProfile } from '@/services/storage';
 import { getPremiumStatus, restoreFlow } from '@/services/purchases';
-import { I18n, Lang } from '@/services/i18n';
+import { I18n, Lang, LANG_LABELS } from '@/services/i18n';
 
 export default function ProfileScreen() {
     const insets = useSafeAreaInsets();
@@ -136,11 +136,14 @@ export default function ProfileScreen() {
         );
     };
 
-    const LANG_OPTIONS: { code: Lang; label: string; flag: string }[] = [
-        { code: 'en', label: 'EN', flag: '🇺🇸' },
-        { code: 'tr', label: 'TR', flag: '🇹🇷' },
-        { code: 'ar', label: 'AR', flag: '🇸🇦' },
-    ];
+    const LANG_FLAGS: Record<Lang, string> = {
+        en: '🇺🇸', tr: '🇹🇷', ar: '🇸🇦', de: '🇩🇪', fr: '🇫🇷', hi: '🇮🇳', zh: '🇨🇳',
+    };
+    const LANG_OPTIONS = I18n.getSupportedLangs().map(code => ({
+        code,
+        label: code.toUpperCase(),
+        flag: LANG_FLAGS[code],
+    }));
 
     // ── Row Item component ────────────────────────────────────────────────────
 
@@ -256,7 +259,7 @@ export default function ProfileScreen() {
                             <Text style={[styles.rowLabel, { color: C.text }]}>{I18n.t('language')}</Text>
                             <Text style={[styles.rowSubLabel, { color: C.textDim }]}>Interface language</Text>
                         </View>
-                        <View style={styles.langSwitcher}>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.langSwitcher} contentContainerStyle={{ gap: 6 }}>
                             {LANG_OPTIONS.map(opt => (
                                 <Pressable
                                     key={opt.code}
@@ -272,7 +275,7 @@ export default function ProfileScreen() {
                                     }]}>{opt.label}</Text>
                                 </Pressable>
                             ))}
-                        </View>
+                        </ScrollView>
                     </View>
 
                     <View style={[styles.divider, { backgroundColor: C.border }]} />

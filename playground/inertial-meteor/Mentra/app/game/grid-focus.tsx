@@ -459,8 +459,8 @@ function makeStyles(C: ReturnType<typeof useMentraTheme>) {
         fpqLabel: { fontSize: 13, color: C.textDim, marginBottom: 16 },
 
         // Personal best
-        newBestBanner: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#FEF3C7', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 8, marginBottom: 16, borderWidth: 1, borderColor: '#FDE68A' },
-        newBestText: { fontSize: 13, fontWeight: '800', color: '#92400E' },
+        newBestBanner: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: C.isDark ? 'rgba(245,158,11,0.12)' : '#FEF3C7', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 8, marginBottom: 16, borderWidth: 1, borderColor: C.isDark ? 'rgba(245,158,11,0.3)' : '#FDE68A' },
+        newBestText: { fontSize: 13, fontWeight: '800', color: C.isDark ? '#FDE68A' : '#92400E' },
         prevBestRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 16 },
         prevBestText: { fontSize: 13, color: C.textDim },
 

@@ -396,7 +396,7 @@ function makeStyles(C: ReturnType<typeof useMentraTheme>) {
     progressFill: { height: 4, backgroundColor: C.brandPrimary, borderRadius: 2 },
     roundText: { textAlign: 'center', fontSize: 12, color: C.textDim, marginBottom: 16 },
     introBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32, gap: 0 },
-    introIconBox: { width: 96, height: 96, borderRadius: 28, backgroundColor: '#FEF2F2', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+    introIconBox: { width: 96, height: 96, borderRadius: 28, backgroundColor: C.isDark ? 'rgba(239,68,68,0.12)' : '#FEF2F2', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
     introTitle: { fontSize: 30, fontWeight: '900', color: C.text, letterSpacing: -0.5 },
     instructionsBox: {
       backgroundColor: C.surface,

@@ -255,7 +255,7 @@ export default function HomeScreen() {
             <Sparkles size={13} color={C.brandPrimary} />
             <Text style={[s.insightLabel, { color: C.brandPrimary }]}>{I18n.t('dailyInsightLabel') ?? 'DAILY INSIGHT'}</Text>
           </View>
-          <Text style={[s.insightText, { color: C.text }]}>"The mind is like a muscle — it only grows under pressure and recovers through rest."</Text>
+          <Text style={[s.insightText, { color: C.text }]}>{I18n.t('dailyInsightQuote')}</Text>
         </Animated.View>
 
         {/* ── Upsell banner ── */}
@@ -263,14 +263,14 @@ export default function HomeScreen() {
           <Animated.View entering={FadeInDown.delay(300).springify()} style={[s.upsellBanner, { backgroundColor: C.surface, borderColor: C.border }]}>
             <BarChart2 size={20} color={C.brandPrimary} />
             <View style={{ flex: 1 }}>
-              <Text style={[s.upsellTitle, { color: C.text }]}>Unlock Full Potential</Text>
-              <Text style={[s.upsellSub, { color: C.textDim }]}>Advanced radar diagnostics, unlimited training & zero ads.</Text>
+              <Text style={[s.upsellTitle, { color: C.text }]}>{I18n.t('paywallHeroTitle')}</Text>
+              <Text style={[s.upsellSub, { color: C.textDim }]}>{I18n.t('paywallFeat4')}</Text>
             </View>
             <Pressable
               onPress={() => router.push('/paywall/onboarding' as any)}
               style={[s.upsellBtn, { backgroundColor: C.brandPrimary }]}
             >
-              <Text style={s.upsellBtnText}>Try Free</Text>
+              <Text style={s.upsellBtnText}>{I18n.t('exploreTryFree')}</Text>
             </Pressable>
           </Animated.View>
         )}
