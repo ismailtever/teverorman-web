@@ -25,12 +25,15 @@ export default function FeatureGatePaywall() {
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        I18n.subscribe(() => forceUpdate(n => n + 1));
+        const unsubscribe = I18n.subscribe(() => forceUpdate(n => n + 1));
         // Defer heavy UI rendering until after the navigation transition completes
         const task = InteractionManager.runAfterInteractions(() => {
             setIsReady(true);
         });
-        return () => task.cancel();
+        return () => {
+            unsubscribe();
+            task.cancel();
+        };
     }, []);
 
     const {
@@ -206,7 +209,4 @@ const styles = StyleSheet.create({
         gap: 4
     },
     ethicalText: {
-        fontSize: 13,
-        color: Colors.mentra.paywall.textDim
-    }
-});
+      

@@ -1,10 +1,10 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, View, StyleSheet } from 'react-native';
 import { HapticTab } from '@/components/haptic-tab';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Home, Compass, Activity, User, BrainCircuit, TrendingUp, Target } from 'lucide-react-native';
+import { Home, Compass, Activity, BookOpen, User, BrainCircuit } from 'lucide-react-native';
 import { BlurView } from 'expo-blur';
 
 export default function TabLayout() {
@@ -71,16 +71,28 @@ export default function TabLayout() {
         options={{
           title: 'Brain',
           tabBarIcon: ({ color, focused }) => (
-            <Target size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+            <Activity size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
           ),
         }}
       />
-
-      {/* Hidden Screens */}
+      <Tabs.Screen
+        name="journal"
+        options={{
+          title: 'Journal',
+          tabBarIcon: ({ color, focused }) => (
+            <BookOpen size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color, focused }) => (
+            <User size={22} color={color} strokeWidth={focused ? 2.5 : 1.8} />
+          ),
+        }}
+      />
+      {/* Hidden tabs */}
       <Tabs.Screen name="activity" options={{ href: null }} />
-      <Tabs.Screen name="explore" options={{ href: null }} />
-      <Tabs.Screen name="journal" options={{ href: null }} />
-      <Tabs.Screen name="profile" options={{ href: null }} />
-    </Tabs>
-  );
-}
+      <Tabs.Screen name="explore" o

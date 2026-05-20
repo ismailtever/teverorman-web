@@ -7,13 +7,13 @@ import { View, Text, StyleSheet, Pressable, TextInput, KeyboardAvoidingView, Pla
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import Animated, { FadeIn, FadeInDown, useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { X, Brain, BrainCircuit, Play, Pause, RotateCcw, Sparkles } from 'lucide-react-native';
 import { I18n } from '@/services/i18n';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
-import { Colors } from '@/constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Storage } from '@/services/storage';
 import { AnalysisEngine, DEFAULT_COGNITIVE_PROFILE } from '@/services/engine/AnalysisEngine';
@@ -25,7 +25,7 @@ type Phase = 'setup' | 'focus' | 'done';
 
 const DURATIONS = [
   { mins: 5,  label: '5 min',  desc: 'Starter',   color: '#10B981' },
-  { mins: 10, label: '10 min', desc: 'Builder',    color: Colors.mentra.brandPrimary },
+  { mins: 10, label: '10 min', desc: 'Builder',    color: '#194031' },
   { mins: 20, label: '20 min', desc: 'Deep Work',  color: '#6366F1' },
   { mins: 30, label: '30 min', desc: 'Flow State', color: '#8B5CF6' },
 ];
@@ -42,6 +42,8 @@ import { NeuroActivationWarmup } from '@/components/game/NeuroActivationWarmup';
 
 export default function DeepFocusGame() {
   const insets = useSafeAreaInsets();
+  const C = useMentraTheme();
+  const styles = makeStyles(C);
   const [phase, setPhase]             = useState<Phase>('setup');
   const [selectedDur, setSelectedDur] = useState(DURATIONS[0]);
   const [task, setTask]               = useState('');
@@ -51,17 +53,21 @@ export default function DeepFocusGame() {
   const [distractions, setDistractions] = useState(0);
   const [quoteIdx]                    = useState(Math.floor(Math.random() * FOCUS_QUOTES.length));
 
-  // BUG FIX 1: Use a single ref for the interval — never recreate on state change
-  const timerRef     = useRef<ReturnType<typeof setInterval> | null>(null);
-  const isPausedRef  = useRef(false);  // Ref mirror — readable inside interval
-  const secondsRef   = useRef(0);      // Ref mirror — readable inside interval
+  // Refs to avoid stale closures inside setInterval
+  const timerRef        = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isPausedRef     = useRef(false);
+  const secondsRef      = useRef(0);
+  const distractionsRef = useRef(0); // mirrors distractions state — safe to read from timer
+  const selectedDurRef  = useRef(DURATIONS[0]); // mirrors selectedDur
   const totalSecs    = selectedDur.mins * 60;
   const progress     = useSharedValue(1);
   const progStyle    = useAnimatedStyle(() => ({ width: `${progress.value * 100}%` as any }));
 
-  // Keep refs in sync
+  // Keep refs in sync with state
   useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
   useEffect(() => { secondsRef.current = secondsLeft; }, [secondsLeft]);
+  useEffect(() => { distractionsRef.current = distractions; }, [distractions]);
+  useEffect(() => { selectedDurRef.current = selectedDur; }, [selectedDur]);
 
   const stopTimer = useCallback(() => {
     if (timerRef.current) {
@@ -102,23 +108,28 @@ export default function DeepFocusGame() {
     setPhase('done');
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
+    // Use refs — avoids stale closure when called from setInterval
+    const currentDistractions = distractionsRef.current;
+    const currentDurMins = selectedDurRef.current.mins;
+    const finalFocusScore = Math.max(0, 100 - currentDistractions * 20);
+
     const session: RawGameSession = {
         sessionId: `${Date.now()}-focus-flow`,
         gameId: 'focus-flow',
         timestamp: new Date().toISOString(),
-        durationSeconds: selectedDur.mins * 60,
+        durationSeconds: currentDurMins * 60,
         events: [],
         rtAllMs: [],
         rtCorrectMs: [],
-        score: focusScore,
-        accuracy: 1.0, 
+        score: finalFocusScore,
+        accuracy: 1.0,
         avgReactionTime: 0,
-        maxStreak: selectedDur.mins
+        maxStreak: currentDurMins
     };
 
     try {
         await Storage.saveSession(session);
-        await Storage.saveGameScore('focus-flow', focusScore);
+        await Storage.saveGameScore('focus-flow', finalFocusScore);
 
         const currentProfile = await Storage.getCognitiveProfile() || DEFAULT_COGNITIVE_PROFILE;
         const updatedProfile = AnalysisEngine.updateProfile(currentProfile, session);
@@ -163,11 +174,11 @@ export default function DeepFocusGame() {
   // ── Setup ──────────────────────────────────────────────────────────────────
   if (phase === 'setup') return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-      <View style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
         <Stack.Screen options={{ headerShown: false }} />
-        <StatusBar style="dark" />
+        <StatusBar style={C.statusBar} />
         <View style={styles.header}>
-          <Pressable onPress={() => router.back()} style={styles.closeBtn}><X size={20} color={Colors.mentra.text} /></Pressable>
+          <Pressable onPress={() => router.back()} style={styles.closeBtn}><X size={20} color={C.text} /></Pressable>
           <Text style={styles.headerTitle}>Deep Focus</Text>
           <View style={{ width: 40 }} />
         </View>
@@ -226,8 +237,9 @@ export default function DeepFocusGame() {
 
   // ── Done ───────────────────────────────────────────────────────────────────
   if (phase === 'done') return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
       <Stack.Screen options={{ headerShown: false }} />
+      <StatusBar style={C.statusBar} />
       <Animated.View entering={FadeIn.springify()} style={styles.doneBox}>
         <Text style={{ fontSize: 72 }}>🎯</Text>
         <Text style={styles.doneTitle}>Deep Work Done</Text>
@@ -262,7 +274,7 @@ export default function DeepFocusGame() {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ headerShown: false }} />
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
       <LinearGradient colors={['#194031', '#0F2820']} style={StyleSheet.absoluteFill} />
       <View style={styles.focusHeader}>
         <Pressable onPress={() => { stopTimer(); router.back(); }} style={styles.closeBtnDark}>
@@ -361,12 +373,4 @@ const styles = StyleSheet.create({
   mainControlBtn: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16 },
   doneBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 14 },
   doneTitle: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  doneTask: { fontSize: 14, color: Colors.mentra.textDim, textAlign: 'center' },
-  doneStats: { flexDirection: 'row', gap: 12 },
-  doneStat: { flex: 1, backgroundColor: Colors.mentra.surface, borderRadius: 16, padding: 16, alignItems: 'center', borderWidth: 1, borderColor: Colors.mentra.border },
-  doneStatVal: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text },
-  doneStatLabel: { fontSize: 10, color: Colors.mentra.textDim, fontWeight: '600', marginTop: 2 },
-  doneTip: { fontSize: 13, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 20 },
-  backLink: { paddingVertical: 8 },
-  backLinkText: { color: Colors.mentra.textDim, fontSize: 14, fontWeight: '600' },
-});
+  doneTask: { fontSize: 14, color: Colors.mentra.textDim, textAlign: 'c

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Card, StatCard } from '@/components/ui/Cards';
@@ -7,7 +7,14 @@ import { Activity, Zap, CheckCircle, Brain, ArrowRight } from 'lucide-react-nati
 import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
 import { I18n } from '@/services/i18n';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
+import Animated, {
+    FadeInUp,
+    useSharedValue,
+    useAnimatedStyle,
+    withTiming,
+    Easing,
+} from 'react-native-reanimated';
 
 interface SessionResultsOverlayProps {
     accuracy: number;
@@ -26,9 +33,22 @@ export function SessionResultsOverlay({
     onContinue,
     onRetry
 }: SessionResultsOverlayProps) {
+    const C = useMentraTheme();
     const formattedReaction = (reactionTimeMs / 1000).toFixed(2) + 's';
 
-    // Fake AI insight dynamically related to their chosen identity level (Usually stored/fetched before passing in)
+    // Animate accuracy bar from 0 → accuracy% on mount
+    const barProgress = useSharedValue(0);
+    const barStyle = useAnimatedStyle(() => ({
+        width: `${barProgress.value}%` as any,
+    }));
+
+    useEffect(() => {
+        barProgress.value = withTiming(Math.min(accuracy, 100), {
+            duration: 800,
+            easing: Easing.out(Easing.cubic),
+        });
+    }, [accuracy]);
+
     const getInsight = () => {
         const lvl = identityLevel.toLowerCase();
         // @ts-ignore
@@ -40,50 +60,50 @@ export function SessionResultsOverlay({
     };
 
     return (
-        <Animated.View entering={FadeInUp.springify().mass(0.8)} style={styles.container}>
+        <Animated.View entering={FadeInUp.springify().mass(0.8)} style={[styles.container, { backgroundColor: C.surface }]}>
             <View style={styles.header}>
-                <Brain size={48} color={Colors.mentra.brandPrimary} style={{ marginBottom: Metrics.spacing.m }} />
+                <Brain size={48} color={C.brandPrimary} style={{ marginBottom: Metrics.spacing.m }} />
                 {/* @ts-ignore */}
-                <ThemedText style={styles.title}>{I18n.t('sessionComplete') || 'Session Complete'}</ThemedText>
-                <ThemedText style={styles.insight}>{getInsight()}</ThemedText>
+                <ThemedText style={[styles.title, { color: C.text }]}>{I18n.t('sessionComplete') || 'Session Complete'}</ThemedText>
+                <ThemedText style={[styles.insight, { color: C.brandPrimary }]}>{getInsight()}</ThemedText>
             </View>
 
             <Card variant="outline" style={styles.metricsCard}>
                 <View style={styles.scoreRow}>
                     {/* @ts-ignore */}
-                    <ThemedText style={styles.scoreLabel}>{I18n.t('finalScore') || 'Final Score'}</ThemedText>
-                    <ThemedText style={styles.scoreValue}>{score}</ThemedText>
+                    <ThemedText style={[styles.scoreLabel, { color: C.textDim }]}>{I18n.t('finalScore') || 'Final Score'}</ThemedText>
+                    <ThemedText style={[styles.scoreValue, { color: C.brandAccent }]}>{score}</ThemedText>
                 </View>
 
-                <View style={styles.divider} />
+                <View style={[styles.divider, { backgroundColor: C.divider }]} />
 
                 <View style={styles.statsGrid}>
                     <StatCard
                         // @ts-ignore
                         title={I18n.t('accuracy') || 'Accuracy'}
                         value={`${Math.round(accuracy)}%`}
-                        icon={<CheckCircle size={18} color={Colors.mentra.success} />}
-                        style={styles.statBox}
+                        icon={<CheckCircle size={18} color={C.success} />}
+                        style={[styles.statBox, { backgroundColor: C.surface2 }]}
                         trendPositive={accuracy > 80}
                     />
                     <StatCard
                         // @ts-ignore
                         title={I18n.t('reactionTime') || 'Reaction'}
                         value={formattedReaction}
-                        icon={<Zap size={18} color={Colors.mentra.warning} />}
-                        style={styles.statBox}
+                        icon={<Zap size={18} color={C.warning} />}
+                        style={[styles.statBox, { backgroundColor: C.surface2 }]}
                     />
                 </View>
 
-                <View style={styles.divider} />
+                <View style={[styles.divider, { backgroundColor: C.divider }]} />
 
                 <View style={styles.focusRow}>
-                    <Activity size={20} color={Colors.mentra.brandAccent} />
+                    <Activity size={20} color={C.brandAccent} />
                     <View style={{ marginLeft: Metrics.spacing.s, flex: 1 }}>
                         {/* @ts-ignore */}
-                        <ThemedText style={styles.focusLabel}>{I18n.t('focusStability') || 'Focus Stability'}</ThemedText>
-                        <View style={styles.focusBarBg}>
-                            <Animated.View style={[styles.focusBarFill, { width: `${accuracy}%` }]} />
+                        <ThemedText style={[styles.focusLabel, { color: C.text }]}>{I18n.t('focusStability') || 'Focus Stability'}</ThemedText>
+                        <View style={[styles.focusBarBg, { backgroundColor: C.border }]}>
+                            <Animated.View style={[styles.focusBarFill, { backgroundColor: C.brandAccent }, barStyle]} />
                         </View>
                     </View>
                 </View>
@@ -92,7 +112,7 @@ export function SessionResultsOverlay({
             <View style={styles.actions}>
                 <PrimaryButton
                     title={I18n.t('continue') || 'Continue'}
-                    icon={<ArrowRight size={20} color={Colors.mentra.surface} />}
+                    icon={<ArrowRight size={20} color={C.surface} />}
                     onPress={onContinue}
                     fullWidth
                     style={{ marginBottom: Metrics.spacing.m }}
@@ -111,7 +131,6 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         maxWidth: 400,
-        backgroundColor: Colors.mentra.surface,
         borderRadius: Metrics.radius.xl,
         padding: Metrics.spacing.xl,
         shadowColor: '#000',
@@ -127,12 +146,10 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 28,
         fontWeight: '800',
-        color: Colors.mentra.text,
         marginBottom: 8,
     },
     insight: {
         fontSize: 16,
-        color: Colors.mentra.brandPrimary,
         textAlign: 'center',
         fontWeight: '500',
         lineHeight: 22,
@@ -149,16 +166,13 @@ const styles = StyleSheet.create({
     scoreLabel: {
         fontSize: 16,
         fontWeight: '700',
-        color: Colors.mentra.textDim,
     },
     scoreValue: {
         fontSize: 32,
         fontWeight: '900',
-        color: Colors.mentra.brandAccent,
     },
     divider: {
         height: 1,
-        backgroundColor: Colors.mentra.divider,
         marginVertical: Metrics.spacing.m,
     },
     statsGrid: {
@@ -167,30 +181,9 @@ const styles = StyleSheet.create({
     },
     statBox: {
         flex: 1,
-        backgroundColor: Colors.mentra.surface2,
         padding: Metrics.spacing.m,
     },
     focusRow: {
         flexDirection: 'row',
         alignItems: 'center',
     },
-    focusLabel: {
-        fontSize: 14,
-        fontWeight: '700',
-        color: Colors.mentra.text,
-        marginBottom: 6,
-    },
-    focusBarBg: {
-        height: 6,
-        backgroundColor: Colors.mentra.border,
-        borderRadius: 3,
-        overflow: 'hidden',
-    },
-    focusBarFill: {
-        height: '100%',
-        backgroundColor: Colors.mentra.brandAccent,
-    },
-    actions: {
-        marginTop: Metrics.spacing.s,
-    }
-});

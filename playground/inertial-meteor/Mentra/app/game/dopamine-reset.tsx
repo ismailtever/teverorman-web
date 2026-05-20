@@ -14,6 +14,7 @@ import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { X, ChevronRight, Brain, TrendingDown, BrainCircuit, Play, Sparkles } from 'lucide-react-native';
@@ -21,7 +22,6 @@ import { I18n } from '@/services/i18n';
 import { NeuroActivationWarmup } from '@/components/game/NeuroActivationWarmup';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
-import { Colors } from '@/constants/Colors';
 import { Storage } from '@/services/storage';
 import { AnalysisEngine, DEFAULT_COGNITIVE_PROFILE } from '@/services/engine/AnalysisEngine';
 import { RawGameSession } from '@/services/engine/types';
@@ -65,6 +65,8 @@ const RESET_EXERCISES = [
 
 export default function DopamineResetGame() {
   const insets = useSafeAreaInsets();
+  const C = useMentraTheme();
+  const styles = makeStyles(C);
   const [phase, setPhase] = useState<Phase>('intro');
   const [selectedTrigger, setSelectedTrigger] = useState<typeof TRIGGERS[0] | null>(null);
   const [urgeLevel, setUrgeLevel] = useState(5);
@@ -120,10 +122,10 @@ export default function DopamineResetGame() {
 
 
   if (phase === 'intro') return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
       <Stack.Screen options={{ headerShown: false }} />
-      <StatusBar style="dark" />
-      <Pressable onPress={() => router.back()} style={styles.closeBtn}><X size={22} color={Colors.mentra.text} /></Pressable>
+      <StatusBar style={C.statusBar} />
+      <Pressable onPress={() => router.back()} style={[styles.closeBtn, { borderColor: C.border, backgroundColor: C.surface }]}><X size={22} color={C.text} /></Pressable>
       <ScrollView contentContainerStyle={styles.scroll}>
         <Animated.View entering={FadeInDown.springify()} style={styles.introBox}>
           <Text style={styles.introEmoji}>🎰</Text>
@@ -132,7 +134,7 @@ export default function DopamineResetGame() {
           <View style={{ width: '100%', gap: 12, marginVertical: 20 }}>
             <View style={styles.instructionsBox}>
               <View style={styles.sectionHeader}>
-                <Play size={14} color={Colors.mentra.brandPrimary} />
+                <Play size={14} color={C.brandPrimary} />
                 <ThemedText style={styles.sectionLabel}>{I18n.t('howToPlay') || 'How To Play'}</ThemedText>
               </View>
               <ThemedText style={styles.cardDesc}>
@@ -142,8 +144,8 @@ export default function DopamineResetGame() {
 
             <View style={styles.scienceBox}>
               <View style={styles.sectionHeader}>
-                <BrainCircuit size={14} color={Colors.mentra.brandAccent} />
-                <ThemedText style={[styles.sectionLabel, { color: Colors.mentra.brandAccent }]}>
+                <BrainCircuit size={14} color={C.brandAccent} />
+                <ThemedText style={[styles.sectionLabel, { color: C.brandAccent }]}>
                   {I18n.t('scienceBehind')}
                 </ThemedText>
               </View>
@@ -175,9 +177,10 @@ export default function DopamineResetGame() {
   );
 
   if (phase === 'trigger') return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
       <Stack.Screen options={{ headerShown: false }} />
-      <Pressable onPress={() => router.back()} style={styles.closeBtn}><X size={22} color={Colors.mentra.text} /></Pressable>
+      <StatusBar style={C.statusBar} />
+      <Pressable onPress={() => setPhase('intro')} style={[styles.closeBtn, { borderColor: C.border, backgroundColor: C.surface }]}><X size={22} color={C.text} /></Pressable>
       <ScrollView contentContainerStyle={styles.scroll}>
         <Animated.View entering={FadeInDown.springify()} style={{ gap: 16 }}>
           <Text style={styles.phaseTitle}>What triggered you?</Text>
@@ -193,7 +196,7 @@ export default function DopamineResetGame() {
                 <Text style={styles.triggerLabel}>{t.label}</Text>
                 <Text style={styles.triggerDesc}>{t.desc}</Text>
               </View>
-              {selectedTrigger?.label === t.label && <Text style={{ color: Colors.mentra.brandPrimary, fontSize: 18 }}>✓</Text>}
+              {selectedTrigger?.label === t.label && <Text style={{ color: C.brandPrimary, fontSize: 18 }}>✓</Text>}
             </Pressable>
           ))}
           {selectedTrigger && (
@@ -207,8 +210,10 @@ export default function DopamineResetGame() {
   );
 
   if (phase === 'urge') return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
       <Stack.Screen options={{ headerShown: false }} />
+      <StatusBar style={C.statusBar} />
+      <Pressable onPress={() => setPhase('trigger')} style={[styles.closeBtn, { borderColor: C.border, backgroundColor: C.surface }]}><X size={22} color={C.text} /></Pressable>
       <ScrollView contentContainerStyle={styles.scroll}>
         <Animated.View entering={FadeInDown.springify()} style={{ gap: 20 }}>
           <Text style={styles.phaseTitle}>Rate your urge</Text>
@@ -253,8 +258,10 @@ export default function DopamineResetGame() {
   );
 
   if (phase === 'reset') return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
       <Stack.Screen options={{ headerShown: false }} />
+      <StatusBar style={C.statusBar} />
+      <Pressable onPress={() => setPhase('urge')} style={[styles.closeBtn, { borderColor: C.border, backgroundColor: C.surface, alignSelf: 'flex-start', margin: 20 }]}><X size={22} color={C.text} /></Pressable>
       <Animated.View entering={FadeInDown.springify()} style={styles.resetBox}>
         <Text style={styles.resetEmoji}>{selectedExercise.emoji}</Text>
         <Text style={styles.resetTitle}>{selectedExercise.title}</Text>
@@ -276,8 +283,9 @@ export default function DopamineResetGame() {
   );
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
       <Stack.Screen options={{ headerShown: false }} />
+      <StatusBar style={C.statusBar} />
       <Animated.View entering={FadeInDown.springify()} style={styles.doneBox}>
         <Text style={{ fontSize: 64 }}>🧠</Text>
         <Text style={styles.doneTitle}>Reset Complete</Text>
@@ -391,14 +399,4 @@ const styles = StyleSheet.create({
   stepDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: Colors.mentra.border },
   stepDotActive: { width: 24, backgroundColor: Colors.mentra.brandPrimary },
   stepDotDone: { backgroundColor: Colors.mentra.success },
-  scienceSmall: { fontSize: 11, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 18, fontStyle: 'italic', paddingHorizontal: 16 },
-
-  doneBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 14 },
-  doneTitle: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  doneSub: { fontSize: 15, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 24 },
-  doneCard: { flexDirection: 'row', gap: 10, backgroundColor: Colors.mentra.success + '12', padding: 16, borderRadius: 14, width: '100%', alignItems: 'flex-start' },
-  doneCardText: { fontSize: 13, color: Colors.mentra.text, lineHeight: 22, flex: 1 },
-  doneTip: { fontSize: 13, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 20 },
-  backLink: { paddingVertical: 8 },
-  backLinkText: { color: Colors.mentra.textDim, fontSize: 14, fontWeight: '600' },
-});
+  scienceSmall: { fontSize: 11, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 18, fontStyle: 'italic', paddingH

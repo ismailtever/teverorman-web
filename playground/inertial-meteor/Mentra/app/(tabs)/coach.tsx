@@ -35,7 +35,6 @@ import {
   Sparkles,
 } from 'lucide-react-native';
 
-import { Colors } from '@/constants/Colors';
 import { getPremiumStatus } from '@/services/purchases';
 import { Storage } from '@/services/storage';
 import {
@@ -48,10 +47,12 @@ import {
   checkDailyLimit,
   QUICK_PROMPTS,
 } from '@/services/aiCoach';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 
 // ─── Typing Indicator ─────────────────────────────────────────────────────────
 
 function TypingIndicator() {
+  const C = useMentraTheme();
   const dot1 = useSharedValue(0);
   const dot2 = useSharedValue(0);
   const dot3 = useSharedValue(0);
@@ -80,11 +81,11 @@ function TypingIndicator() {
   const s3 = useAnimatedStyle(() => ({ transform: [{ translateY: dot3.value }] }));
 
   return (
-    <View style={styles.typingBubble}>
+    <View style={[styles.typingBubble, { backgroundColor: C.surface, borderColor: C.border }]}>
       <View style={styles.typingDots}>
-        <Animated.View style={[styles.dot, s1]} />
-        <Animated.View style={[styles.dot, s2]} />
-        <Animated.View style={[styles.dot, s3]} />
+        <Animated.View style={[styles.dot, { backgroundColor: C.muted }, s1]} />
+        <Animated.View style={[styles.dot, { backgroundColor: C.muted }, s2]} />
+        <Animated.View style={[styles.dot, { backgroundColor: C.muted }, s3]} />
       </View>
     </View>
   );
@@ -93,6 +94,7 @@ function TypingIndicator() {
 // ─── Message Bubble ────────────────────────────────────────────────────────────
 
 function MessageBubble({ message, index }: { message: ChatMessage; index: number }) {
+  const C = useMentraTheme();
   const isUser = message.role === 'user';
   const time = new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -102,15 +104,20 @@ function MessageBubble({ message, index }: { message: ChatMessage; index: number
       style={[styles.messageRow, isUser ? styles.messageRowUser : styles.messageRowAI]}
     >
       {!isUser && (
-        <View style={styles.aiAvatar}>
+        <View style={[styles.aiAvatar, { backgroundColor: C.brandPrimary }]}>
           <BrainCircuit size={16} color="#FFF" />
         </View>
       )}
-      <View style={[styles.bubble, isUser ? styles.bubbleUser : styles.bubbleAI]}>
-        <Text style={[styles.bubbleText, isUser ? styles.bubbleTextUser : styles.bubbleTextAI]}>
+      <View style={[
+        styles.bubble,
+        isUser
+          ? [styles.bubbleUser, { backgroundColor: C.brandPrimary }]
+          : [styles.bubbleAI, { backgroundColor: C.surface, borderColor: C.border, shadowColor: C.text }],
+      ]}>
+        <Text style={[styles.bubbleText, isUser ? styles.bubbleTextUser : { color: C.text }]}>
           {message.content}
         </Text>
-        <Text style={[styles.bubbleTime, isUser ? styles.bubbleTimeUser : styles.bubbleTimeAI]}>
+        <Text style={[styles.bubbleTime, isUser ? styles.bubbleTimeUser : { color: C.muted }]}>
           {time}
         </Text>
       </View>
@@ -121,26 +128,31 @@ function MessageBubble({ message, index }: { message: ChatMessage; index: number
 // ─── Empty State ───────────────────────────────────────────────────────────────
 
 function EmptyState({ onPromptPress }: { onPromptPress: (msg: string) => void }) {
+  const C = useMentraTheme();
   return (
     <Animated.View entering={FadeIn.springify()} style={styles.emptyContainer}>
-      <View style={styles.emptyAvatar}>
-        <BrainCircuit size={36} color={Colors.mentra.brandPrimary} />
+      <View style={[styles.emptyAvatar, { backgroundColor: C.brandPrimary + '15', borderColor: C.brandPrimary + '30' }]}>
+        <BrainCircuit size={36} color={C.brandPrimary} />
       </View>
-      <Text style={styles.emptyTitle}>Your AI Life Coach</Text>
-      <Text style={styles.emptySubtitle}>
+      <Text style={[styles.emptyTitle, { color: C.text }]}>Your AI Life Coach</Text>
+      <Text style={[styles.emptySubtitle, { color: C.textDim }]}>
         Ask me anything about focus, anxiety, habits, sleep, or how to perform at your best.
       </Text>
 
-      <Text style={styles.promptsLabel}>QUICK STARTS</Text>
+      <Text style={[styles.promptsLabel, { color: C.textDim }]}>QUICK STARTS</Text>
       <View style={styles.promptsGrid}>
         {QUICK_PROMPTS.map((p, i) => (
           <Pressable
             key={i}
             onPress={() => onPromptPress(p.message)}
-            style={({ pressed }) => [styles.promptChip, pressed && { opacity: 0.7, transform: [{ scale: 0.97 }] }]}
+            style={({ pressed }) => [
+              styles.promptChip,
+              { backgroundColor: C.surface, borderColor: C.border, shadowColor: C.text },
+              pressed && { opacity: 0.7, transform: [{ scale: 0.97 }] },
+            ]}
           >
             <Text style={styles.promptEmoji}>{p.emoji}</Text>
-            <Text style={styles.promptLabel}>{p.label}</Text>
+            <Text style={[styles.promptLabel, { color: C.text }]}>{p.label}</Text>
           </Pressable>
         ))}
       </View>
@@ -151,6 +163,7 @@ function EmptyState({ onPromptPress }: { onPromptPress: (msg: string) => void })
 // ─── Main Screen ───────────────────────────────────────────────────────────────
 
 export default function CoachScreen() {
+  const C = useMentraTheme();
   const insets = useSafeAreaInsets();
   const flatListRef = useRef<FlatList>(null);
 
@@ -284,20 +297,20 @@ export default function CoachScreen() {
   const isLimitExhausted = !isPro && remaining === 0;
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <StatusBar style="dark" />
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
+      <StatusBar style={C.statusBar} />
 
       {/* ── Header ── */}
-      <Animated.View entering={FadeInDown.springify()} style={styles.header}>
+      <Animated.View entering={FadeInDown.springify()} style={[styles.header, { borderBottomColor: C.border, backgroundColor: C.surface }]}>
         <View style={styles.headerLeft}>
-          <View style={styles.headerAvatar}>
+          <View style={[styles.headerAvatar, { backgroundColor: C.brandPrimary }]}>
             <BrainCircuit size={20} color="#FFF" />
           </View>
           <View>
-            <Text style={styles.headerTitle}>AI Coach</Text>
+            <Text style={[styles.headerTitle, { color: C.text }]}>AI Coach</Text>
             <View style={styles.onlineRow}>
-              <View style={styles.onlineDot} />
-              <Text style={styles.onlineText}>Online · Ready to help</Text>
+              <View style={[styles.onlineDot, { backgroundColor: C.success }]} />
+              <Text style={[styles.onlineText, { color: C.textDim }]}>Online · Ready to help</Text>
             </View>
           </View>
         </View>
@@ -305,15 +318,15 @@ export default function CoachScreen() {
           {!isPro && (
             <Pressable
               onPress={() => router.push('/paywall/onboarding' as any)}
-              style={styles.proChip}
+              style={[styles.proChip, { backgroundColor: C.brandSecondary + '25', borderColor: C.brandPrimary + '30' }]}
             >
-              <Zap size={12} color={Colors.mentra.brandPrimary} />
-              <Text style={styles.proChipText}>Pro</Text>
+              <Zap size={12} color={C.brandPrimary} />
+              <Text style={[styles.proChipText, { color: C.brandPrimary }]}>Pro</Text>
             </Pressable>
           )}
           {messages.length > 0 && (
             <Pressable onPress={handleClearChat} style={styles.clearBtn}>
-              <Trash2 size={18} color={Colors.mentra.textDim} />
+              <Trash2 size={18} color={C.textDim} />
             </Pressable>
           )}
         </View>
@@ -327,7 +340,7 @@ export default function CoachScreen() {
             {remaining} free message{remaining !== 1 ? 's' : ''} left today.{' '}
           </Text>
           <Pressable onPress={() => router.push('/paywall/onboarding' as any)}>
-            <Text style={styles.limitBannerLink}>Go Pro</Text>
+            <Text style={[styles.limitBannerLink, { color: C.brandPrimary }]}>Go Pro</Text>
           </Pressable>
         </Animated.View>
       )}
@@ -359,7 +372,7 @@ export default function CoachScreen() {
             ListFooterComponent={
               isTyping ? (
                 <View style={styles.typingRow}>
-                  <View style={styles.aiAvatar}>
+                  <View style={[styles.aiAvatar, { backgroundColor: C.brandPrimary }]}>
                     <BrainCircuit size={16} color="#FFF" />
                   </View>
                   <TypingIndicator />
@@ -370,11 +383,11 @@ export default function CoachScreen() {
         )}
 
         {/* ── Input Bar ── */}
-        <View style={[styles.inputBar, { paddingBottom: insets.bottom + 8 }]}>
+        <View style={[styles.inputBar, { paddingBottom: insets.bottom + 8, borderTopColor: C.border, backgroundColor: C.surface }]}>
           {isLimitExhausted ? (
             <Pressable
               onPress={() => router.push('/paywall/onboarding' as any)}
-              style={styles.limitExhaustedBtn}
+              style={[styles.limitExhaustedBtn, { backgroundColor: C.brandPrimary }]}
             >
               <Zap size={16} color="#FFF" />
               <Text style={styles.limitExhaustedText}>Upgrade for Unlimited Coaching</Text>
@@ -382,26 +395,29 @@ export default function CoachScreen() {
           ) : (
             <View style={styles.inputRow}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: C.bg, borderColor: C.border, color: C.text }]}
                 placeholder={`Ask your coach anything...`}
-                placeholderTextColor={Colors.mentra.muted}
+                placeholderTextColor={C.muted}
                 value={inputText}
                 onChangeText={setInputText}
                 multiline
                 maxLength={1000}
-                selectionColor={Colors.mentra.brandPrimary}
+                selectionColor={C.brandPrimary}
                 returnKeyType="default"
                 blurOnSubmit={false}
               />
               <Pressable
                 onPress={() => handleSend()}
                 disabled={!canSend}
-                style={[styles.sendBtn, canSend ? styles.sendBtnActive : styles.sendBtnDisabled]}
+                style={[
+                  styles.sendBtn,
+                  canSend ? { backgroundColor: C.brandPrimary } : { backgroundColor: C.surface2 },
+                ]}
               >
                 {isTyping ? (
                   <ActivityIndicator size="small" color="#FFF" />
                 ) : (
-                  <Send size={18} color={canSend ? '#FFF' : Colors.mentra.muted} />
+                  <Send size={18} color={canSend ? '#FFF' : C.muted} />
                 )}
               </Pressable>
             </View>
@@ -409,7 +425,7 @@ export default function CoachScreen() {
 
           {/* Free tier counter */}
           {!isPro && remaining !== null && !isLimitExhausted && (
-            <Text style={styles.freeCounter}>
+            <Text style={[styles.freeCounter, { color: C.muted }]}>
               {remaining}/{10} free messages today
             </Text>
           )}
@@ -424,7 +440,6 @@ export default function CoachScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.mentra.bg,
   },
 
   // Header
@@ -436,8 +451,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.mentra.border,
-    backgroundColor: Colors.mentra.surface,
   },
   headerLeft: {
     flexDirection: 'row',
@@ -448,14 +461,12 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: Colors.mentra.brandPrimary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontSize: 17,
     fontWeight: '800',
-    color: Colors.mentra.text,
     letterSpacing: -0.3,
   },
   onlineRow: {
@@ -468,11 +479,9 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 3.5,
-    backgroundColor: Colors.mentra.success,
   },
   onlineText: {
     fontSize: 12,
-    color: Colors.mentra.textDim,
     fontWeight: '500',
   },
   headerRight: {
@@ -484,17 +493,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: Colors.mentra.brandSecondary + '25',
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: Colors.mentra.brandPrimary + '30',
   },
   proChipText: {
     fontSize: 11,
     fontWeight: '800',
-    color: Colors.mentra.brandPrimary,
   },
   clearBtn: {
     padding: 8,
@@ -519,7 +525,6 @@ const styles = StyleSheet.create({
   },
   limitBannerLink: {
     fontSize: 13,
-    color: Colors.mentra.brandPrimary,
     fontWeight: '800',
   },
 
@@ -545,7 +550,6 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: Colors.mentra.brandPrimary,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 2,
@@ -559,15 +563,11 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   bubbleUser: {
-    backgroundColor: Colors.mentra.brandPrimary,
     borderBottomRightRadius: 4,
   },
   bubbleAI: {
-    backgroundColor: Colors.mentra.surface,
     borderWidth: 1,
-    borderColor: Colors.mentra.border,
     borderBottomLeftRadius: 4,
-    shadowColor: Colors.mentra.text,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.04,
     shadowRadius: 4,
@@ -580,18 +580,12 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontWeight: '500',
   },
-  bubbleTextAI: {
-    color: Colors.mentra.text,
-  },
   bubbleTime: {
     fontSize: 10,
     alignSelf: 'flex-end',
   },
   bubbleTimeUser: {
     color: 'rgba(255,255,255,0.55)',
-  },
-  bubbleTimeAI: {
-    color: Colors.mentra.muted,
   },
 
   // Typing
@@ -602,9 +596,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   typingBubble: {
-    backgroundColor: Colors.mentra.surface,
     borderWidth: 1,
-    borderColor: Colors.mentra.border,
     borderRadius: 18,
     borderBottomLeftRadius: 4,
     paddingHorizontal: 14,
@@ -619,7 +611,6 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 3.5,
-    backgroundColor: Colors.mentra.muted,
   },
 
   // Empty state
@@ -633,9 +624,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: Colors.mentra.brandPrimary + '15',
     borderWidth: 2,
-    borderColor: Colors.mentra.brandPrimary + '30',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -643,13 +632,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: Colors.mentra.text,
     marginBottom: 8,
     letterSpacing: -0.3,
   },
   emptySubtitle: {
     fontSize: 15,
-    color: Colors.mentra.textDim,
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 32,
@@ -658,7 +645,6 @@ const styles = StyleSheet.create({
   promptsLabel: {
     fontSize: 11,
     fontWeight: '800',
-    color: Colors.mentra.textDim,
     letterSpacing: 1.5,
     alignSelf: 'flex-start',
     marginBottom: 12,
@@ -671,13 +657,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    backgroundColor: Colors.mentra.surface,
     borderWidth: 1,
-    borderColor: Colors.mentra.border,
     borderRadius: 14,
     paddingHorizontal: 16,
     paddingVertical: 13,
-    shadowColor: Colors.mentra.text,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.04,
     shadowRadius: 4,
@@ -688,7 +671,6 @@ const styles = StyleSheet.create({
   promptLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: Colors.mentra.text,
     flex: 1,
   },
 
@@ -697,8 +679,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: Colors.mentra.border,
-    backgroundColor: Colors.mentra.surface,
     gap: 4,
   },
   inputRow: {
@@ -708,15 +688,12 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: Colors.mentra.bg,
     borderWidth: 1,
-    borderColor: Colors.mentra.border,
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingTop: 10,
     paddingBottom: 10,
     fontSize: 15,
-    color: Colors.mentra.text,
     maxHeight: 120,
     lineHeight: 20,
   },
@@ -728,15 +705,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexShrink: 0,
   },
-  sendBtnActive: {
-    backgroundColor: Colors.mentra.brandPrimary,
-  },
-  sendBtnDisabled: {
-    backgroundColor: Colors.mentra.surface2,
-  },
   freeCounter: {
     fontSize: 11,
-    color: Colors.mentra.muted,
     textAlign: 'center',
     fontWeight: '500',
   },
@@ -747,7 +717,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: Colors.mentra.brandPrimary,
     borderRadius: 14,
     paddingVertical: 14,
   },
@@ -757,3 +726,4 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
 });
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
