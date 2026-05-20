@@ -380,5 +380,21 @@
     "gameGridFocusTutorial": "按顺序查找 1 到 25 的数字。训练周围视觉和持续专注力。",
     "gameDeepFocusTutorial": "高强度的认知冲刺。整合多个领域以达到精英心流状态。",
     "gameImpulseControlTutorial": "轻触大脑符号。忽略社交媒体诱饵。夺回抑制控制力。",
-    "gameDopamineResetTutorial": "识别您的诱导因素，通过引导重置打破奖励循环。"
+    "gameDopamineResetTutorial": "识别您的诱导因素，通过引导重置打破奖励循环。",
+    "diagTitle": "诊断",
+    "diagRecalibrate": "重新校准",
+    "diagCogProfile": "您的认知档案",
+    "diagGrowthTitle": "最大成长机会",
+    "diagGrowthDesc": "您的 %{dim} 分数具有最高的提升潜力。专注的 7 天训练可平均提高 23%。",
+    "diagProtocol": "推荐方案",
+    "diagProgram": "7天计划",
+    "diagMastery": "%{dim} 精通",
+    "diagBootcampDesc": "科学支持的训练方法，提升您的 %{key} 能力 — 高绩效人士、运动员和顶级管理者均在使用。每天仅需 12 分钟。",
+    "diagDuration": "预计 12 分钟/天 · 7 天",
+    "diagStartProgram": "开始计划",
+    "dimFocus": "专注",
+    "dimMemory": "记忆",
+    "dimLogic": "逻辑",
+    "dimSpeed": "速度",
+    "dimResilience": "韧性"
 }

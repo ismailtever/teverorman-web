@@ -375,5 +375,21 @@
     "gameGridFocusTutorial": "Trouvez les chiffres de 1 à 25 dans l'ordre. Entraîne la vision périphérique et la concentration soutenue.",
     "gameDeepFocusTutorial": "Un sprint cognitif de haute intensité. Atteignez l'état de flow d'élite en combinant plusieurs domaines.",
     "gameImpulseControlTutorial": "Appuyez sur les symboles du cerveau. IGNOREZ les leurres des réseaux sociaux. Récupérez le contrôle inhibiteur.",
-    "gameDopamineResetTutorial": "Identifiez vos déclencheurs et utilisez des redirections guidées pour briser la boucle de récompense."
+    "gameDopamineResetTutorial": "Identifiez vos déclencheurs et utilisez des redirections guidées pour briser la boucle de récompense.",
+    "diagTitle": "Diagnostics",
+    "diagRecalibrate": "Recalibrer",
+    "diagCogProfile": "VOTRE PROFIL COGNITIF",
+    "diagGrowthTitle": "Plus grande opportunité de croissance",
+    "diagGrowthDesc": "Votre score %{dim} a le plus grand potentiel d'amélioration. Un bloc de 7 jours peut l'augmenter de 23 % en moyenne.",
+    "diagProtocol": "PROTOCOLE RECOMMANDÉ",
+    "diagProgram": "PROGRAMME 7 JOURS",
+    "diagMastery": "Maîtrise %{dim}",
+    "diagBootcampDesc": "Rituels scientifiques pour votre capacité %{key} — utilisés par les hauts performeurs. Seulement 12 min/jour.",
+    "diagDuration": "Est. 12 min/jour · 7 jours",
+    "diagStartProgram": "Démarrer le programme",
+    "dimFocus": "CONCENTRATION",
+    "dimMemory": "MÉMOIRE",
+    "dimLogic": "LOGIQUE",
+    "dimSpeed": "VITESSE",
+    "dimResilience": "RÉSILIENCE"
 }

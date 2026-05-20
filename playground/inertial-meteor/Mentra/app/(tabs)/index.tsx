@@ -92,7 +92,7 @@ function MentraScoreCard({ score, streak }: { score: number; streak: number }) {
         <Text style={s.scoreStatus}>{tier} {scoreLabel}</Text>
         <View style={s.streakRow}>
           <Flame size={13} color="#FDE68A" />
-          <Text style={s.streakText}>{streak} day streak</Text>
+          <Text style={s.streakText}>{I18n.t('dayStreakFormatter', { streak })}</Text>
         </View>
       </View>
       <View style={s.scoreRight}>
@@ -197,7 +197,7 @@ export default function HomeScreen() {
 
         {/* ── Greeting ── */}
         <Animated.View entering={FadeInUp.springify()} style={s.greetingRow}>
-          <View>
+          <View style={s.greetingText}>
             <Text style={[s.greeting, { color: C.text }]}>{greetingWord}, {userName} 👋</Text>
             <Text style={[s.greetingSub, { color: C.textDim }]}>{greetingMotivation}</Text>
           </View>
@@ -288,9 +288,10 @@ function makeStyles(C: ReturnType<typeof import('@/hooks/useMentraTheme').useMen
     scroll: { paddingHorizontal: 20, paddingBottom: 100 },
 
     greetingRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingTop: 8, marginBottom: 20 },
+    greetingText: { flex: 1, paddingRight: 8 },
     greeting: { fontSize: 24, fontWeight: '800', letterSpacing: -0.3 },
     greetingSub: { fontSize: 14, marginTop: 2 },
-    upgradePill: { flexDirection: 'row', alignItems: 'center', gap: 4, borderRadius: 20, paddingHorizontal: 10, paddingVertical: 5, borderWidth: 1 },
+    upgradePill: { flexDirection: 'row', alignItems: 'center', gap: 4, borderRadius: 20, paddingHorizontal: 10, paddingVertical: 5, borderWidth: 1, flexShrink: 0 },
     upgradePillText: { fontSize: 12, fontWeight: '700' },
 
     // Score card
@@ -350,11 +351,6 @@ function makeStyles(C: ReturnType<typeof import('@/hooks/useMentraTheme').useMen
     insightHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 },
     insightLabel: { fontSize: 10, fontWeight: '800', letterSpacing: 1.2 },
     insightText: { fontSize: 14, lineHeight: 22, fontStyle: 'italic' },
-
-    // Routines (kept for type-safety, no longer rendered)
-    routinesStrip: { gap: 10, paddingBottom: 4, marginBottom: 20 },
-    routineChip: { flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 10 },
-    routineChipText: { fontSize: 13, fontWeight: '700' },
 
     // Upsell
     upsellBanner: { borderRadius: 14, borderWidth: 1, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, marginTop: 4 },

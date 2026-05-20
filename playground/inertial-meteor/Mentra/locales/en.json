@@ -304,5 +304,21 @@
     "calW": "W",
     "calT2": "T",
     "calF": "F",
-    "calS2": "S"
+    "calS2": "S",
+    "diagTitle": "Diagnostics",
+    "diagRecalibrate": "Recalibrate",
+    "diagCogProfile": "YOUR COGNITIVE PROFILE",
+    "diagGrowthTitle": "Biggest Growth Opportunity",
+    "diagGrowthDesc": "Your %{dim} score has the highest improvement potential. A focused 7-day training block can elevate this by an average of 23%.",
+    "diagProtocol": "RECOMMENDED PROTOCOL",
+    "diagProgram": "7-DAY PROGRAM",
+    "diagMastery": "%{dim} Mastery",
+    "diagBootcampDesc": "Science-backed rituals to sharpen your %{key} capacity — used by high-performers, athletes, and top executives. Just 12 min/day.",
+    "diagDuration": "Est. 12 min/day · 7 days",
+    "diagStartProgram": "Start Program",
+    "dimFocus": "FOCUS",
+    "dimMemory": "MEMORY",
+    "dimLogic": "LOGIC",
+    "dimSpeed": "SPEED",
+    "dimResilience": "RESILIENCE"
 }

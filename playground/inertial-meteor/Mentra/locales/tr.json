@@ -297,5 +297,21 @@
     "packMemoryTitle": "Hafıza Sarayı",
     "packMemoryDesc": "Loci yöntemi ile uzaysal hatırlama kalıpları kullanarak çalışma belleğini geliştir.",
     "packFitnessTitle": "Fitness Tutarlılığı",
-    "packFitnessDesc": "Mikro taahhüt alışkanlık döngüleri ile sürdürülebilir egzersiz alışkanlığı oluştur."
+    "packFitnessDesc": "Mikro taahhüt alışkanlık döngüleri ile sürdürülebilir egzersiz alışkanlığı oluştur.",
+    "diagTitle": "Tanı",
+    "diagRecalibrate": "Yeniden Kalibre Et",
+    "diagCogProfile": "BİLİŞSEL PROFİLİN",
+    "diagGrowthTitle": "En Büyük Gelişim Fırsatı",
+    "diagGrowthDesc": "%{dim} skorunun en yüksek gelişim potansiyeli var. 7 günlük odaklı antrenman bloğu bunu ortalama %23 artırabilir.",
+    "diagProtocol": "ÖNERİLEN PROTOKOL",
+    "diagProgram": "7 GÜNLÜK PROGRAM",
+    "diagMastery": "%{dim} Ustalığı",
+    "diagBootcampDesc": "Yüksek performanslı kişiler, sporcular ve üst düzey yöneticilerin kullandığı bilim destekli ritüeller. Günde sadece 12 dk.",
+    "diagDuration": "Tahminen 12 dk/gün · 7 gün",
+    "diagStartProgram": "Programa Başla",
+    "dimFocus": "ODAK",
+    "dimMemory": "HAFIZA",
+    "dimLogic": "MANTIK",
+    "dimSpeed": "HIZ",
+    "dimResilience": "DAYANIKLILIK"
 }

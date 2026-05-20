@@ -375,5 +375,21 @@
     "gameGridFocusTutorial": "Finde die Zahlen von 1 bis 25 in der richtigen Reihenfolge. Trainiert die periphere Sicht.",
     "gameDeepFocusTutorial": "Ein hochintensiver kognitiver Sprint. Erreiche den Elite-Flow-Zustand.",
     "gameImpulseControlTutorial": "Tippe auf die Gehirnsymbole. IGNORIERE die Social-Media-Köder. Stärkt die Kontrolle über Impulse.",
-    "gameDopamineResetTutorial": "Identifiziere deine Trigger und nutze geführte Umleitungen, um die Belohnungsschleife zu unterbrechen."
+    "gameDopamineResetTutorial": "Identifiziere deine Trigger und nutze geführte Umleitungen, um die Belohnungsschleife zu unterbrechen.",
+    "diagTitle": "Diagnostik",
+    "diagRecalibrate": "Neu kalibrieren",
+    "diagCogProfile": "DEIN KOGNITIONSPROFIL",
+    "diagGrowthTitle": "Größtes Wachstumspotenzial",
+    "diagGrowthDesc": "Dein %{dim}-Wert hat das höchste Verbesserungspotenzial. Ein 7-Tage-Trainingsblock kann dies um durchschnittlich 23 % steigern.",
+    "diagProtocol": "EMPFOHLENES PROTOKOLL",
+    "diagProgram": "7-TAGE-PROGRAMM",
+    "diagMastery": "%{dim}-Meisterschaft",
+    "diagBootcampDesc": "Wissenschaftlich fundierte Rituale zur Schärfung deiner %{key}-Kapazität. Nur 12 Min./Tag.",
+    "diagDuration": "Ca. 12 Min./Tag · 7 Tage",
+    "diagStartProgram": "Programm starten",
+    "dimFocus": "FOKUS",
+    "dimMemory": "GEDÄCHTNIS",
+    "dimLogic": "LOGIK",
+    "dimSpeed": "GESCHWINDIGKEIT",
+    "dimResilience": "RESILIENZ"
 }
