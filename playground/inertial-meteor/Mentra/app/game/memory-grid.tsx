@@ -78,7 +78,7 @@ export default function MemoryGridScreen() {
                         {I18n.t('correct') ?? 'CORRECT!'}
                     </ThemedText>
                     <ThemedText style={{ color: C.textDim, fontSize: 14 }}>
-                        Next level loading…
+                        {I18n.t('nextLevelLoading') ?? 'Next level loading…'}
                     </ThemedText>
                 </View>
             );
@@ -97,7 +97,7 @@ export default function MemoryGridScreen() {
                     </ThemedText>
 
                     {gameState === 'fail' && (
-                        <ThemedText style={[styles.scoreText, { color: C.brandAccent }]}>
+                        <ThemedText style={[styles.scoreText, { color: C.brandSecondary }]}>
                             {I18n.t('score') ?? 'Score'}: {score}
                         </ThemedText>
                     )}
@@ -151,9 +151,9 @@ export default function MemoryGridScreen() {
                                         backgroundColor: isActive
                                             ? C.brandPrimary
                                             : isUserPressed
-                                                ? C.brandAccent
+                                                ? C.brandSecondary
                                                 : pressed ? C.surface2 : C.surface,
-                                        borderColor: isUserPressed ? C.brandAccent : C.border,
+                                        borderColor: isUserPressed ? C.brandSecondary : C.border,
                                     },
                                 ]}
                             />

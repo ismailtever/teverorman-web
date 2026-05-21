@@ -4,6 +4,7 @@ import { Check } from 'lucide-react-native';
 import { ThemedText } from '../themed-text';
 import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Metrics } from '@/constants/Theme';
+import { I18n } from '@/services/i18n';
 
 interface CardProps extends ViewProps {
     children?: React.ReactNode;
@@ -77,7 +78,7 @@ export const FeatureRow = ({ text }: { text: string }) => {
     const C = useMentraTheme();
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: Metrics.spacing.s }}>
-            <Check size={20} color={C.brandAccent} />
+            <Check size={20} color={C.brandPrimary} />
             <ThemedText style={{ fontSize: 16, color: C.textDim, marginLeft: Metrics.spacing.m }}>
                 {text}
             </ThemedText>
@@ -109,13 +110,13 @@ export const PricingCard = ({ title, price, description, secondaryPrice, isBestV
             {...props}
         >
             {isBestValue && (
-                <View style={[styles.bestValueBadge, isSelected && { backgroundColor: C.brandAccent }]}>
-                    <ThemedText style={[styles.bestValueText, isSelected && { color: C.bg }]}>Best Value</ThemedText>
+                <View style={[styles.bestValueBadge, isSelected && { backgroundColor: C.brandPrimary }]}>
+                    <ThemedText style={[styles.bestValueText, isSelected && { color: C.bg }]}>{I18n.t('bestValue')}</ThemedText>
                 </View>
             )}
             <View>
                 <ThemedText style={styles.pricingTitle}>{title}</ThemedText>
-                <ThemedText style={[styles.pricingDesc, isSelected && { color: C.brandAccent }]}>{description}</ThemedText>
+                <ThemedText style={[styles.pricingDesc, isSelected && { color: C.brandPrimary }]}>{description}</ThemedText>
             </View>
             <View style={styles.pricingPriceContainer}>
                 <ThemedText style={styles.pricingPrice}>{price}</ThemedText>
@@ -194,7 +195,7 @@ function makeStyles(C: ReturnType<typeof useMentraTheme>) {
             overflow: 'hidden',
         },
         pricingCardSelected: {
-            borderColor: C.brandAccent,
+            borderColor: C.brandPrimary,
             borderWidth: 2,
             backgroundColor: C.surface2,
         },

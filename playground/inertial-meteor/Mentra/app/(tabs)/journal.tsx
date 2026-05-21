@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
     View, Text, ScrollView, TextInput, Pressable,
     StyleSheet, KeyboardAvoidingView, Platform,
@@ -17,7 +17,7 @@ import { useMentraTheme } from '@/hooks/useMentraTheme';
 
 // ─── Mood Options ─────────────────────────────────────────────────────────────
 
-const MOODS = [
+const getMoods = () => [
     { label: I18n.t('moodLabelGreat'), icon: <Sun size={22} color="#F59E0B" />, value: 5 },
     { label: I18n.t('moodLabelGood'), icon: <Smile size={22} color="#10B981" />, value: 4 },
     { label: I18n.t('moodLabelOkay'), icon: <Meh size={22} color="#6366F1" />, value: 3 },
@@ -69,6 +69,10 @@ export default function JournalScreen() {
     const [noteText, setNoteText] = useState('');
     const [saved, setSaved] = useState(false);
     const [pastEntries, setPastEntries] = useState<any[]>([]);
+    const [, forceUpdate] = useState(0);
+
+    // Re-render on language change
+    useEffect(() => I18n.subscribe(() => forceUpdate(n => n + 1)), []);
 
     useFocusEffect(
         useCallback(() => {
@@ -137,7 +141,7 @@ export default function JournalScreen() {
                 <Animated.View entering={FadeInDown.delay(80).springify()} style={styles.section}>
                     <Text style={[styles.sectionLabel, { color: C.text }]}>{I18n.t('journalFeelPrompt')}</Text>
                     <View style={styles.moodRow}>
-                        {MOODS.map(m => (
+                        {getMoods().map(m => (
                             <Pressable
                                 key={m.value}
                                 onPress={() => { Haptics.selectionAsync(); setSelectedMood(m.value); }}
@@ -212,7 +216,7 @@ export default function JournalScreen() {
                         <Text style={[styles.historyTitle, { color: C.text }]}>{I18n.t('journalPastLabel')}</Text>
                         {pastEntries.map((item, idx) => {
                             const dateObj = new Date(item.date);
-                            const moodObj = MOODS.find(m => m.value === item.mood);
+                            const moodObj = getMoods().find(m => m.value === item.mood);
                             return (
                                 <View key={idx} style={[styles.entryCard, { backgroundColor: C.surface, borderColor: C.border }]}>
                                     <View style={styles.entryHeader}>

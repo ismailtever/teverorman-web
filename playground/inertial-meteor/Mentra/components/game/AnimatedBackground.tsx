@@ -55,7 +55,7 @@ export function AnimatedBackground() {
             <Animated.View
                 style={[
                     styles.blob2,
-                    { backgroundColor: C.brandAccent },
+                    { backgroundColor: C.brandSecondary },
                     style2,
                 ]}
             />

@@ -72,10 +72,10 @@ export function SessionResultsOverlay({
                 <View style={styles.scoreRow}>
                     {/* @ts-ignore */}
                     <ThemedText style={[styles.scoreLabel, { color: C.textDim }]}>{I18n.t('finalScore') || 'Final Score'}</ThemedText>
-                    <ThemedText style={[styles.scoreValue, { color: C.brandAccent }]}>{score}</ThemedText>
+                    <ThemedText style={[styles.scoreValue, { color: C.brandPrimary }]}>{score}</ThemedText>
                 </View>
 
-                <View style={[styles.divider, { backgroundColor: C.divider }]} />
+                <View style={[styles.divider, { backgroundColor: C.border }]} />
 
                 <View style={styles.statsGrid}>
                     <StatCard
@@ -95,15 +95,15 @@ export function SessionResultsOverlay({
                     />
                 </View>
 
-                <View style={[styles.divider, { backgroundColor: C.divider }]} />
+                <View style={[styles.divider, { backgroundColor: C.border }]} />
 
                 <View style={styles.focusRow}>
-                    <Activity size={20} color={C.brandAccent} />
+                    <Activity size={20} color={C.brandPrimary} />
                     <View style={{ marginLeft: Metrics.spacing.s, flex: 1 }}>
                         {/* @ts-ignore */}
                         <ThemedText style={[styles.focusLabel, { color: C.text }]}>{I18n.t('focusStability') || 'Focus Stability'}</ThemedText>
                         <View style={[styles.focusBarBg, { backgroundColor: C.border }]}>
-                            <Animated.View style={[styles.focusBarFill, { backgroundColor: C.brandAccent }, barStyle]} />
+                            <Animated.View style={[styles.focusBarFill, { backgroundColor: C.brandPrimary }, barStyle]} />
                         </View>
                     </View>
                 </View>

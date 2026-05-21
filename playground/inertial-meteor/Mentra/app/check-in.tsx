@@ -61,12 +61,12 @@ export default function CheckInScreen() {
     return (
         <View style={styles.container}>
             <StatusBar style={C.statusBar} />
-            <AppHeader title="Daily Check-In" showBack={false} />
+            <AppHeader title={I18n.t('dailyCheckIn')} showBack={false} />
 
             <View style={styles.content}>
                 {/* Progress Indicator */}
                 <View style={styles.progressSection}>
-                    <ProgressBar progress={progress} color={C.brandAccent} />
+                    <ProgressBar progress={progress} color={C.brandPrimary} />
                     <ThemedText style={styles.stepText}>{I18n.t('step')} {step + 1} {I18n.t('of')} {CHECK_IN_STEPS.length}</ThemedText>
                 </View>
 
@@ -84,7 +84,7 @@ export default function CheckInScreen() {
                                     onPress={() => handleSelect(option)}
                                     style={[
                                         styles.optionButton,
-                                        isSelected && { borderColor: C.brandAccent, backgroundColor: C.surface2, borderWidth: 2 }
+                                        isSelected && { borderColor: C.brandPrimary, backgroundColor: C.surface2, borderWidth: 2 }
                                     ]}
                                     fullWidth
                                 />

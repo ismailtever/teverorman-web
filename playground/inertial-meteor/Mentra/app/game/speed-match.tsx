@@ -167,7 +167,7 @@ export default function SpeedMatchScreen() {
                         ]}
                         onPress={() => handlePress(false)}
                     >
-                        <ThemedText style={{ color: C.danger, fontSize: 24, fontWeight: '800' }}>NO</ThemedText>
+                        <ThemedText style={{ color: C.danger, fontSize: 24, fontWeight: '800' }}>{I18n.t('speedMatchNo') ?? 'NO'}</ThemedText>
                     </Pressable>
 
                     <Pressable
@@ -180,7 +180,7 @@ export default function SpeedMatchScreen() {
                         ]}
                         onPress={() => handlePress(true)}
                     >
-                        <ThemedText style={{ color: C.success, fontSize: 24, fontWeight: '800' }}>YES</ThemedText>
+                        <ThemedText style={{ color: C.success, fontSize: 24, fontWeight: '800' }}>{I18n.t('speedMatchYes') ?? 'YES'}</ThemedText>
                     </Pressable>
                 </View>
             )}

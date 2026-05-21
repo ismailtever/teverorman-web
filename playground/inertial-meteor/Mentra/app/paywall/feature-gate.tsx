@@ -53,9 +53,9 @@ export default function FeatureGatePaywall() {
 
     // Reduced feature set for feature gate
     const FEATURES = [
-        "Unlimited Workouts",
-        "Advanced Insights",
-        "No Ads"
+        I18n.t('paywallFeat1'),
+        I18n.t('paywallFeat2'),
+        I18n.t('paywallFeat4'),
     ];
 
     const CTA_VARIANT: 'A' | 'B' = 'A';
@@ -92,8 +92,8 @@ export default function FeatureGatePaywall() {
 
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                 <View style={styles.heroSection}>
-                    <ThemedText style={styles.headline}>Unlock Mentra Pro.</ThemedText>
-                    <ThemedText style={styles.subHeadline}>Access advanced training and deeper insights.</ThemedText>
+                    <ThemedText style={styles.headline}>{I18n.t('paywallHeroTitle')}</ThemedText>
+                    <ThemedText style={styles.subHeadline}>{I18n.t('paywallHeroSub')}</ThemedText>
                     <ThemedText style={[styles.subHeadline, { marginTop: 8, fontSize: 13, color: PW.accent, fontWeight: '500' }]}>
                         {I18n.t('paywallValueFrame')}
                     </ThemedText>

@@ -40,16 +40,16 @@ export default function DiscountOfferPaywall() {
     } = usePaywall('reengagment_discount');
 
     const FEATURES = [
-        "Unlimited Daily Workouts",
-        "Advanced Cognitive Radar & Insights",
-        "Speed Match & Memory Grid Pro Levels",
-        "No Ads, Pure Focus"
+        I18n.t('paywallFeat1'),
+        I18n.t('paywallFeat2'),
+        I18n.t('paywallFeat3'),
+        I18n.t('paywallFeat4'),
     ];
 
     const CTA_VARIANT: 'A' | 'B' = 'A';
     const getCtaText = () => {
         if (isPurchasing) return I18n.t('processing');
-        return CTA_VARIANT === 'A' ? "Claim Offer" : "Redeem Partner Offer";
+        return CTA_VARIANT === 'A' ? I18n.t('discountClaimOffer') : I18n.t('discountRedeemOffer');
     };
 
     if (isLoading) {
@@ -72,10 +72,10 @@ export default function DiscountOfferPaywall() {
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                 <View style={styles.heroSection}>
                     <View style={styles.discountBadge}>
-                        <ThemedText style={styles.discountBadgeText}>Limited partner offer</ThemedText>
+                        <ThemedText style={styles.discountBadgeText}>{I18n.t('discountBadge')}</ThemedText>
                     </View>
-                    <ThemedText style={styles.headline}>Finish the week strong.</ThemedText>
-                    <ThemedText style={styles.subHeadline}>A structured mind compounds.</ThemedText>
+                    <ThemedText style={styles.headline}>{I18n.t('discountHeadline')}</ThemedText>
+                    <ThemedText style={styles.subHeadline}>{I18n.t('discountSubheadline')}</ThemedText>
                     <ThemedText style={[styles.subHeadline, { marginTop: 8, fontSize: 13, color: PW.accent, fontWeight: '500' }]}>
                         {I18n.t('paywallValueFrame')}
                     </ThemedText>

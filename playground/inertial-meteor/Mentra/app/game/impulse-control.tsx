@@ -260,8 +260,8 @@ export default function ImpulseControlGame() {
 
           <View style={styles.scienceBox}>
             <View style={styles.sectionHeader}>
-              <BrainCircuit size={14} color={C.brandAccent} />
-              <ThemedText style={[styles.sectionLabel, { color: C.brandAccent }]}>
+              <BrainCircuit size={14} color={C.brandSecondary} />
+              <ThemedText style={[styles.sectionLabel, { color: C.brandSecondary }]}>
                 {I18n.t('scienceBehind')}
               </ThemedText>
             </View>

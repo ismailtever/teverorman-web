@@ -8,6 +8,7 @@ import * as Haptics from 'expo-haptics';
 
 import { Metrics } from '@/constants/Theme';
 import { useMentraTheme } from '@/hooks/useMentraTheme';
+import { I18n } from '@/services/i18n';
 import { getPremiumStatus, restoreFlow, purchasePlan, fetchOfferingsSafe, OfferingsData } from '@/services/purchases';
 
 const { width, height } = Dimensions.get('window');
@@ -58,10 +59,10 @@ export default function InterstitialPaywall() {
         : `${offerings?.yearlyPkg?.product.priceString || '$59.99'}/year`;
 
     const features = [
-        "Full access to the Mentra AI Coach.",
-        "Unlock Deep Focus & Sleep routines.",
-        "Infinite Grid Focus sessions.",
-        "Advanced Analytics & Mood Tracking"
+        I18n.t('paywallFeat1'),
+        I18n.t('paywallFeat2'),
+        I18n.t('paywallFeat3'),
+        I18n.t('paywallFeat4'),
     ];
 
     return (
@@ -82,11 +83,10 @@ export default function InterstitialPaywall() {
 
                 {isReady ? (
                     <Animated.View entering={SlideInDown.springify().delay(100)} style={styles.card}>
-                        <Text style={styles.badge}>WAIT BEFORE YOU GO</Text>
-                        <Text style={styles.title}>Your mind is ready for more.</Text>
+                        <Text style={styles.badge}>{I18n.t('interstitialBadge') ?? 'WAIT BEFORE YOU GO'}</Text>
+                        <Text style={styles.title}>{I18n.t('interstitialTitle') ?? 'Your mind is ready for more.'}</Text>
                         <Text style={styles.subtext}>
-                            Don't lose your momentum. Upgrade to Mentra Pro to permanently unlock
-                            the tools required to structure your life.
+                            {I18n.t('interstitialBody') ?? "Don't lose your momentum. Upgrade to Mentra Pro to permanently unlock the tools required to structure your life."}
                         </Text>
 
                         <View style={styles.features}>
@@ -104,14 +104,14 @@ export default function InterstitialPaywall() {
                             style={({ pressed }) => [styles.ctaBtn, { opacity: (pressed || loading || processing) ? 0.8 : 1 }]}
                         >
                             <Text style={styles.ctaText}>
-                                {processing ? "Processing..." : "Unlock Mentra Pro"}
+                                {processing ? I18n.t('processing') : I18n.t('paywallUnlock')}
                             </Text>
                         </Pressable>
-                        <Text style={styles.priceHints}>{loading ? "Loading..." : priceText}</Text>
-                        <Text style={styles.priceHints}>Cancel anytime.</Text>
+                        <Text style={styles.priceHints}>{loading ? I18n.t('loading') ?? 'Loading...' : priceText}</Text>
+                        <Text style={styles.priceHints}>{I18n.t('cancelAnytime')}</Text>
 
                         <Pressable onPress={() => restoreFlow('interstitial_paywall')} style={{ marginTop: 24 }}>
-                            <Text style={styles.restoreText}>Restore Purchases</Text>
+                            <Text style={styles.restoreText}>{I18n.t('paywallRestore')}</Text>
                         </Pressable>
                     </Animated.View>
                 ) : (

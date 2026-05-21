@@ -1,17 +1,27 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { AlertTriangle } from 'lucide-react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Metrics } from '@/constants/Theme';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 
 export default function DisclaimerScreen() {
+    const C = useMentraTheme();
+    const styles = makeStyles(C);
+
     return (
         <View style={styles.container}>
-            <Stack.Screen options={{ title: 'Medical Disclaimer', headerStyle: { backgroundColor: '#000' }, headerTintColor: '#fff' }} />
+            <StatusBar style={C.statusBar} />
+            <Stack.Screen options={{
+                title: 'Medical Disclaimer',
+                headerStyle: { backgroundColor: C.bg },
+                headerTintColor: C.text,
+            }} />
             <ScrollView contentContainerStyle={styles.content}>
                 <View style={{ alignItems: 'center', marginBottom: 30 }}>
-                    <AlertTriangle size={48} color={'#EF4444'} />
+                    <AlertTriangle size={48} color={C.danger} />
                     <ThemedText type="title" style={{ marginTop: 20, textAlign: 'center' }}>Not Medical Advice</ThemedText>
                 </View>
 
@@ -20,7 +30,7 @@ export default function DisclaimerScreen() {
                 </ThemedText>
 
                 <View style={styles.box}>
-                    <ThemedText type="defaultSemiBold" style={{ color: '#EF4444' }}>IMPORTANT:</ThemedText>
+                    <ThemedText type="defaultSemiBold" style={{ color: C.danger }}>IMPORTANT:</ThemedText>
                     <ThemedText style={styles.p}>
                         Mentra is NOT a medical device. It should NOT be used to diagnose, treat, cure, or prevent any disease, medical condition, or mental health disorder (such as ADHD, Snoezelen, or Concussion).
                     </ThemedText>
@@ -34,13 +44,24 @@ export default function DisclaimerScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#000' },
-    content: { padding: Metrics.spacing.l },
-    p: { fontSize: 16, lineHeight: 24, color: '#ccc', marginBottom: 20, marginTop: 5 },
-    box: {
-        borderWidth: 1, borderColor: '#EF4444',
-        backgroundColor: 'rgba(255, 50, 50, 0.1)',
-        padding: 20, borderRadius: 12, marginBottom: 20
-    }
-});
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+    return StyleSheet.create({
+        container: { flex: 1, backgroundColor: C.bg },
+        content: { padding: Metrics.spacing.l },
+        p: {
+            fontSize: 16,
+            lineHeight: 24,
+            color: C.textDim,
+            marginBottom: 20,
+            marginTop: 5,
+        },
+        box: {
+            borderWidth: 1,
+            borderColor: C.danger,
+            backgroundColor: C.isDark ? 'rgba(239,68,68,0.10)' : 'rgba(239,68,68,0.05)',
+            padding: 20,
+            borderRadius: 12,
+            marginBottom: 20,
+        },
+    });
+}

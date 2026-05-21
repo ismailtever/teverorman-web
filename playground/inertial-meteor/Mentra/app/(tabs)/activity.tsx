@@ -36,7 +36,7 @@ export default function ActivityScreen() {
                     <SectionTitle title="Weekly Summary" />
                     <Card variant="default" style={styles.summaryCard}>
                         <View style={styles.summaryHeader}>
-                            <Trophy size={28} color={C.brandAccent} />
+                            <Trophy size={28} color={C.brandPrimary} />
                             <View style={styles.summaryTitleContainer}>
                                 <SectionTitle title="Great work, Athlete!" subtitle="You're on track to beat last week." />
                             </View>
@@ -60,7 +60,7 @@ export default function ActivityScreen() {
                             <StatCard
                                 title="Days"
                                 value="4"
-                                icon={<Calendar size={18} color={C.brandAccent} />}
+                                icon={<Calendar size={18} color={C.brandSecondary} />}
                                 style={styles.flexCard}
                             />
                         </View>
@@ -109,6 +109,6 @@ function makeStyles(C: ReturnType<typeof useMentraTheme>) {
         flexCard: { flex: 1, padding: Metrics.spacing.m, backgroundColor: C.surface2 },
         listSection: { paddingHorizontal: Metrics.spacing.l, marginTop: Metrics.spacing.m },
         listCard: { padding: 0, overflow: 'hidden', marginTop: Metrics.spacing.s },
-        borderBottom: { borderBottomWidth: 1, borderBottomColor: C.divider },
+        borderBottom: { borderBottomWidth: 1, borderBottomColor: C.border },
     });
 }

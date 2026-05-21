@@ -112,7 +112,7 @@ export default function SettingsScreen() {
                             <ListRow
                                 title={I18n.t('upgradeProTitle')}
                                 subtitle={I18n.t('upgradeProSubtitle')}
-                                icon={<Shield fill={C.brandAccent} size={20} color={C.bg} />}
+                                icon={<Shield fill={C.brandPrimary} size={20} color={C.bg} />}
                                 onPress={() => router.push('/paywall/onboarding' as any)}
                                 style={{ backgroundColor: 'rgba(74, 222, 128, 0.1)' }}
                             />
@@ -126,7 +126,7 @@ export default function SettingsScreen() {
                     <Card style={{ padding: 0, overflow: 'hidden' }}>
                         <ListRow
                             title={isRestoring ? I18n.t('restoring') : I18n.t('paywallRestore')}
-                            icon={<Zap size={20} color={C.brandAccent} />}
+                            icon={<Zap size={20} color={C.brandPrimary} />}
                             onPress={handleRestore}
                         />
                         <ListRow
@@ -242,9 +242,9 @@ function makeStyles(C: ReturnType<typeof useMentraTheme>) {
             fontWeight: '600',
         },
         proCard: {
-            borderColor: C.brandAccent,
+            borderColor: C.brandPrimary,
             borderWidth: 1,
-            shadowColor: C.brandAccent,
+            shadowColor: C.brandPrimary,
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.15,
             shadowRadius: 10,
@@ -255,7 +255,7 @@ function makeStyles(C: ReturnType<typeof useMentraTheme>) {
             padding: Metrics.spacing.m,
             backgroundColor: C.surface2,
             borderTopWidth: 1,
-            borderTopColor: C.divider,
+            borderTopColor: C.border,
             gap: 12,
         },
         warningText: {

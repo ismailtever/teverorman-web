@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -13,11 +13,15 @@ import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
 import { ListRow } from '@/components/ui/ListRow';
+import { I18n } from '@/services/i18n';
 
 export default function TrainingSessionScreen() {
     const C = useMentraTheme();
     const styles = makeStyles(C);
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
+    const [, forceUpdate] = useState(0);
+
+    useEffect(() => I18n.subscribe(() => forceUpdate(n => n + 1)), []);
 
     // SESSION_STEPS defined inside component so C.* colors are available
     const SESSION_STEPS = [
@@ -39,7 +43,7 @@ export default function TrainingSessionScreen() {
             id: 'cooldown',
             title: 'Focus Breathing',
             duration: '3 min',
-            icon: <CheckCircle2 size={24} color={C.brandAccent} />,
+            icon: <CheckCircle2 size={24} color={C.brandSecondary} />,
             route: '/(tabs)' // Placeholder for now
         }
     ];
@@ -64,14 +68,14 @@ export default function TrainingSessionScreen() {
     return (
         <View style={styles.container}>
             <StatusBar style={C.statusBar} />
-            <AppHeader title="Today's Session" showBack={true} />
+            <AppHeader title={I18n.t('trainingSessionTitle')} showBack={true} />
 
             <ScrollView contentContainerStyle={styles.content}>
 
                 {/* Progress Header */}
                 <Section style={styles.progressSection}>
                     <View style={styles.progressHeader}>
-                        <SectionTitle title="Session Progress" />
+                        <SectionTitle title={I18n.t('sessionProgress')} />
                         <ThemedText style={styles.progressText}>
                             {Math.min(currentStepIndex + 1, SESSION_STEPS.length)} / {SESSION_STEPS.length}
                         </ThemedText>
@@ -105,7 +109,7 @@ export default function TrainingSessionScreen() {
                                     rightElement={
                                         isActive ? (
                                             <View style={styles.activeBadge}>
-                                                <ThemedText style={styles.activeBadgeText}>UP NEXT</ThemedText>
+                                                <ThemedText style={styles.activeBadgeText}>{I18n.t('upNext')}</ThemedText>
                                             </View>
                                         ) : undefined
                                     }
@@ -122,14 +126,14 @@ export default function TrainingSessionScreen() {
             <View style={styles.footer}>
                 {!isFinished ? (
                     <PrimaryButton
-                        title={`Start ${SESSION_STEPS[currentStepIndex].title}`}
+                        title={`${I18n.t('startStep')} ${SESSION_STEPS[currentStepIndex].title}`}
                         icon={<Play size={18} color={C.surface} />}
                         onPress={handleStartGame}
                         fullWidth
                     />
                 ) : (
                     <PrimaryButton
-                        title="Complete Session"
+                        title={I18n.t('completeSession')}
                         icon={<CheckCircle2 size={18} color={C.surface} />}
                         onPress={handleFinish}
                         fullWidth
@@ -169,7 +173,7 @@ function makeStyles(C: ReturnType<typeof useMentraTheme>) {
         },
         borderBottom: {
             borderBottomWidth: 1,
-            borderBottomColor: C.divider,
+            borderBottomColor: C.border,
         },
         opacityLocked: {
             opacity: 0.5,
@@ -178,7 +182,7 @@ function makeStyles(C: ReturnType<typeof useMentraTheme>) {
             backgroundColor: C.surface2,
         },
         activeBadge: {
-            backgroundColor: C.brandAccent,
+            backgroundColor: C.brandPrimary,
             paddingHorizontal: 8,
             paddingVertical: 4,
             borderRadius: Metrics.radius.s,
@@ -192,7 +196,7 @@ function makeStyles(C: ReturnType<typeof useMentraTheme>) {
             padding: Metrics.spacing.l,
             paddingBottom: Metrics.spacing.xl,
             borderTopWidth: 1,
-            borderTopColor: C.divider,
+            borderTopColor: C.border,
             backgroundColor: C.surface,
         }
     });
