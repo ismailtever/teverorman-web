@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentra — Brain Training for Focus & Memory</title>
+    <meta name="description" content="Train your brain with science-backed cognitive exercises. Improve focus, memory, and resilience with your personal AI coach.">
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=2.2">
+    <style>
+        :root {
+            --color-mentra-primary: #1a6b3a;
+            --color-mentra-bg: #f8faf9;
+            --color-mentra-text: #0f172a;
+            --color-mentra-muted: #64748b;
+        }
+
+        .mentra-hero {
+            padding: 8rem 2rem 6rem;
+            text-align: center;
+            background: linear-gradient(180deg, #ffffff 0%, var(--color-mentra-bg) 100%);
+        }
+
+        .mentra-badge {
+            display: inline-block;
+            background: #e8f5ee;
+            color: var(--color-mentra-primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mentra-hero h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--color-mentra-text);
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .mentra-hero p {
+            font-size: 1.25rem;
+            color: var(--color-mentra-muted);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        .app-badges {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+        }
+
+        .badge-placeholder {
+            background: #000;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .badge-placeholder:hover { opacity: 0.8; }
+
+        .mentra-features {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover { transform: translateY(-5px); }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--color-mentra-muted);
+            line-height: 1.6;
+        }
+
+        .privacy-strip {
+            background: var(--color-mentra-text);
+            color: #fff;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .privacy-strip h2 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .privacy-strip p {
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .mentra-hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo" style="display: flex; align-items: center; height: 35px;"><img src="logo.svg" alt="TEVER" style="height: 100%; width: auto;"></a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="mentra-support.html" class="nav-link">Support</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <section class="mentra-hero">
+            <span class="badge mentra-badge">Now Available</span>
+            <h1>Mentra — Train Your Mind</h1>
+            <p>Science-backed cognitive exercises designed to sharpen your focus, strengthen memory, and build mental resilience.</p>
+            
+            <div class="app-badges">
+                <div class="badge-placeholder">
+                    <span></span> Download on App Store
+                </div>
+                <div class="badge-placeholder">
+                    <span>▶</span> Get it on Google Play
+                </div>
+            </div>
+        </section>
+
+        <section class="mentra-features">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Deep Focus</h3>
+                <p>Expand your attention span with Schulte tables and Go/No-Go tasks. Reclaim your concentration from the distraction economy.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>Working Memory</h3>
+                <p>Strengthen your hippocampal encoding with spatial grid patterns. Remember more, forget less.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>AI Coach</h3>
+                <p>Chat with your personal cognitive coach for advice on focus, stress, and mental performance based on your training data.</p>
+            </div>
+        </section>
+
+        <section class="privacy-strip">
+            <h2>Local-First Privacy</h2>
+            <p>Your brain data is personal. Mentra stores all scores, journals, and profiles locally on your device. No data sold. No ads. Just progress.</p>
+            <div style="margin-top: 2rem;">
+                <a href="mentra-privacy.html" style="color: #fff; text-decoration: underline;">Privacy Policy</a>
+                <span style="margin: 0 1rem; opacity: 0.3;">|</span>
+                <a href="mentra-support.html" style="color: #fff; text-decoration: underline;">Support</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div style="text-align: center; font-size: 0.875rem; color: var(--color-text-muted); padding: 4rem 0;">
+                &copy; <script>document.write(new Date().getFullYear())</script> Tever Technology — A Tever Company
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>

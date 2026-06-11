@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tever Orman | Plywood & Kontrplak Fiyat Listesi</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Tever Forest Products: Toptan ve perakende Birch Plywood (Huş Kontrplak) ve Filmli Kontrplak fiyat listesi.">
+    <meta name="keywords" content="Plywood fiyatları, kontrplak fiyat listesi, huş kontrplak fiyat, film yüzeyli kontrplak fiyat">
+    <meta name="author" content="Tever Orman A.Ş.">
+    <meta name="robots" content="index, follow">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css?v=2.1">
+    <!-- Flag Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
+
+    <style>
+        .prices-hero {
+            padding: calc(var(--header-height) + var(--spacing-sm)) 0 var(--spacing-md);
+            background-color: var(--color-surface-alt);
+            text-align: center;
+        }
+
+        .prices-container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: var(--spacing-md) var(--spacing-sm);
+        }
+
+        .download-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: var(--color-surface-alt);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+
+        .download-text {
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        .download-btn {
+            background-color: var(--color-primary);
+            color: var(--color-text-inverse);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: var(--color-primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(10, 51, 35, 0.2);
+        }
+
+        .table-section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .table-section h2 {
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.5rem;
+            border-left: 4px solid var(--color-accent);
+            padding-left: 0.75rem;
+        }
+
+        .section-desc {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+            max-width: 800px;
+            line-height: 1.5;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .brand-logo {
+            height: 36px;
+            width: auto;
+            opacity: 0.95;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            background-color: var(--color-surface);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .prices-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-main);
+            font-size: 0.85rem;
+            text-align: center;
+            min-width: 800px;
+        }
+
+        .prices-table th, 
+        .prices-table td {
+            padding: 0.75rem 0.5rem;
+            border: 1px solid var(--color-border);
+            vertical-align: middle;
+        }
+
+        .prices-table th {
+            background-color: var(--color-primary);
+            color: var(--color-text-inverse);
+            font-weight: 600;
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+        }
+
+        .prices-table th.top-header {
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+
+        .prices-table tr:nth-child(even) td {
+            background-color: var(--color-surface-alt);
+        }
+
+        .prices-table tr:hover td {
+            background-color: rgba(207, 170, 130, 0.1);
+        }
+
+        .table-hint {
+            font-size: 0.8rem;
+            color: var(--color-accent-dark);
+            margin-top: 0.25rem;
+            display: block;
+            font-weight: 500;
+        }
+
+        /* Terms & Bank details grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .info-card {
+            background-color: var(--color-surface-alt);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+        }
+
+        .info-card h3 {
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.15rem;
+            color: var(--color-primary);
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: 0.5rem;
+        }
+
+        .info-list {
+            list-style-type: disc;
+            padding-left: 1.25rem;
+        }
+
+        .info-list li {
+            margin-bottom: 0.6rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .info-list li strong {
+            color: var(--color-primary);
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo" style="display: flex; align-items: center; height: 35px;"><img src="logo.svg" alt="TEVER" style="height: 100%; width: auto;"></a>
+            <button class="mobile-menu-toggle" aria-expanded="false" aria-label="Toggle navigation">
+                <div class="hamburger-icon"></div>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+                <li><a href="products.html" class="nav-link" data-i18n="nav.products">Products</a></li>
+                <li><a href="prices.html" class="nav-link active" data-i18n="nav.prices">Price List</a></li>
+                <li><a href="about.html" class="nav-link" data-i18n="nav.about">About</a></li>
+                <li><a href="teversanat.html" class="nav-link" style="color: var(--color-primary); font-weight: 600;"
+                        data-i18n="nav.sanat">Tever Sanat</a></li>
+                <li><a href="contact.html" class="nav-link" data-i18n="nav.contact">Contact</a></li>
+
+                <!-- Flag Based Language Selector -->
+                <li class="language-selector">
+                    <button class="lang-btn" id="langBtn">
+                        <span class="fi fi-gb"></span>
+                        <span style="font-size:0.8rem; font-weight:600;">EN</span>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <!-- Populated by JS -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="prices-hero">
+        <div class="container">
+            <h1 class="text-hero mb-sm" data-i18n="prices.title">Plywood & Kontrplak Fiyat Listesi</h1>
+            <p class="text-lead" data-i18n="prices.subtitle">Toptan ve Perakende Satış Fiyat Kataloğu - 2026</p>
+            <span style="font-size: 0.8rem; color: var(--color-text-muted); display: block; margin-top: 0.5rem; font-weight: 500;" data-i18n="prices.doc_meta">Doküman No: TO-2026/FL-01 | Yayın Tarihi: 09.06.2026</span>
+        </div>
+    </section>
+
+    <div class="prices-container">
+        <!-- Download Bar -->
+        <div class="download-bar">
+            <div class="download-text" data-i18n="prices.download_text">Fiyat listesini bilgisayarınıza veya telefonunuza PDF olarak indirebilirsiniz.</div>
+            <a href="assets/Tever Orman Fiyat Listesi.pdf" class="download-btn" download>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span data-i18n="prices.download_btn">PDF Fiyat Listesini İndir</span>
+            </a>
+        </div>
+
+        <!-- Film Faced section -->
+        <section class="table-section">
+            <h2 data-i18n="prices.film_faced_title">Filmli Ürünler (Film-Faced Birch Plywood)</h2>
+            <div class="brand-container">
+                <img src="assets/images/surfactor_logo.png" alt="Surfactor Logo" class="brand-logo">
+                <p class="section-desc" style="margin: 0; max-width: 700px;" data-i18n="prices.film_faced_desc">Filmli kontrplak ürünlerimizin yüzeyinde, beton kalıplarında yüksek aşınma direnci ve pürüzsüz yüzey kalitesi elde etmek amacıyla 120 g/m² surfactor proTEG 427 fenolik film kullanılmaktadır.</p>
+            </div>
+            <div class="table-wrapper">
+                <table class="prices-table">
+                    <thead>
+                        <tr>
+                            <th colspan="3" class="top-header" data-i18n="prices.film_faced_title">FİLMLİ ÜRÜNLER</th>
+                            <th colspan="2" class="top-header" data-i18n="prices.table_wholesale">TOPTAN SATIŞ FİYATI</th>
+                            <th colspan="2" class="top-header" data-i18n="prices.table_retail">PERAKENDE SATIŞ FİYATI</th>
+                        </tr>
+                        <tr>
+                            <th data-i18n="prices.table_thick_mm">KALINLIK (mm)</th>
+                            <th data-i18n="prices.table_width_mm">EN (mm)</th>
+                            <th data-i18n="prices.table_length_mm">BOY (mm)</th>
+                            <th data-i18n="prices.table_m3_price">m³ SATIŞ FİYATI</th>
+                            <th data-i18n="prices.table_adet_price">ADET SATIŞ FİYATI</th>
+                            <th data-i18n="prices.table_m3_price">m³ SATIŞ FİYATI</th>
+                            <th data-i18n="prices.table_adet_price">ADET SATIŞ FİYATI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="film-table-body">
+                        <!-- Filled by JS -->
+                    </tbody>
+                </table>
+            </div>
+            <span class="table-hint" data-i18n="prices.table_swipe_hint">➔ Tüm sütunları görmek için tabloyu sağa/sola kaydırabilirsiniz.</span>
+        </section>
+
+        <!-- Plywood section -->
+        <section class="table-section">
+            <h2 data-i18n="prices.plywood_title">Kontrplak Ürünler (Birch Plywood)</h2>
+            <div class="table-wrapper">
+                <table class="prices-table" style="min-width: 1200px;">
+                    <thead>
+                        <tr>
+                            <th colspan="3" class="top-header" data-i18n="prices.plywood_title">KONTRPLAK ÜRÜNLER</th>
+                            <th colspan="6" class="top-header" data-i18n="prices.table_wholesale">TOPTAN SATIŞ FİYATI</th>
+                            <th colspan="6" class="top-header" data-i18n="prices.table_retail">PERAKENDE SATIŞ FİYATI</th>
+                        </tr>
+                        <tr>
+                            <th rowspan="2" data-i18n="prices.table_thick_mm">KALINLIK (mm)</th>
+                            <th rowspan="2" data-i18n="prices.table_width_mm">EN (mm)</th>
+                            <th rowspan="2" data-i18n="prices.table_length_mm">BOY (mm)</th>
+                            <th colspan="2" data-i18n="prices.quality_bb">KALİTE BB/BB</th>
+                            <th colspan="2" data-i18n="prices.quality_bbb">KALİTE B/BB</th>
+                            <th colspan="2" data-i18n="prices.quality_bb_b">KALİTE B/B</th>
+                            <th colspan="2" data-i18n="prices.quality_bb">KALİTE BB/BB</th>
+                            <th colspan="2" data-i18n="prices.quality_bbb">KALİTE B/BB</th>
+                            <th colspan="2" data-i18n="prices.quality_bb_b">KALİTE B/B</th>
+                        </tr>
+                        <tr>
+                            <!-- Toptan BB/BB -->
+                            <th data-i18n="prices.m3_fiyat">m³ Fiyatı</th>
+                            <th data-i18n="prices.adet_fiyat">Adet Fiyatı</th>
+                            <!-- Toptan B/BB -->
+                            <th data-i18n="prices.m3_fiyat">m³ Fiyatı</th>
+                            <th data-i18n="prices.adet_fiyat">Adet Fiyatı</th>
+                            <!-- Toptan B/B -->
+                            <th data-i18n="prices.m3_fiyat">m³ Fiyatı</th>
+                            <th data-i18n="prices.adet_fiyat">Adet Fiyatı</th>
+                            <!-- Perakende BB/BB -->
+                            <th data-i18n="prices.m3_fiyat">m³ Fiyatı</th>
+                            <th data-i18n="prices.adet_fiyat">Adet Fiyatı</th>
+                            <!-- Perakende B/BB -->
+                            <th data-i18n="prices.m3_fiyat">m³ Fiyatı</th>
+                            <th data-i18n="prices.adet_fiyat">Adet Fiyatı</th>
+                            <!-- Perakende B/B -->
+                            <th data-i18n="prices.m3_fiyat">m³ Fiyatı</th>
+                            <th data-i18n="prices.adet_fiyat">Adet Fiyatı</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ply-table-body">
+                        <!-- Filled by JS -->
+                    </tbody>
+                </table>
+            </div>
+            <span class="table-hint" data-i18n="prices.table_swipe_hint">➔ Tüm sütunları görmek için tabloyu sağa/sola kaydırabilirsiniz.</span>
+        </section>
+
+        <!-- Commercial Terms & Bank Accounts Grid -->
+        <div class="info-grid">
+            <!-- Commercial Terms -->
+            <div class="info-card">
+                <h3 data-i18n="prices.terms_title">Ticari Şartlar (Commercial Terms)</h3>
+                <ul class="info-list">
+                    <li data-i18n="prices.incoterms_val"><strong>Teslim Şekli:</strong> Fiyatlarımız Sakarya Fabrika teslim fiyatlarıdır.</li>
+                    <li data-i18n="prices.moq_val"><strong>Toptan Minimum Sipariş:</strong> Toptan satış fiyatlarımız minimum 300 m³ ve üzeri siparişler için geçerlidir.</li>
+                    <li data-i18n="prices.currency_val"><strong>Para Birimi:</strong> EUR (Sipariş ile birlikte yapılacak ödemeler, Türkiye Cumhuriyet Merkez Bankası (TCMB) Efektif Satış Kuru üzerinden hesap edilerek gerçekleştirilir)</li>
+                    <li data-i18n="prices.sheets_val"><strong>1 m³ Plaka Adetleri (1250x2500 mm):</strong> 3mm: 106 Adet | 4mm: 80 Adet | 6.5mm: 49 Adet | 9mm: 35 Adet | 12mm: 26 Adet | 15mm: 21 Adet | 18mm: 17 Adet | 21mm: 15 Adet | 24mm: 13 Adet | 27mm: 11 Adet | 30mm: 10 Adet | 35mm: 9 Adet | 40mm: 8 Adet | 45mm: 7 Adet | 50mm: 6 Adet</li>
+                    <li data-i18n="prices.payment_val"><strong>Ödeme Şartı:</strong> Sipariş esnasında belirlenir.</li>
+                    <li data-i18n="prices.lead_val"><strong>Teslim Süresi:</strong> Sipariş onayından itibaren 2-4 hafta.</li>
+                    <li data-i18n="prices.validity_val"><strong>Geçerlilik:</strong> Teklif tarihinden itibaren 30 gün geçerlidir.</li>
+                </ul>
+            </div>
+            
+            <!-- Bank Account Details -->
+            <div class="info-card">
+                <h3 data-i18n="prices.bank_title">Banka Hesap Bilgileri (IBAN) (Bank Account Details (IBAN))</h3>
+                <ul class="info-list" style="list-style-type: none; padding-left: 0;">
+                    <li style="margin-bottom: 0.8rem; font-size: 0.875rem; line-height: 1.5;">
+                        <strong data-i18n="prices.bank_beneficiary_label">Alıcı / Ünvan:</strong><br/>
+                        <span style="font-weight: 500; font-size: 0.85rem; color: var(--color-primary);">TEVER ORMAN MAMULLERİ SANAYİ VE TİCARET ANONİM ŞİRKETİ</span>
+                    </li>
+                    <li style="margin-bottom: 0.8rem; font-size: 0.875rem; line-height: 1.5;">
+                        <strong data-i18n="prices.bank_eur_label">EUR IBAN:</strong><br/>
+                        <code style="font-family: monospace; font-size: 0.95rem; font-weight: 600; letter-spacing: 0.05em; background: rgba(0,0,0,0.04); padding: 0.15rem 0.4rem; border-radius: var(--radius-sm); display: inline-block; margin-top: 0.2rem;">TR93 0020 5000 0014 0016 6001 03</code>
+                    </li>
+                    <li style="margin-bottom: 0.8rem; font-size: 0.875rem; line-height: 1.5;">
+                        <strong data-i18n="prices.bank_usd_label">USD IBAN:</strong><br/>
+                        <code style="font-family: monospace; font-size: 0.95rem; font-weight: 600; letter-spacing: 0.05em; background: rgba(0,0,0,0.04); padding: 0.15rem 0.4rem; border-radius: var(--radius-sm); display: inline-block; margin-top: 0.2rem;">TR50 0020 5000 0014 0016 6001 01</code>
+                    </li>
+                    <li style="margin-bottom: 0.8rem; font-size: 0.875rem; line-height: 1.5;">
+                        <strong data-i18n="prices.bank_tl_label">TL IBAN:</strong><br/>
+                        <code style="font-family: monospace; font-size: 0.95rem; font-weight: 600; letter-spacing: 0.05em; background: rgba(0,0,0,0.04); padding: 0.15rem 0.4rem; border-radius: var(--radius-sm); display: inline-block; margin-top: 0.2rem;">TR34 0020 5000 0014 0016 6000 01</code>
+                    </li>
+                    <li style="margin-top: 1rem; font-size: 0.8rem; color: var(--color-accent-dark); font-weight: 500;" data-i18n="prices.bank_notice">
+                        * Lütfen ödeme açıklamalarında fatura numaranızı belirtiniz.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="brand-logo mb-md" style="display: block; height: 35px;"><img src="logo.svg" alt="TEVER" style="height: 100%; width: auto;"></a>
+                    <p class="text-small text-muted">
+                        <strong data-i18n="contact.legal_title">Tever Orman Mamülleri</strong><br>
+                        <span data-i18n="contact.legal_suffix">Sanayi ve Ticaret A.Ş.</span>
+                    </p>
+                    <p class="text-small text-muted" style="margin-top: 1rem;">
+                        Nato Yolu Caddesi, Narin Sokak No: 3/4,<br>
+                        İstanbul, Türkiye
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.products">Products</h4>
+                    <ul>
+                        <li><a href="products.html" data-i18n="footer.plywood">Birch Plywood (Kontrplak)</a></li>
+                        <li><a href="products.html#veneer" data-i18n="footer.veneer">Veneer (Papel)</a></li>
+                        <li><a href="products.html#lumber" data-i18n="footer.lumber_link">Lumber (Kereste)</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.culture">Culture</h4>
+                    <ul>
+                        <li><a href="teversanat.html" data-i18n="nav.sanat">Tever Sanat</a></li>
+                        <li><a href="teversanat-gallery.html" data-i18n="footer.art_collection">Art Collection</a></li>
+                        <li><a href="teversanat-apply.html" data-i18n="footer.for_artists">For Artists</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer.connect">Connect</h4>
+                    <ul>
+                        <li><a href="mailto:m.eymen@teverorman.com">m.eymen@teverorman.com</a></li>
+                        <li><a href="mailto:info@teverorman.com">info@teverorman.com</a></li>
+                        <li><a href="https://wa.me/905344141224">+90 534 414 12 24</a></li>
+                        <li style="margin-top: 1rem;"><a href="contact.html" class="btn-text"
+                                style="color: var(--color-accent); font-weight: 600;">➔ Partner with Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                style="margin-top: 4rem; padding-top: 2rem; text-align: center; font-size: 0.875rem; color: var(--color-text-muted); border-top: 1px solid var(--color-border);">
+                &copy;
+                <script>document.write(new Date().getFullYear())</script> Tever Orman Mamülleri A.Ş. | Global Trade &
+                Art.
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        // Data and Rendering
+        const filmData = [
+            { thk: 9, base: 820, mid: 905 },
+            { thk: 12, base: 820, mid: 905 },
+            { thk: 15, base: 770, mid: 850 },
+            { thk: 18, base: 750, mid: 825 },
+            { thk: 21, base: 750, mid: 825 },
+            { thk: 30, base: 780, mid: 860 }
+        ];
+
+        const plyData = [
+            { thk: 3, base: { BB: 2200, B_BB: 2300, B_B: 2450 }, mid: { BB: 2640, B_BB: 2740, B_B: 2890 } },
+            { thk: 4, base: { BB: 2000, B_BB: 2100, B_B: 2250 }, mid: { BB: 2400, B_BB: 2500, B_B: 2650 } },
+            { thk: 6.5, base: { BB: 1300, B_BB: 1400, B_B: 1550 }, mid: { BB: 1560, B_BB: 1660, B_B: 1810 } },
+            { thk: 9, base: { BB: 840, B_BB: 940, B_B: 1090 }, mid: { BB: 1010, B_BB: 1110, B_B: 1260 } },
+            { thk: 12, base: { BB: 840, B_BB: 940, B_B: 1090 }, mid: { BB: 1010, B_BB: 1110, B_B: 1260 } },
+            { thk: 15, base: { BB: 770, B_BB: 870, B_B: 1020 }, mid: { BB: 925, B_BB: 1025, B_B: 1175 } },
+            { thk: 18, base: { BB: 770, B_BB: 870, B_B: 1020 }, mid: { BB: 925, B_BB: 1025, B_B: 1175 } },
+            { thk: 21, base: { BB: 770, B_BB: 870, B_B: 1020 }, mid: { BB: 925, B_BB: 1025, B_B: 1175 } },
+            { thk: 24, base: { BB: 770, B_BB: 870, B_B: 1020 }, mid: { BB: 925, B_BB: 1025, B_B: 1175 } },
+            { thk: 27, base: { BB: 990, B_BB: 1090, B_B: 1240 }, mid: { BB: 1190, B_BB: 1290, B_B: 1440 } },
+            { thk: 30, base: { BB: 990, B_BB: 1090, B_B: 1240 }, mid: { BB: 1190, B_BB: 1290, B_B: 1440 } },
+            { thk: 35, base: { BB: 1500, B_BB: 1600, B_B: 1750 }, mid: { BB: 1800, B_BB: 1900, B_B: 2050 } }, // Corrected typo
+            { thk: 40, base: { BB: 1500, B_BB: 1600, B_B: 1750 }, mid: { BB: 1800, B_BB: 1900, B_B: 2050 } },
+            { thk: 45, base: { BB: 1500, B_BB: 1600, B_B: 1750 }, mid: { BB: 1800, B_BB: 1900, B_B: 2050 } },
+            { thk: 50, base: { BB: 1500, B_BB: 1600, B_B: 1750 }, mid: { BB: 1800, B_BB: 1900, B_B: 2050 } }
+        ];
+
+        // Format helpers
+        const formatM3 = (val) => Math.ceil(val).toLocaleString('tr-TR') + " € / m³";
+        const formatAdet = (val) => val.toFixed(2).replace('.', ',') + " €";
+
+        // Populate Film Faced
+        const filmBody = document.getElementById('film-table-body');
+        filmData.forEach(item => {
+            const vol = (item.thk / 1000.0) * 1.25 * 2.5;
+            const toptanM3 = item.base * 1.04;
+            const toptanAdet = toptanM3 * vol;
+            const perakendeM3 = item.mid + 15;
+            const perakendeAdet = perakendeM3 * vol;
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${item.thk} mm</strong></td>
+                <td>1250</td>
+                <td>2500</td>
+                <td>${formatM3(toptanM3)}</td>
+                <td><strong>${formatAdet(toptanAdet)}</strong></td>
+                <td>${formatM3(perakendeM3)}</td>
+                <td><strong>${formatAdet(perakendeAdet)}</strong></td>
+            `;
+            filmBody.appendChild(tr);
+        });
+
+        // Populate Plywood
+        const plyBody = document.getElementById('ply-table-body');
+        plyData.forEach(item => {
+            const vol = (item.thk / 1000.0) * 1.25 * 2.5;
+            
+            const toptanM3_bb = item.base.BB * 1.04;
+            const toptanAd_bb = toptanM3_bb * vol;
+            const toptanM3_bbb = item.base.B_BB * 1.04;
+            const toptanAd_bbb = toptanM3_bbb * vol;
+            const toptanM3_bb_b = item.base.B_B * 1.04;
+            const toptanAd_bb_b = toptanM3_bb_b * vol;
+
+            const perM3_bb = item.mid.BB + 15;
+            const perAd_bb = perM3_bb * vol;
+            const perM3_bbb = item.mid.B_BB + 15;
+            const perAd_bbb = perM3_bbb * vol;
+            const perM3_bb_b = item.mid.B_B + 15;
+            const perAd_bb_b = perM3_bb_b * vol;
+
+            const enVal = "1250";
+            const boyVal = "2500";
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${item.thk} mm</strong></td>
+                <td>${enVal}</td>
+                <td>${boyVal}</td>
+                
+                <td>${formatM3(toptanM3_bb)}</td>
+                <td><strong>${formatAdet(toptanAd_bb)}</strong></td>
+                <td>${formatM3(toptanM3_bbb)}</td>
+                <td><strong>${formatAdet(toptanAd_bbb)}</strong></td>
+                <td>${formatM3(toptanM3_bb_b)}</td>
+                <td><strong>${formatAdet(toptanAd_bb_b)}</strong></td>
+                
+                <td>${formatM3(perM3_bb)}</td>
+                <td><strong>${formatAdet(perAd_bb)}</strong></td>
+                <td>${formatM3(perM3_bbb)}</td>
+                <td><strong>${formatAdet(perAd_bbb)}</strong></td>
+                <td>${formatM3(perM3_bb_b)}</td>
+                <td><strong>${formatAdet(perAd_bb_b)}</strong></td>
+            `;
+            plyBody.appendChild(tr);
+        });
+    </script>
+</body>
+
+</html>

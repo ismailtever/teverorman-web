@@ -121,6 +121,7 @@ const translations = {
     // Navigation
     'nav.home': { en: 'Home', tr: 'Ana Sayfa', fa: 'خانه', 'ar-gcc': 'الرئيسية', 'ar-eg': 'الرئيسية', de: 'Startseite', fr: 'Accueil', es: 'Inicio', it: 'Home', 'zh-cn': '首页' },
     'nav.products': { en: 'Products', tr: 'Ürünler', fa: 'محصولات', 'ar-gcc': 'منتجات', 'ar-eg': 'منتجات', de: 'Produkte', fr: 'Produits', es: 'Productos', it: 'Prodotti', 'zh-cn': '产品' },
+    'nav.prices': { en: 'Price List', tr: 'Fiyat Listesi', de: 'Preisliste', fr: 'Liste des prix', es: 'Lista de precios', it: 'Listino prezzi', 'zh-cn': '价格表' },
     'nav.lumber': { en: 'Lumber', tr: 'Kereste', fa: 'الوار', 'ar-gcc': 'الأخشاب', 'ar-eg': 'الأخشاب', de: 'Schnittholz', fr: 'Bois', es: 'Madera', it: 'Legname', 'zh-cn': '木材' },
     'nav.about': { en: 'Our Heritage', tr: 'Mirasımız', fa: 'درباره ما', 'ar-gcc': 'تراثنا', 'ar-eg': 'تراثنا', de: 'Unser Erbe', fr: 'Notre Héritage', es: 'Nuestra Herencia', it: 'La Nostra Eredità', 'zh-cn': '我们的遗产' },
     'nav.sanat': { en: 'Tever Sanat', tr: 'Tever Sanat', fa: 'تور هنر', 'ar-gcc': 'تيفير للفنون', 'ar-eg': 'تيفير للفنون', de: 'Tever Kunst', fr: 'Tever Art', es: 'Tever Arte', it: 'Tever Arte', 'zh-cn': 'Tever 艺术' },
@@ -239,7 +240,75 @@ const translations = {
     'contact.message': { en: 'Message', tr: 'Mesajınız' },
     'contact.btn_email': { en: 'Send Email', tr: 'E-Posta Gönder' },
     'contact.btn_whatsapp': { en: 'Send via WhatsApp', tr: 'WhatsApp ile Gönder' },
-    'contact.whatsapp_hint': { en: 'Need a faster response? Use the WhatsApp button.', tr: 'Daha hızlı yanıt için WhatsApp butonunu kullanın.' }
+    'contact.whatsapp_hint': { en: 'Need a faster response? Use the WhatsApp button.', tr: 'Daha hızlı yanıt için WhatsApp butonunu kullanın.' },
+
+    // Prices Page
+    'prices.title': { en: 'Plywood & Kontrplak Price List', tr: 'Plywood & Kontrplak Fiyat Listesi' },
+    'prices.subtitle': { en: 'Wholesale and Retail Price Catalog - 2026', tr: 'Toptan ve Perakende Satış Fiyat Kataloğu - 2026' },
+    'prices.doc_meta': { en: 'Document No: TO-2026/FL-01 | Issue Date: 09.06.2026', tr: 'Doküman No: TO-2026/FL-01 | Yayın Tarihi: 09.06.2026' },
+    'prices.download_text': { en: 'You can download the price list as a PDF to your computer or phone.', tr: 'Fiyat listesini bilgisayarınıza veya telefonunuza PDF olarak indirebilirsiniz.' },
+    'prices.download_btn': { en: 'Download PDF Price List', tr: 'Fiyat Listesini PDF Olarak İndir' },
+    'prices.film_faced_title': { en: 'Film-Faced Plywood (Filmli Ürünler)', tr: 'Filmli Ürünler (Film-Faced Plywood)' },
+    'prices.film_faced_desc': {
+        en: 'For our film-faced plywood products, premium 120 g/m² surfactor proTEG 427 phenolic film is used to ensure high wear resistance and a smooth concrete surface finish in formwork applications.',
+        tr: 'Filmli kontrplak ürünlerimizin yüzeyinde, beton kalıplarında yüksek aşınma direnci ve pürüzsüz yüzey kalitesi elde etmek amacıyla 120 g/m² surfactor proTEG 427 fenolik film kullanılmaktadır.'
+    },
+    'prices.plywood_title': { en: 'Birch Plywood Products (Kontrplak Ürünler)', tr: 'Kontrplak Ürünler (Birch Plywood)' },
+    'prices.table_thick': { en: 'Thickness', tr: 'Kalınlık' },
+    'prices.table_thick_mm': { en: 'THICKNESS (mm)', tr: 'KALINLIK (mm)' },
+    'prices.table_width_mm': { en: 'WIDTH (mm)', tr: 'EN (mm)' },
+    'prices.table_length_mm': { en: 'LENGTH (mm)', tr: 'BOY (mm)' },
+    'prices.table_wholesale': { en: 'WHOLESALE PRICE', tr: 'TOPTAN SATIŞ FİYATI' },
+    'prices.table_retail': { en: 'RETAIL PRICE', tr: 'PERAKENDE SATIŞ FİYATI' },
+    'prices.table_m3_price': { en: 'm³ PRICE', tr: 'm³ SATIŞ FİYATI' },
+    'prices.table_adet_price': { en: 'SHEET PRICE', tr: 'ADET SATIŞ FİYATI' },
+    'prices.quality_bb': { en: 'BB/BB GRADE', tr: 'KALİTE BB/BB' },
+    'prices.quality_bbb': { en: 'B/BB GRADE', tr: 'KALİTE B/BB' },
+    'prices.quality_bb_b': { en: 'B/B GRADE', tr: 'KALİTE B/B' },
+    'prices.m3_fiyat': { en: 'm³ Price', tr: 'm³ Fiyatı' },
+    'prices.adet_fiyat': { en: 'Sheet Price', tr: 'Adet Fiyatı' },
+    'prices.table_swipe_hint': { en: '➔ Swipe horizontally to view all columns', tr: '➔ Tüm sütunları görmek için tabloyu sağa/sola kaydırabilirsiniz.' },
+    'prices.terms_title': { en: 'Commercial Terms', tr: 'Ticari Şartlar' },
+    'prices.incoterms_label': { en: 'Incoterms:', tr: 'Teslim Şekli:' },
+    'prices.currency_label': { en: 'Currency:', tr: 'Para Birimi:' },
+    'prices.moq_label': { en: 'MOQ:', tr: 'Minimum Sipariş (MOQ):' },
+    'prices.payment_label': { en: 'Payment Terms:', tr: 'Ödeme Şartı:' },
+    'prices.lead_label': { en: 'Lead Time:', tr: 'Teslim Süresi:' },
+    'prices.validity_label': { en: 'Validity:', tr: 'Geçerlilik:' },
+    'prices.bank_title': { en: 'Bank Account Details (IBAN)', tr: 'Banka Hesap Bilgileri (IBAN)' },
+    'prices.bank_beneficiary_label': { en: 'Beneficiary:', tr: 'Alıcı / Ünvan:' },
+    'prices.bank_eur_label': { en: 'EUR IBAN:', tr: 'EUR IBAN:' },
+    'prices.bank_tl_label': { en: 'TL IBAN:', tr: 'TL IBAN:' },
+    'prices.bank_usd_label': { en: 'USD IBAN:', tr: 'USD IBAN:' },
+    'prices.bank_notice': { en: '* Please state the invoice number in the payment description.', tr: '* Lütfen ödeme açıklamalarında fatura numaranızı belirtiniz.' },
+    'prices.incoterms_val': {
+        en: '<strong>Delivery Terms:</strong> Prices are Sakarya Factory delivery prices (Ex Works)',
+        tr: '<strong>Teslim Şekli:</strong> Fiyatlarımız Sakarya Fabrika teslim fiyatlarıdır.'
+    },
+    'prices.moq_val': {
+        en: '<strong>Wholesale MOQ:</strong> Our wholesale prices are valid for minimum orders of 300 m³ and above.',
+        tr: '<strong>Toptan Minimum Sipariş:</strong> Toptan satış fiyatlarımız minimum 300 m³ ve üzeri siparişler için geçerlidir.'
+    },
+    'prices.currency_val': {
+        en: '<strong>Currency:</strong> EUR (Payments made with the order are calculated and processed based on the Central Bank of the Republic of Turkey (CBRT) Effective Selling Rate)',
+        tr: '<strong>Para Birimi:</strong> EUR (Sipariş ile birlikte yapılacak ödemeler, Türkiye Cumhuriyet Merkez Bankası (TCMB) Efektif Satış Kuru üzerinden hesap edilerek gerçekleştirilir)'
+    },
+    'prices.sheets_val': {
+        en: '<strong>Approx. Sheets per m³ (1250x2500 mm):</strong> 3mm: 106 Sheets | 4mm: 80 Sheets | 6.5mm: 49 Sheets | 9mm: 35 Sheets | 12mm: 26 Sheets | 15mm: 21 Sheets | 18mm: 17 Sheets | 21mm: 15 Sheets | 24mm: 13 Sheets | 27mm: 11 Sheets | 30mm: 10 Sheets | 35mm: 9 Sheets | 40mm: 8 Sheets | 45mm: 7 Sheets | 50mm: 6 Sheets',
+        tr: '<strong>1 m³ Plaka Adetleri (1250x2500 mm):</strong> 3mm: 106 Adet | 4mm: 80 Adet | 6.5mm: 49 Adet | 9mm: 35 Adet | 12mm: 26 Adet | 15mm: 21 Adet | 18mm: 17 Adet | 21mm: 15 Adet | 24mm: 13 Adet | 27mm: 11 Adet | 30mm: 10 Adet | 35mm: 9 Adet | 40mm: 8 Adet | 45mm: 7 Adet | 50mm: 6 Adet'
+    },
+    'prices.payment_val': {
+        en: '<strong>Payment Terms:</strong> Determined at the time of order.',
+        tr: '<strong>Ödeme Şartı:</strong> Sipariş esnasında belirlenir.'
+    },
+    'prices.lead_val': {
+        en: '<strong>Lead Time:</strong> 2-4 weeks from order confirmation.',
+        tr: '<strong>Teslim Süresi:</strong> Sipariş onayından itibaren 2-4 hafta.'
+    },
+    'prices.validity_val': {
+        en: '<strong>Validity:</strong> Valid for 30 days from the offer date.',
+        tr: '<strong>Geçerlilik:</strong> Teklif tarihinden itibaren 30 gün geçerlidir.'
+    }
 };
 
 function initLanguageSystem() {

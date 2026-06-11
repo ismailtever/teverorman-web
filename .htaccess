@@ -2,6 +2,16 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# Support extension-less HTML URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*)$ $1.html [NC,L]
+
+# Specific mapping for Mentra support and marketing
+RewriteRule ^support$ mentra-support.html [NC,L]
+RewriteRule ^mentra$ mentra.html [NC,L]
+RewriteRule ^privacy$ mentra-privacy.html [NC,L]
+
 # Optional: Browser Caching for better speed
 <IfModule mod_expires.c>
   ExpiresActive On
@@ -17,3 +27,4 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
   ExpiresByType image/x-icon "access plus 1 year"
   ExpiresDefault "access plus 2 days"
 </IfModule>
+
