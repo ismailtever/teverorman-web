@@ -5,8 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 
 import { ThemedText } from '@/components/themed-text';
 import { PrimaryButton } from '@/components/ui/Buttons';
-import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
+import { PW } from '@/constants/PaywallColors';
 import { I18n } from '@/services/i18n';
 
 import { usePaywall } from '@/components/paywall/usePaywall';
@@ -25,12 +25,15 @@ export default function FeatureGatePaywall() {
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        I18n.subscribe(() => forceUpdate(n => n + 1));
+        const unsubscribe = I18n.subscribe(() => forceUpdate(n => n + 1));
         // Defer heavy UI rendering until after the navigation transition completes
         const task = InteractionManager.runAfterInteractions(() => {
             setIsReady(true);
         });
-        return () => task.cancel();
+        return () => {
+            unsubscribe();
+            task.cancel();
+        };
     }, []);
 
     const {
@@ -50,9 +53,9 @@ export default function FeatureGatePaywall() {
 
     // Reduced feature set for feature gate
     const FEATURES = [
-        "Unlimited Workouts",
-        "Advanced Insights",
-        "No Ads"
+        I18n.t('paywallFeat1'),
+        I18n.t('paywallFeat2'),
+        I18n.t('paywallFeat4'),
     ];
 
     const CTA_VARIANT: 'A' | 'B' = 'A';
@@ -73,7 +76,7 @@ export default function FeatureGatePaywall() {
     if (isLoading || !isReady) {
         return (
             <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-                <ActivityIndicator size="large" color={Colors.mentra.paywall.accent} />
+                <ActivityIndicator size="large" color={PW.accent} />
             </View>
         );
     }
@@ -89,9 +92,9 @@ export default function FeatureGatePaywall() {
 
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                 <View style={styles.heroSection}>
-                    <ThemedText style={styles.headline}>{I18n.t('paywallProUnlock')}</ThemedText>
-                    <ThemedText style={styles.subHeadline}>{I18n.t('paywallProSubtitle')}</ThemedText>
-                    <ThemedText style={[styles.subHeadline, { marginTop: 8, fontSize: 13, color: Colors.mentra.paywall.accent, fontWeight: '500' }]}>
+                    <ThemedText style={styles.headline}>{I18n.t('paywallHeroTitle')}</ThemedText>
+                    <ThemedText style={styles.subHeadline}>{I18n.t('paywallHeroSub')}</ThemedText>
+                    <ThemedText style={[styles.subHeadline, { marginTop: 8, fontSize: 13, color: PW.accent, fontWeight: '500' }]}>
                         {I18n.t('paywallValueFrame')}
                     </ThemedText>
                 </View>
@@ -139,7 +142,7 @@ export default function FeatureGatePaywall() {
                         onPress={() => handlePurchase(handleFeatureGateSuccess)}
                         disabled={isPurchasing}
                         fullWidth
-                        style={{ backgroundColor: Colors.mentra.paywall.accent }}
+                        style={{ backgroundColor: PW.accent }}
                     />
 
                     <View style={styles.ethicalContainer}>
@@ -162,7 +165,7 @@ export default function FeatureGatePaywall() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.mentra.paywall.background,
+        backgroundColor: PW.background,
     },
     scrollContent: {
         padding: Metrics.spacing.l,
@@ -175,13 +178,13 @@ const styles = StyleSheet.create({
     headline: {
         fontSize: 32, // Smaller
         fontWeight: '800',
-        color: Colors.mentra.paywall.text,
+        color: PW.text,
         marginBottom: Metrics.spacing.s,
         lineHeight: 38,
     },
     subHeadline: {
         fontSize: 15, // Smaller
-        color: Colors.mentra.paywall.textDim,
+        color: PW.textDim,
         lineHeight: 22,
     },
     featuresSection: {
@@ -189,7 +192,7 @@ const styles = StyleSheet.create({
     },
     socialProof: {
         fontSize: 12,
-        color: Colors.mentra.paywall.textDim,
+        color: PW.textDim,
         textAlign: 'center',
         marginTop: Metrics.spacing.m,
         fontStyle: 'italic'
@@ -207,6 +210,6 @@ const styles = StyleSheet.create({
     },
     ethicalText: {
         fontSize: 13,
-        color: Colors.mentra.paywall.textDim
+        color: PW.textDim
     }
 });

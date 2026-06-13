@@ -7,13 +7,13 @@ import { View, Text, StyleSheet, Pressable, TextInput, KeyboardAvoidingView, Pla
 import { router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import Animated, { FadeIn, FadeInDown, useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { X, Brain, BrainCircuit, Play, Pause, RotateCcw, Sparkles } from 'lucide-react-native';
-import { useI18n } from '@/services/i18n';
+import { I18n } from '@/services/i18n';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
-import { Colors } from '@/constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Storage } from '@/services/storage';
 import { AnalysisEngine, DEFAULT_COGNITIVE_PROFILE } from '@/services/engine/AnalysisEngine';
@@ -23,27 +23,27 @@ import { Streak } from '@/services/streak';
 
 type Phase = 'setup' | 'focus' | 'done';
 
+const DURATIONS = [
+  { mins: 5,  label: '5 min',  desc: 'Starter',   color: '#10B981' },
+  { mins: 10, label: '10 min', desc: 'Builder',    color: '#194031' },
+  { mins: 20, label: '20 min', desc: 'Deep Work',  color: '#6366F1' },
+  { mins: 30, label: '30 min', desc: 'Flow State', color: '#8B5CF6' },
+];
+
+const FOCUS_QUOTES = [
+  "Your brain is rebuilding its ability to hold a single thought.",
+  "Every second without checking your phone is a rep for your prefrontal cortex.",
+  "Boredom is not a problem — it's your dopamine system resetting.",
+  "The discomfort you feel is neuroplasticity happening.",
+  "Deep work is the skill social media stole. You're taking it back.",
+];
+
 import { NeuroActivationWarmup } from '@/components/game/NeuroActivationWarmup';
 
 export default function DeepFocusGame() {
   const insets = useSafeAreaInsets();
-  const { t, lang } = useI18n();
-
-  const DURATIONS = React.useMemo(() => [
-    { mins: 5,  label: t('dfDur5min'),  desc: t('dfDurStarter'),   color: '#10B981' },
-    { mins: 10, label: t('dfDur10min'), desc: t('dfDurBuilder'),    color: Colors.mentra.brandPrimary },
-    { mins: 20, label: t('dfDur20min'), desc: t('dfDurDeepWork'),  color: '#6366F1' },
-    { mins: 30, label: t('dfDur30min'), desc: t('dfDurFlowState'), color: '#8B5CF6' },
-  ], [lang]);
-
-  const FOCUS_QUOTES = React.useMemo(() => [
-    t('dfQuote1'),
-    t('dfQuote2'),
-    t('dfQuote3'),
-    t('dfQuote4'),
-    t('dfQuote5'),
-  ], [lang]);
-
+  const C = useMentraTheme();
+  const styles = makeStyles(C);
   const [phase, setPhase]             = useState<Phase>('setup');
   const [selectedDur, setSelectedDur] = useState(DURATIONS[0]);
   const [task, setTask]               = useState('');
@@ -53,25 +53,21 @@ export default function DeepFocusGame() {
   const [distractions, setDistractions] = useState(0);
   const [quoteIdx]                    = useState(Math.floor(Math.random() * FOCUS_QUOTES.length));
 
-  // Sync selected duration if language changes during setup
-  useEffect(() => {
-    if (phase === 'setup') {
-      const current = DURATIONS.find(d => d.mins === selectedDur.mins);
-      if (current) setSelectedDur(current);
-    }
-  }, [lang, phase]);
-
-  // BUG FIX 1: Use a single ref for the interval — never recreate on state change
-  const timerRef     = useRef<ReturnType<typeof setInterval> | null>(null);
-  const isPausedRef  = useRef(false);  // Ref mirror — readable inside interval
-  const secondsRef   = useRef(0);      // Ref mirror — readable inside interval
+  // Refs to avoid stale closures inside setInterval
+  const timerRef        = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isPausedRef     = useRef(false);
+  const secondsRef      = useRef(0);
+  const distractionsRef = useRef(0); // mirrors distractions state — safe to read from timer
+  const selectedDurRef  = useRef(DURATIONS[0]); // mirrors selectedDur
   const totalSecs    = selectedDur.mins * 60;
   const progress     = useSharedValue(1);
   const progStyle    = useAnimatedStyle(() => ({ width: `${progress.value * 100}%` as any }));
 
-  // Keep refs in sync
+  // Keep refs in sync with state
   useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
   useEffect(() => { secondsRef.current = secondsLeft; }, [secondsLeft]);
+  useEffect(() => { distractionsRef.current = distractions; }, [distractions]);
+  useEffect(() => { selectedDurRef.current = selectedDur; }, [selectedDur]);
 
   const stopTimer = useCallback(() => {
     if (timerRef.current) {
@@ -112,23 +108,28 @@ export default function DeepFocusGame() {
     setPhase('done');
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
+    // Use refs — avoids stale closure when called from setInterval
+    const currentDistractions = distractionsRef.current;
+    const currentDurMins = selectedDurRef.current.mins;
+    const finalFocusScore = Math.max(0, 100 - currentDistractions * 20);
+
     const session: RawGameSession = {
         sessionId: `${Date.now()}-focus-flow`,
         gameId: 'focus-flow',
         timestamp: new Date().toISOString(),
-        durationSeconds: selectedDur.mins * 60,
+        durationSeconds: currentDurMins * 60,
         events: [],
         rtAllMs: [],
         rtCorrectMs: [],
-        score: focusScore,
-        accuracy: 1.0, 
+        score: finalFocusScore,
+        accuracy: 1.0,
         avgReactionTime: 0,
-        maxStreak: selectedDur.mins
+        maxStreak: currentDurMins
     };
 
     try {
         await Storage.saveSession(session);
-        await Storage.saveGameScore('focus-flow', focusScore);
+        await Storage.saveGameScore('focus-flow', finalFocusScore);
 
         const currentProfile = await Storage.getCognitiveProfile() || DEFAULT_COGNITIVE_PROFILE;
         const updatedProfile = AnalysisEngine.updateProfile(currentProfile, session);
@@ -173,37 +174,37 @@ export default function DeepFocusGame() {
   // ── Setup ──────────────────────────────────────────────────────────────────
   if (phase === 'setup') return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-      <View style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
         <Stack.Screen options={{ headerShown: false }} />
-        <StatusBar style="dark" />
+        <StatusBar style={C.statusBar} />
         <View style={styles.header}>
-          <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.closeBtn}><X size={20} color={Colors.mentra.text} /></Pressable>
-          <Text style={styles.headerTitle}>{t('dfTitle')}</Text>
+          <Pressable onPress={() => router.back()} style={styles.closeBtn}><X size={20} color={C.text} /></Pressable>
+          <Text style={styles.headerTitle}>Deep Focus</Text>
           <View style={{ width: 40 }} />
         </View>
         <Animated.View entering={FadeIn.springify()} style={styles.setupContent}>
           <View style={styles.scienceBox}>
             <View style={styles.sectionHeader}>
-              <BrainCircuit size={14} color={Colors.mentra.brandAccent} />
-              <ThemedText style={[styles.sectionLabel, { color: Colors.mentra.brandAccent }]}>
-                {t('scienceBehind')}
+              <BrainCircuit size={14} color={C.brandSecondary} />
+              <ThemedText style={[styles.sectionLabel, { color: C.brandSecondary }]}>
+                {I18n.t('scienceBehind')}
               </ThemedText>
             </View>
             <ThemedText style={styles.scienceWhat}>
-              {t('dfIntroWhat')}
+              {I18n.t('dfIntroWhat')}
             </ThemedText>
             <ThemedText style={styles.scienceWhy}>
-              {t('dfIntroWhy')}
+              {I18n.t('dfIntroWhy')}
             </ThemedText>
           </View>
-          <Text style={styles.setupLabel}>{t('dfSetupWork')}</Text>
+          <Text style={styles.setupLabel}>WHAT WILL YOU WORK ON?</Text>
           <TextInput
             style={styles.taskInput}
-            placeholder={t('dfSetupPlaceholder') || "e.g. Read 20 pages, Write report intro..."}
-            placeholderTextColor={Colors.mentra.muted}
+            placeholder="e.g. Read 20 pages, Write report intro..."
+            placeholderTextColor={C.muted}
             value={task} onChangeText={setTask} multiline
           />
-          <Text style={styles.setupLabel}>{t('dfSetupDur')}</Text>
+          <Text style={styles.setupLabel}>CHOOSE DURATION</Text>
           <View style={styles.durGrid}>
             {DURATIONS.map(d => (
               <Pressable key={d.mins}
@@ -217,14 +218,14 @@ export default function DeepFocusGame() {
           </View>
           <Pressable onPress={() => setShowWarmup(true)} style={[styles.startBtn, { backgroundColor: selectedDur.color }]}>
             <Play size={18} color="#FFF" />
-            <Text style={styles.startBtnText}>{t('dfStart')}</Text>
+            <Text style={styles.startBtnText}>Start Deep Focus</Text>
           </Pressable>
         </Animated.View>
 
         <NeuroActivationWarmup 
             visible={showWarmup} 
             gameTitle="DEEP FOCUS"
-            tutorialText={t('gameDeepFocusTutorial')}
+            tutorialText={I18n.t('gameDeepFocusTutorial' as any)}
             onComplete={() => {
                 setShowWarmup(false);
                 startGame();
@@ -236,30 +237,35 @@ export default function DeepFocusGame() {
 
   // ── Done ───────────────────────────────────────────────────────────────────
   if (phase === 'done') return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
       <Stack.Screen options={{ headerShown: false }} />
+      <StatusBar style={C.statusBar} />
       <Animated.View entering={FadeIn.springify()} style={styles.doneBox}>
         <Text style={{ fontSize: 72 }}>🎯</Text>
-        <Text style={styles.doneTitle}>{t('dfDone')}</Text>
-        <Text style={styles.doneTask}>{task || t('dfFocusSession')}</Text>
+        <Text style={styles.doneTitle}>Deep Work Done</Text>
+        <Text style={styles.doneTask}>{task || 'Focus session'}</Text>
         <View style={styles.doneStats}>
-          <View style={styles.doneStat}><Text style={styles.doneStatVal}>{selectedDur.mins}</Text><Text style={styles.doneStatLabel}>{t('dfMinutes')}</Text></View>
+          <View style={styles.doneStat}><Text style={styles.doneStatVal}>{selectedDur.mins}</Text><Text style={styles.doneStatLabel}>minutes</Text></View>
           <View style={styles.doneStat}>
-            <Text style={[styles.doneStatVal, { color: focusScore >= 80 ? Colors.mentra.success : Colors.mentra.warning }]}>{focusScore}</Text>
-            <Text style={styles.doneStatLabel}>{t('dfScore')}</Text>
+            <Text style={[styles.doneStatVal, { color: focusScore >= 80 ? C.success : C.warning }]}>{focusScore}</Text>
+            <Text style={styles.doneStatLabel}>focus score</Text>
           </View>
           <View style={styles.doneStat}>
-            <Text style={[styles.doneStatVal, distractions > 0 ? { color: Colors.mentra.danger } : { color: Colors.mentra.success }]}>{distractions}</Text>
-            <Text style={styles.doneStatLabel}>{t('dfPauses')}</Text>
+            <Text style={[styles.doneStatVal, distractions > 0 ? { color: C.danger } : { color: C.success }]}>{distractions}</Text>
+            <Text style={styles.doneStatLabel}>pauses</Text>
           </View>
         </View>
         <Text style={styles.doneTip}>
           {distractions === 0
-            ? t('dfBoredomTip')
-            : t('dfPauseTip', { count: distractions, plural: distractions > 1 ? 's' : '' })}
+            ? "Perfect focus. Your prefrontal cortex just got a full workout."
+            : `${distractions} pause${distractions > 1 ? 's' : ''}. Each one was a pull from your old habit. You still finished — that's the win.`}
         </Text>
-        <Pressable onPress={startGame} style={styles.startBtn}><Text style={styles.startBtnText}>{t('playAgain')}</Text></Pressable>
-        <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.backLink}><Text style={styles.backLinkText}>← {t('back')}</Text></Pressable>
+        <Pressable onPress={() => setPhase('setup')} style={[styles.startBtn, { backgroundColor: selectedDur.color }]}>
+          <Text style={styles.startBtnText}>Another Session</Text>
+        </Pressable>
+        <Pressable onPress={() => router.back()} style={styles.backLink}>
+          <Text style={styles.backLinkText}>← Back to Home</Text>
+        </Pressable>
       </Animated.View>
     </View>
   );
@@ -268,7 +274,7 @@ export default function DeepFocusGame() {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ headerShown: false }} />
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
       <LinearGradient colors={['#194031', '#0F2820']} style={StyleSheet.absoluteFill} />
       <View style={styles.focusHeader}>
         <Pressable onPress={() => { stopTimer(); router.back(); }} style={styles.closeBtnDark}>
@@ -283,7 +289,7 @@ export default function DeepFocusGame() {
         <View style={styles.timerCircle}>
           <View style={styles.timerCircleInner} />
           <Text style={styles.timerDisplay}>{String(mins).padStart(2,'0')}:{String(secs).padStart(2,'0')}</Text>
-          <Text style={styles.timerLabel}>{isPaused ? t('timerPaused') : t('timerFocused')}</Text>
+          <Text style={styles.timerLabel}>{isPaused ? 'PAUSED' : 'FOCUSED'}</Text>
         </View>
         <Text style={styles.focusQuote}>"{FOCUS_QUOTES[quoteIdx]}"</Text>
       </Animated.View>
@@ -303,76 +309,78 @@ export default function DeepFocusGame() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.mentra.bg },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 12 },
-  headerTitle: { fontSize: 18, fontWeight: '800', color: Colors.mentra.text },
-  closeBtn: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: Colors.mentra.border, backgroundColor: Colors.mentra.surface, alignItems: 'center', justifyContent: 'center' },
-  closeBtnDark: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
-  setupContent: { flex: 1, paddingHorizontal: 24, paddingTop: 8, gap: 16 },
-  scienceBox: {
-    backgroundColor: Colors.mentra.brandAccent + '08',
-    padding: Metrics.spacing.m,
-    borderRadius: Metrics.radius.m,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: Colors.mentra.brandAccent + '15',
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 8,
-  },
-  sectionLabel: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: Colors.mentra.brandPrimary,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
-  scienceWhat: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: Colors.mentra.text,
-    marginBottom: 4,
-  },
-  scienceWhy: {
-    fontSize: 13,
-    color: Colors.mentra.textDim,
-    lineHeight: 18,
-  },
-  setupLabel: { fontSize: 11, fontWeight: '800', color: Colors.mentra.textDim, letterSpacing: 1.5 },
-  taskInput: { backgroundColor: Colors.mentra.surface, borderRadius: 14, borderWidth: 1, borderColor: Colors.mentra.border, padding: 14, fontSize: 15, color: Colors.mentra.text, minHeight: 72 },
-  durGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  durCard: { width: '47%', padding: 14, borderRadius: 14, borderWidth: 2, borderColor: Colors.mentra.border, backgroundColor: Colors.mentra.surface, alignItems: 'center', gap: 4 },
-  durLabel: { fontSize: 18, fontWeight: '800' },
-  durDesc: { fontSize: 11, color: Colors.mentra.textDim, fontWeight: '600' },
-  startBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 16, borderRadius: 16, marginTop: 4 },
-  startBtnText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
-  focusHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 12 },
-  distractionBadge: { backgroundColor: 'rgba(255,255,255,0.12)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 },
-  distractionText: { color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: '700' },
-  focusCenter: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 28 },
-  focusTask: { fontSize: 16, color: 'rgba(255,255,255,0.6)', fontWeight: '600', textAlign: 'center' },
-  timerCircle: { width: 200, height: 200, borderRadius: 100, borderWidth: 3, borderColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
-  timerCircleInner: { position: 'absolute', width: 180, height: 180, borderRadius: 90, backgroundColor: 'rgba(74,222,128,0.06)' },
-  timerDisplay: { fontSize: 52, fontWeight: '900', color: '#FFF', letterSpacing: -2 },
-  timerLabel: { fontSize: 11, fontWeight: '800', color: 'rgba(255,255,255,0.4)', letterSpacing: 2 },
-  focusQuote: { fontSize: 14, color: 'rgba(255,255,255,0.4)', textAlign: 'center', lineHeight: 22, fontStyle: 'italic', paddingHorizontal: 16 },
-  progressBg: { height: 3, backgroundColor: 'rgba(255,255,255,0.1)', marginHorizontal: 24, borderRadius: 2, marginBottom: 24 },
-  progressFill: { height: 3, borderRadius: 2 },
-  focusControls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 20, paddingBottom: 40 },
-  controlBtn: { width: 52, height: 52, borderRadius: 26, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
-  mainControlBtn: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16 },
-  doneBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 14 },
-  doneTitle: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  doneTask: { fontSize: 14, color: Colors.mentra.textDim, textAlign: 'center' },
-  doneStats: { flexDirection: 'row', gap: 12 },
-  doneStat: { flex: 1, backgroundColor: Colors.mentra.surface, borderRadius: 16, padding: 16, alignItems: 'center', borderWidth: 1, borderColor: Colors.mentra.border },
-  doneStatVal: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text },
-  doneStatLabel: { fontSize: 10, color: Colors.mentra.textDim, fontWeight: '600', marginTop: 2 },
-  doneTip: { fontSize: 13, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 20 },
-  backLink: { paddingVertical: 8 },
-  backLinkText: { color: Colors.mentra.textDim, fontSize: 14, fontWeight: '600' },
-});
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: C.bg },
+    header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 12 },
+    headerTitle: { fontSize: 18, fontWeight: '800', color: C.text },
+    closeBtn: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: C.border, backgroundColor: C.surface, alignItems: 'center', justifyContent: 'center' },
+    closeBtnDark: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
+    setupContent: { flex: 1, paddingHorizontal: 24, paddingTop: 8, gap: 16 },
+    scienceBox: {
+      backgroundColor: C.brandSecondary + '18',
+      padding: Metrics.spacing.m,
+      borderRadius: Metrics.radius.m,
+      width: '100%',
+      borderWidth: 1,
+      borderColor: C.brandSecondary + '30',
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      marginBottom: 8,
+    },
+    sectionLabel: {
+      fontSize: 11,
+      fontWeight: '800',
+      color: C.brandPrimary,
+      letterSpacing: 1,
+      textTransform: 'uppercase',
+    },
+    scienceWhat: {
+      fontSize: 15,
+      fontWeight: '700',
+      color: C.text,
+      marginBottom: 4,
+    },
+    scienceWhy: {
+      fontSize: 13,
+      color: C.textDim,
+      lineHeight: 18,
+    },
+    setupLabel: { fontSize: 11, fontWeight: '800', color: C.textDim, letterSpacing: 1.5 },
+    taskInput: { backgroundColor: C.surface, borderRadius: 14, borderWidth: 1, borderColor: C.border, padding: 14, fontSize: 15, color: C.text, minHeight: 72 },
+    durGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+    durCard: { width: '47%', padding: 14, borderRadius: 14, borderWidth: 2, borderColor: C.border, backgroundColor: C.surface, alignItems: 'center', gap: 4 },
+    durLabel: { fontSize: 18, fontWeight: '800' },
+    durDesc: { fontSize: 11, color: C.textDim, fontWeight: '600' },
+    startBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 16, borderRadius: 16, marginTop: 4 },
+    startBtnText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
+    focusHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 12 },
+    distractionBadge: { backgroundColor: 'rgba(255,255,255,0.12)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 },
+    distractionText: { color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: '700' },
+    focusCenter: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 28 },
+    focusTask: { fontSize: 16, color: 'rgba(255,255,255,0.6)', fontWeight: '600', textAlign: 'center' },
+    timerCircle: { width: 200, height: 200, borderRadius: 100, borderWidth: 3, borderColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' },
+    timerCircleInner: { position: 'absolute', width: 180, height: 180, borderRadius: 90, backgroundColor: 'rgba(74,222,128,0.06)' },
+    timerDisplay: { fontSize: 52, fontWeight: '900', color: '#FFF', letterSpacing: -2 },
+    timerLabel: { fontSize: 11, fontWeight: '800', color: 'rgba(255,255,255,0.4)', letterSpacing: 2 },
+    focusQuote: { fontSize: 14, color: 'rgba(255,255,255,0.4)', textAlign: 'center', lineHeight: 22, fontStyle: 'italic', paddingHorizontal: 16 },
+    progressBg: { height: 3, backgroundColor: 'rgba(255,255,255,0.1)', marginHorizontal: 24, borderRadius: 2, marginBottom: 24 },
+    progressFill: { height: 3, borderRadius: 2 },
+    focusControls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 20, paddingBottom: 40 },
+    controlBtn: { width: 52, height: 52, borderRadius: 26, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
+    mainControlBtn: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16 },
+    doneBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 14 },
+    doneTitle: { fontSize: 28, fontWeight: '900', color: C.text, letterSpacing: -0.5 },
+    doneTask: { fontSize: 14, color: C.textDim, textAlign: 'center' },
+    doneStats: { flexDirection: 'row', gap: 12 },
+    doneStat: { flex: 1, backgroundColor: C.surface, borderRadius: 16, padding: 16, alignItems: 'center', borderWidth: 1, borderColor: C.border },
+    doneStatVal: { fontSize: 28, fontWeight: '900', color: C.text },
+    doneStatLabel: { fontSize: 10, color: C.textDim, fontWeight: '600', marginTop: 2 },
+    doneTip: { fontSize: 13, color: C.textDim, textAlign: 'center', lineHeight: 20 },
+    backLink: { paddingVertical: 8 },
+    backLinkText: { color: C.textDim, fontSize: 14, fontWeight: '600' },
+  });
+}

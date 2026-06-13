@@ -5,8 +5,8 @@ import { StatusBar } from 'expo-status-bar';
 
 import { ThemedText } from '@/components/themed-text';
 import { PrimaryButton, GhostButton } from '@/components/ui/Buttons';
-import { Colors } from '@/constants/Colors';
 import { Metrics } from '@/constants/Theme';
+import { PW } from '@/constants/PaywallColors';
 import { I18n } from '@/services/i18n';
 
 import { usePaywall } from '@/components/paywall/usePaywall';
@@ -24,11 +24,14 @@ export default function OnboardingPaywall() {
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        I18n.subscribe(() => forceUpdate(n => n + 1));
+        const unsubscribe = I18n.subscribe(() => forceUpdate(n => n + 1));
         const task = InteractionManager.runAfterInteractions(() => {
             setIsReady(true);
         });
-        return () => task.cancel();
+        return () => {
+            unsubscribe();
+            task.cancel();
+        };
     }, []);
 
     const {
@@ -73,7 +76,7 @@ export default function OnboardingPaywall() {
     if (isLoading || !isReady) {
         return (
             <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-                <ActivityIndicator size="large" color={Colors.mentra.paywall.accent} />
+                <ActivityIndicator size="large" color={PW.accent} />
             </View>
         );
     }
@@ -90,7 +93,7 @@ export default function OnboardingPaywall() {
                 <View style={styles.heroSection}>
                     <ThemedText style={styles.headline}>{I18n.t('paywallHeroTitle')}</ThemedText>
                     <ThemedText style={styles.subHeadline}>{I18n.t('paywallHeroSub')}</ThemedText>
-                    <ThemedText style={[styles.subHeadline, { marginTop: 8, fontSize: 13, color: Colors.mentra.paywall.accent, fontWeight: '500' }]}>
+                    <ThemedText style={[styles.subHeadline, { marginTop: 8, fontSize: 13, color: PW.accent, fontWeight: '500' }]}>
                         {I18n.t('paywallValueFrame')}
                     </ThemedText>
                 </View>
@@ -138,7 +141,7 @@ export default function OnboardingPaywall() {
                         onPress={() => handlePurchase()}
                         disabled={isPurchasing}
                         fullWidth
-                        style={{ backgroundColor: Colors.mentra.paywall.accent }} // override explicitly
+                        style={{ backgroundColor: PW.accent }} // override explicitly
                     />
 
                     <View style={styles.ethicalContainer}>
@@ -161,7 +164,7 @@ export default function OnboardingPaywall() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.mentra.paywall.background,
+        backgroundColor: PW.background,
     },
     scrollContent: {
         padding: Metrics.spacing.l,
@@ -174,13 +177,13 @@ const styles = StyleSheet.create({
     headline: {
         fontSize: 36,
         fontWeight: '800',
-        color: Colors.mentra.paywall.text,
+        color: PW.text,
         marginBottom: Metrics.spacing.m,
         lineHeight: 42,
     },
     subHeadline: {
         fontSize: 16,
-        color: Colors.mentra.paywall.textDim,
+        color: PW.textDim,
         lineHeight: 24,
     },
     featuresSection: {
@@ -188,7 +191,7 @@ const styles = StyleSheet.create({
     },
     socialProof: {
         fontSize: 12,
-        color: Colors.mentra.paywall.textDim,
+        color: PW.textDim,
         textAlign: 'center',
         marginTop: Metrics.spacing.m,
         fontStyle: 'italic'
@@ -206,6 +209,6 @@ const styles = StyleSheet.create({
     },
     ethicalText: {
         fontSize: 13,
-        color: Colors.mentra.paywall.textDim
+        color: PW.textDim
     }
 });

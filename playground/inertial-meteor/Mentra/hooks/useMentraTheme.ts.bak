@@ -1,0 +1,45 @@
+import { useColorScheme } from 'react-native';
+import { Colors } from '@/constants/Colors';
+
+export function useMentraTheme() {
+  const theme = useColorScheme() ?? 'light';
+  const isDark = theme === 'dark';
+  
+  if (isDark) {
+    return {
+      bg: Colors.mentra.darkTokens.bg,
+      surface: Colors.mentra.darkTokens.surface,
+      surface2: Colors.mentra.darkTokens.surface2,
+      text: Colors.mentra.darkTokens.text,
+      textDim: Colors.mentra.darkTokens.textDim,
+      muted: Colors.mentra.darkTokens.muted,
+      brandPrimary: Colors.mentra.primaryDark,
+      brandSecondary: Colors.mentra.secondaryDark,
+      brandAccent: Colors.mentra.secondaryDark,
+      success: Colors.mentra.success,
+      warning: Colors.mentra.warning,
+      danger: Colors.mentra.danger,
+      border: Colors.mentra.darkTokens.border,
+      statusBar: 'light' as const,
+      isDark: true,
+    };
+  } else {
+    return {
+      bg: Colors.mentra.bg,
+      surface: Colors.mentra.surface,
+      surface2: Colors.mentra.surface2,
+      text: Colors.mentra.text,
+      textDim: Colors.mentra.textDim,
+      muted: Colors.mentra.muted,
+      brandPrimary: Colors.mentra.brandPrimary,
+      brandSecondary: Colors.mentra.brandSecondary,
+      brandAccent: Colors.mentra.brandAccent,
+      success: Colors.mentra.success,
+      warning: Colors.mentra.warning,
+      danger: Colors.mentra.danger,
+      border: Colors.mentra.border,
+      statusBar: 'dark' as const,
+      isDark: false,
+    };
+  }
+}

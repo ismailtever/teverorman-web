@@ -8,9 +8,9 @@ import Animated, { FadeInUp, FadeOutDown, useAnimatedStyle, withSpring, useShare
 import { ThemedText } from '@/components/themed-text';
 import { Card, StatCard } from '@/components/ui/Cards';
 import { PrimaryButton, SecondaryButton } from '@/components/ui/Buttons';
-import { Colors } from '@/constants/Colors';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Metrics } from '@/constants/Theme';
-import { useI18n } from '@/services/i18n';
+import { I18n } from '@/services/i18n';
 import { getPremiumStatus } from '@/services/purchases';
 
 // Core Engine
@@ -37,7 +37,7 @@ const PhaseMap = {
 };
 
 export default function DailySessionScreen() {
-    const { t } = useI18n();
+    const C = useMentraTheme();
     const [isPro, setIsPro] = useState(false);
 
     useEffect(() => {
@@ -86,26 +86,28 @@ export default function DailySessionScreen() {
         }
     }, [peakEngine.gameState, phase]);
 
+    const styles = makeStyles(C);
+
     // UI Renders based on phase
     const renderActivation = () => (
         <Animated.View entering={FadeInUp} exiting={FadeOutDown} style={styles.introContainer}>
             <View style={styles.activationCard}>
-                <TrendingUp size={48} color={Colors.mentra.brandPrimary} style={{ marginBottom: Metrics.spacing.l }} />
-                <ThemedText style={styles.themeBadge}>{t('dailyThemePrefix')} {weeklyTheme.toUpperCase()}</ThemedText>
-                <ThemedText style={styles.title}>{t('dailyActivationTitle')}</ThemedText>
+                <TrendingUp size={48} color={C.brandPrimary} style={{ marginBottom: Metrics.spacing.l }} />
+                <ThemedText style={styles.themeBadge}>WEEKLY THEME: {weeklyTheme.toUpperCase()}</ThemedText>
+                <ThemedText style={styles.title}>Concept Activation</ThemedText>
                 <ThemedText style={styles.subtitle}>
-                    {t('dailyActivationSubtitle')}
+                    Today we train working memory and processing speed under mild time pressure. Stay calm and focus on accuracy.
                 </ThemedText>
 
                 <View style={styles.phaseBreakdown}>
-                    <ThemedText style={styles.phaseItem}>{t('dailyPhase1')}</ThemedText>
-                    <ThemedText style={styles.phaseItem}>{t('dailyPhase2')}</ThemedText>
-                    <ThemedText style={styles.phaseItem}>{t('dailyPhase3')}</ThemedText>
+                    <ThemedText style={styles.phaseItem}>Phase 1: Working Memory Warm-up</ThemedText>
+                    <ThemedText style={styles.phaseItem}>Phase 2: Accelerated Memory (Core)</ThemedText>
+                    <ThemedText style={styles.phaseItem}>Phase 3: Reaction Burst (Speed)</ThemedText>
                 </View>
             </View>
 
             <PrimaryButton
-                title={t('dailyBeginBtn')}
+                title="Begin Session"
                 onPress={() => setPhase('warmup')}
                 style={{ width: '80%', marginTop: 20 }}
             />
@@ -119,38 +121,38 @@ export default function DailySessionScreen() {
         return (
             <Animated.View entering={FadeInUp} style={styles.introContainer}>
                 <View style={styles.headerBox}>
-                    <Brain size={48} color={Colors.mentra.brandPrimary} style={{ marginBottom: Metrics.spacing.m }} />
-                    <ThemedText style={styles.title}>{t('dailyCompleteTitle')}</ThemedText>
+                    <Brain size={48} color={C.brandPrimary} style={{ marginBottom: Metrics.spacing.m }} />
+                    <ThemedText style={styles.title}>Session Complete</ThemedText>
                     <Card style={styles.insightBox} variant="outline">
-                        <BarChart2 size={24} color={Colors.mentra.brandAccent} style={{ marginBottom: 8 }} />
+                        <BarChart2 size={24} color={C.brandPrimary} style={{ marginBottom: 8 }} />
                         <ThemedText style={styles.insight}>{insight}</ThemedText>
                     </Card>
                 </View>
 
                 <Card variant="outline" style={styles.metricsCard}>
                     <View style={styles.scoreRow}>
-                        <ThemedText style={styles.scoreLabel}>{t('dailyCognitiveOutput')}</ThemedText>
+                        <ThemedText style={styles.scoreLabel}>Cognitive Output</ThemedText>
                         <ThemedText style={styles.scoreValue}>{totalScore}</ThemedText>
                     </View>
 
                     <View style={styles.statsGrid}>
                         <StatCard
-                            title={t('accuracy')}
+                            title="Accuracy"
                             value={`${Math.round(avgAcc * 100)}%`}
-                            icon={<CheckCircle size={18} color={Colors.mentra.success} />}
+                            icon={<CheckCircle size={18} color={C.success} />}
                             trendPositive={avgAcc >= 0.85}
                         />
                         <StatCard
-                            title={t('reaction')}
+                            title="Reaction"
                             value={`${(avgRt / 1000).toFixed(2)}s`}
-                            icon={<Zap size={18} color={Colors.mentra.warning} />}
+                            icon={<Zap size={18} color={C.warning} />}
                             trendPositive={avgRt < 800}
                         />
                     </View>
                 </Card>
 
                 <PrimaryButton
-                    title={t('finishBtn') || 'Finish'}
+                    title="Finish"
                     onPress={() => router.replace('/(tabs)/training')}
                     style={{ width: '80%', marginTop: Metrics.spacing.xl }}
                 />
@@ -175,8 +177,8 @@ export default function DailySessionScreen() {
                     </View>
 
                     {engine.isReverse && (
-                        <ThemedText style={{ color: Colors.mentra.brandAccent, fontWeight: 'bold', marginBottom: 20 }}>
-                            {t('dailyReversePattern')}
+                        <ThemedText style={{ color: C.brandPrimary, fontWeight: 'bold', marginBottom: 20 }}>
+                            REVERSE PATTERN
                         </ThemedText>
                     )}
 
@@ -197,17 +199,17 @@ export default function DailySessionScreen() {
                                     key={index}
                                     onPress={() => engine.handleCellPress(index)}
                                     disabled={engine.gameState !== 'recall'}
-                                    style={({ pressed }: { pressed: boolean }) => [
+                                    style={({ pressed }) => [
                                         styles.cell,
                                         {
                                             width: cellSize,
                                             height: cellSize,
                                             backgroundColor: isActive
-                                                ? Colors.mentra.brandPrimary
+                                                ? C.brandPrimary
                                                 : isUserPressed
-                                                    ? Colors.mentra.brandAccent
-                                                    : (pressed ? Colors.mentra.surface2 : Colors.mentra.surface),
-                                            borderColor: isUserPressed ? Colors.mentra.brandAccent : Colors.mentra.border,
+                                                    ? C.brandPrimary
+                                                    : (pressed ? C.surface2 : C.surface),
+                                            borderColor: isUserPressed ? C.brandPrimary : C.border,
                                             transform: [{ scale: pressed ? 0.95 : 1 }]
                                         }
                                     ]}
@@ -227,38 +229,37 @@ export default function DailySessionScreen() {
                     </View>
 
                     <Animated.View style={styles.symbolContainer}>
-                        <Brain size={100} color={Colors.mentra.brandPrimary} />
-                        {/* Placeholder for the actual shape logic */}
-                        <ThemedText style={{ marginTop: 20, color: Colors.mentra.textDim }}>{peakEngine.currentSymbol}</ThemedText>
+                        <Brain size={100} color={C.brandPrimary} />
+                        <ThemedText style={{ marginTop: 20, color: C.textDim }}>{peakEngine.currentSymbol}</ThemedText>
                     </Animated.View>
 
                     <View style={[styles.controls, { marginTop: 60 }]}>
                         <AnimatedPressable
-                            style={({ pressed }: { pressed: boolean }) => [
+                            style={({ pressed }) => [
                                 styles.gameBtn,
                                 {
-                                    borderColor: Colors.mentra.danger,
-                                    backgroundColor: pressed ? Colors.mentra.surface2 : Colors.mentra.surface,
+                                    borderColor: C.danger,
+                                    backgroundColor: pressed ? C.surface2 : C.surface,
                                     transform: [{ scale: pressed ? 0.95 : 1 }]
                                 }
                             ]}
                             onPress={() => peakEngine.handleGuess(false)}
                         >
-                            <ThemedText style={{ color: Colors.mentra.danger, fontSize: 24, fontWeight: '800' }}>{t('speedMatchNo')}</ThemedText>
+                            <ThemedText style={{ color: C.danger, fontSize: 24, fontWeight: '800' }}>NO</ThemedText>
                         </AnimatedPressable>
 
                         <AnimatedPressable
-                            style={({ pressed }: { pressed: boolean }) => [
+                            style={({ pressed }) => [
                                 styles.gameBtn,
                                 {
-                                    borderColor: Colors.mentra.success,
-                                    backgroundColor: pressed ? Colors.mentra.surface2 : Colors.mentra.surface,
+                                    borderColor: C.success,
+                                    backgroundColor: pressed ? C.surface2 : C.surface,
                                     transform: [{ scale: pressed ? 0.95 : 1 }]
                                 }
                             ]}
                             onPress={() => peakEngine.handleGuess(true)}
                         >
-                            <ThemedText style={{ color: Colors.mentra.success, fontSize: 24, fontWeight: '800' }}>{t('speedMatchYes')}</ThemedText>
+                            <ThemedText style={{ color: C.success, fontSize: 24, fontWeight: '800' }}>YES</ThemedText>
                         </AnimatedPressable>
                     </View>
                 </View>
@@ -274,7 +275,7 @@ export default function DailySessionScreen() {
 
             <View style={styles.header}>
                 <Pressable onPress={() => router.back()} style={styles.closeBtn}>
-                    <X color={Colors.mentra.text} size={24} />
+                    <X color={C.text} size={24} />
                 </Pressable>
                 {(phase !== 'activation' && phase !== 'results') && (
                     <View style={styles.scoreBadge}>
@@ -290,73 +291,75 @@ export default function DailySessionScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: Colors.mentra.bg },
-    header: {
-        position: 'absolute', top: 60, left: 0, right: 0,
-        flexDirection: 'row', justifyContent: 'space-between',
-        alignItems: 'center', paddingHorizontal: Metrics.spacing.l,
-        zIndex: 10,
-    },
-    closeBtn: {
-        padding: 8, backgroundColor: Colors.mentra.surface,
-        borderRadius: Metrics.radius.round, borderWidth: 1,
-        borderColor: Colors.mentra.border,
-    },
-    scoreBadge: {
-        paddingHorizontal: 16, paddingVertical: 8,
-        backgroundColor: Colors.mentra.surface, borderRadius: Metrics.radius.m,
-        borderWidth: 1, borderColor: Colors.mentra.border,
-    },
-    scoreText: { color: Colors.mentra.text, fontWeight: '800', fontSize: 16 },
-    introContainer: {
-        flex: 1, justifyContent: 'center', alignItems: 'center', padding: Metrics.spacing.xl,
-    },
-    activationCard: {
-        backgroundColor: 'rgba(255,255,255,0.02)',
-        borderRadius: Metrics.radius.xl,
-        padding: Metrics.spacing.xxl,
-        borderWidth: 1,
-        borderColor: 'rgba(42,102,82,0.3)',
-        alignItems: 'center',
-        width: '100%'
-    },
-    themeBadge: {
-        color: Colors.mentra.brandAccent,
-        fontSize: 12,
-        fontWeight: '800',
-        letterSpacing: 1.5,
-        marginBottom: Metrics.spacing.xs
-    },
-    title: { fontSize: 28, fontWeight: '800', color: Colors.mentra.text, textAlign: 'center', marginBottom: Metrics.spacing.s },
-    subtitle: { fontSize: 14, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 22, marginBottom: Metrics.spacing.xl },
-    phaseBreakdown: { width: '100%', marginTop: Metrics.spacing.m },
-    phaseItem: { color: Colors.mentra.text, fontSize: 14, fontWeight: '500', paddingVertical: Metrics.spacing.s, borderTopWidth: 1, borderTopColor: Colors.mentra.surface },
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+    return StyleSheet.create({
+        container: { flex: 1, backgroundColor: C.bg },
+        header: {
+            position: 'absolute', top: 60, left: 0, right: 0,
+            flexDirection: 'row', justifyContent: 'space-between',
+            alignItems: 'center', paddingHorizontal: Metrics.spacing.l,
+            zIndex: 10,
+        },
+        closeBtn: {
+            padding: 8, backgroundColor: C.surface,
+            borderRadius: Metrics.radius.round, borderWidth: 1,
+            borderColor: C.border,
+        },
+        scoreBadge: {
+            paddingHorizontal: 16, paddingVertical: 8,
+            backgroundColor: C.surface, borderRadius: Metrics.radius.m,
+            borderWidth: 1, borderColor: C.border,
+        },
+        scoreText: { color: C.text, fontWeight: '800', fontSize: 16 },
+        introContainer: {
+            flex: 1, justifyContent: 'center', alignItems: 'center', padding: Metrics.spacing.xl,
+        },
+        activationCard: {
+            backgroundColor: 'rgba(255,255,255,0.02)',
+            borderRadius: Metrics.radius.xl,
+            padding: Metrics.spacing.xxl,
+            borderWidth: 1,
+            borderColor: 'rgba(42,102,82,0.3)',
+            alignItems: 'center',
+            width: '100%'
+        },
+        themeBadge: {
+            color: C.brandPrimary,
+            fontSize: 12,
+            fontWeight: '800',
+            letterSpacing: 1.5,
+            marginBottom: Metrics.spacing.xs
+        },
+        title: { fontSize: 28, fontWeight: '800', color: C.text, textAlign: 'center', marginBottom: Metrics.spacing.s },
+        subtitle: { fontSize: 14, color: C.textDim, textAlign: 'center', lineHeight: 22, marginBottom: Metrics.spacing.xl },
+        phaseBreakdown: { width: '100%', marginTop: Metrics.spacing.m },
+        phaseItem: { color: C.text, fontSize: 14, fontWeight: '500', paddingVertical: Metrics.spacing.s, borderTopWidth: 1, borderTopColor: C.surface },
 
-    // Engine specific
-    gameArea: { flex: 1, alignItems: 'center' },
-    cell: {
-        borderRadius: Metrics.radius.l, borderWidth: 2,
-        shadowColor: Colors.mentra.brandPrimary, shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
-    },
-    symbolContainer: {
-        width: 240, height: 240, backgroundColor: Colors.mentra.surface,
-        borderRadius: Metrics.radius.xl, justifyContent: 'center', alignItems: 'center',
-        borderWidth: 2, borderColor: Colors.mentra.border,
-        shadowColor: Colors.mentra.brandPrimary, shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.1, shadowRadius: 20, elevation: 10,
-    },
-    controls: { flexDirection: 'row', justifyContent: 'space-around', width: '100%', paddingHorizontal: Metrics.spacing.xl },
-    gameBtn: { width: 140, height: 80, borderRadius: Metrics.radius.l, borderWidth: 3, justifyContent: 'center', alignItems: 'center' },
+        // Engine specific
+        gameArea: { flex: 1, alignItems: 'center' },
+        cell: {
+            borderRadius: Metrics.radius.l, borderWidth: 2,
+            shadowColor: C.brandPrimary, shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
+        },
+        symbolContainer: {
+            width: 240, height: 240, backgroundColor: C.surface,
+            borderRadius: Metrics.radius.xl, justifyContent: 'center', alignItems: 'center',
+            borderWidth: 2, borderColor: C.border,
+            shadowColor: C.brandPrimary, shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.1, shadowRadius: 20, elevation: 10,
+        },
+        controls: { flexDirection: 'row', justifyContent: 'space-around', width: '100%', paddingHorizontal: Metrics.spacing.xl },
+        gameBtn: { width: 140, height: 80, borderRadius: Metrics.radius.l, borderWidth: 3, justifyContent: 'center', alignItems: 'center' },
 
-    // Results specific
-    headerBox: { alignItems: 'center', marginBottom: Metrics.spacing.xl, width: '100%' },
-    insightBox: { padding: 20, alignItems: 'center', marginTop: 10 },
-    insight: { fontSize: 16, color: Colors.mentra.text, textAlign: 'center', lineHeight: 24, fontWeight: '500' },
-    metricsCard: { width: '100%', backgroundColor: 'rgba(5, 20, 15, 0.4)', borderWidth: 1, borderColor: Colors.mentra.border, marginBottom: Metrics.spacing.xl, padding: Metrics.spacing.l },
-    scoreRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: Colors.mentra.border, paddingBottom: Metrics.spacing.m, marginBottom: Metrics.spacing.m },
-    scoreLabel: { fontSize: 16, color: Colors.mentra.textDim, fontWeight: '600' },
-    scoreValue: { fontSize: 32, color: Colors.mentra.text, fontWeight: '800' },
-    statsGrid: { flexDirection: 'row', gap: Metrics.spacing.m }
-});
+        // Results specific
+        headerBox: { alignItems: 'center', marginBottom: Metrics.spacing.xl, width: '100%' },
+        insightBox: { padding: 20, alignItems: 'center', marginTop: 10 },
+        insight: { fontSize: 16, color: C.text, textAlign: 'center', lineHeight: 24, fontWeight: '500' },
+        metricsCard: { width: '100%', backgroundColor: 'rgba(5, 20, 15, 0.4)', borderWidth: 1, borderColor: C.border, marginBottom: Metrics.spacing.xl, padding: Metrics.spacing.l },
+        scoreRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: C.border, paddingBottom: Metrics.spacing.m, marginBottom: Metrics.spacing.m },
+        scoreLabel: { fontSize: 16, color: C.textDim, fontWeight: '600' },
+        scoreValue: { fontSize: 32, color: C.text, fontWeight: '800' },
+        statsGrid: { flexDirection: 'row', gap: Metrics.spacing.m }
+    });
+}

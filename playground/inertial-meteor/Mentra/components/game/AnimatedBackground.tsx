@@ -8,10 +8,11 @@ import Animated, {
     withSequence,
     Easing,
 } from 'react-native-reanimated';
-import { Colors } from '@/constants/Colors';
 import { BlurView } from 'expo-blur';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 
 export function AnimatedBackground() {
+    const C = useMentraTheme();
     const opacity1 = useSharedValue(0.4);
     const opacity2 = useSharedValue(0.1);
 
@@ -32,7 +33,7 @@ export function AnimatedBackground() {
             -1,
             true
         );
-    }, [opacity1, opacity2]);
+    }, []);
 
     const style1 = useAnimatedStyle(() => ({
         opacity: opacity1.value,
@@ -47,14 +48,14 @@ export function AnimatedBackground() {
             <Animated.View
                 style={[
                     styles.blob1,
-                    { backgroundColor: Colors.mentra.brandPrimary },
+                    { backgroundColor: C.brandPrimary },
                     style1,
                 ]}
             />
             <Animated.View
                 style={[
                     styles.blob2,
-                    { backgroundColor: Colors.mentra.brandAccent },
+                    { backgroundColor: C.brandSecondary },
                     style2,
                 ]}
             />

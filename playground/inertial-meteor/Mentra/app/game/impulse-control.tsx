@@ -13,11 +13,11 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { X, Brain, BrainCircuit, Play, Sparkles } from 'lucide-react-native';
-import { useI18n } from '@/services/i18n';
+import { I18n } from '@/services/i18n';
 import { NeuroActivationWarmup } from '@/components/game/NeuroActivationWarmup';
 import { Metrics } from '@/constants/Theme';
 import { ThemedText } from '@/components/themed-text';
-import { Colors } from '@/constants/Colors';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Storage } from '@/services/storage';
 import { AnalysisEngine, DEFAULT_COGNITIVE_PROFILE } from '@/services/engine/AnalysisEngine';
 import { RawGameSession } from '@/services/engine/types';
@@ -25,6 +25,22 @@ import { Logger } from '@/services/logger';
 import { Streak } from '@/services/streak';
 
 const { width } = Dimensions.get('window');
+
+const GO_STIMULI = [
+  { emoji: '🧠', label: 'Brain Boost', color: '#194031',                  bg: '#E8F5F0', tap: true  },
+  { emoji: '⚡', label: 'Focus Up',    color: '#10B981',                  bg: '#ECFDF5', tap: true  },
+  { emoji: '💡', label: 'Logic',       color: '#F59E0B',                  bg: '#FFFBEB', tap: true  },
+  { emoji: '🎯', label: 'Sharp',       color: '#6366F1',                  bg: '#EDECFD', tap: true  },
+];
+
+const NOGO_STIMULI = [
+  { emoji: '❤️',  label: '24 likes',       color: '#EF4444', bg: '#FEF2F2', tap: false },
+  { emoji: '💬',  label: '3 comments',     color: '#3B82F6', bg: '#DBEAFE', tap: false },
+  { emoji: '🔔',  label: 'Notification',   color: '#F59E0B', bg: '#FFFBEB', tap: false },
+  { emoji: '👀',  label: '47 story views', color: '#8B5CF6', bg: '#F5F3FF', tap: false },
+  { emoji: '🔥',  label: 'Trending now',   color: '#EF4444', bg: '#FEF2F2', tap: false },
+  { emoji: '📲',  label: 'New message',    color: '#10B981', bg: '#ECFDF5', tap: false },
+];
 
 const TOTAL_ROUNDS = 20;
 const STIMULUS_MS  = 1000;
@@ -34,24 +50,8 @@ type GamePhase = 'intro' | 'playing' | 'results';
 
 export default function ImpulseControlGame() {
   const insets = useSafeAreaInsets();
-  const { t, lang } = useI18n();
-
-  const GO_STIMULI = React.useMemo(() => [
-    { emoji: '🧠', label: t('icStimBrain'), color: Colors.mentra.brandPrimary, bg: '#E8F5F0', tap: true  },
-    { emoji: '⚡', label: t('icStimFocus'), color: '#10B981',                  bg: '#ECFDF5', tap: true  },
-    { emoji: '💡', label: t('icStimLogic'), color: '#F59E0B',                  bg: '#FFFBEB', tap: true  },
-    { emoji: '🎯', label: t('icStimSharp'), color: '#6366F1',                  bg: '#EDECFD', tap: true  },
-  ], [lang, t]);
-
-  const NOGO_STIMULI = React.useMemo(() => [
-    { emoji: '❤️',  label: t('icBaitLikes'),       color: '#EF4444', bg: '#FEF2F2', tap: false },
-    { emoji: '💬',  label: t('icBaitComments'),     color: '#3B82F6', bg: '#DBEAFE', tap: false },
-    { emoji: '🔔',  label: t('icBaitNotif'),   color: '#F59E0B', bg: '#FFFBEB', tap: false },
-    { emoji: '👀',  label: t('icBaitViews'), color: '#8B5CF6', bg: '#F5F3FF', tap: false },
-    { emoji: '🔥',  label: t('icBaitTrending'),   color: '#EF4444', bg: '#FEF2F2', tap: false },
-    { emoji: '📲',  label: t('icBaitMessage'),    color: '#10B981', bg: '#ECFDF5', tap: false },
-  ], [lang, t]);
-
+  const C = useMentraTheme();
+  const styles = makeStyles(C);
   const [phase, setPhase]           = useState<GamePhase>('intro');
   const [score, setScore]           = useState(0);
   const [showWarmup, setShowWarmup] = useState(false);
@@ -62,17 +62,20 @@ export default function ImpulseControlGame() {
   const [feedback, setFeedback]     = useState<'correct' | 'wrong' | null>(null);
   const [timeLeft, setTimeLeft]     = useState(45);
 
-  // BUG FIX 3: Use refs to avoid stale closures in showNext
+  // Refs to avoid stale closures in callbacks
   const phaseRef        = useRef<GamePhase>('intro');
   const roundRef        = useRef(0);
+  const scoreRef        = useRef(0);
+  const missesRef       = useRef(0);
+  const falseAlarmsRef  = useRef(0);
   const timerRef        = useRef<ReturnType<typeof setInterval> | null>(null);
   const stimRef         = useRef<ReturnType<typeof setTimeout>  | null>(null);
   const nextRef         = useRef<ReturnType<typeof setTimeout>  | null>(null);
   const isProcessingRef = useRef(false);
-  const sessionStartTime = useRef(0);
-  const rtAllMs = useRef<number[]>([]);
+  const sessionStartTime  = useRef(0);
+  const stimStartTime     = useRef(0); // tracks when current stim appeared
+  const rtAllMs     = useRef<number[]>([]);
   const rtCorrectMs = useRef<number[]>([]);
-  const lastStimTime = useRef<number>(0);
 
   const scale = useSharedValue(1);
   const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
@@ -86,26 +89,28 @@ export default function ImpulseControlGame() {
   useEffect(() => () => { clearAllTimers(); }, [clearAllTimers]);
 
   const showNext = useCallback((roundNum: number) => {
-    // BUG FIX 3: Always check phase ref — never continue after results
     if (phaseRef.current !== 'playing') return;
     if (roundNum >= TOTAL_ROUNDS) {
-      finishSession(score, misses, falseAlarms);
+      // Use refs — never stale closures
+      finishSession(scoreRef.current, missesRef.current, falseAlarmsRef.current);
       return;
     }
     isProcessingRef.current = false;
     const isNoGo = Math.random() < 0.4;
     const pool = isNoGo ? NOGO_STIMULI : GO_STIMULI;
     const stim = pool[Math.floor(Math.random() * pool.length)];
+    stimStartTime.current = Date.now(); // track stim appearance time
     setCurrent(stim);
     setFeedback(null);
-    lastStimTime.current = Date.now();
 
     // Auto-expire after STIMULUS_MS
     stimRef.current = setTimeout(() => {
       setCurrent(prev => {
         if (prev?.tap) {
-          setMisses(m => m + 1); // missed GO
-          rtAllMs.current.push(STIMULUS_MS); // count as slow RT for stability
+          // Missed GO — increment via ref immediately
+          missesRef.current++;
+          setMisses(missesRef.current);
+          rtAllMs.current.push(STIMULUS_MS);
         }
         return null;
       });
@@ -114,7 +119,7 @@ export default function ImpulseControlGame() {
       setRound(nextRound);
       nextRef.current = setTimeout(() => showNext(nextRound), GAP_MS);
     }, STIMULUS_MS);
-  }, [GO_STIMULI, NOGO_STIMULI, score, misses, falseAlarms, clearAllTimers]);
+  }, []);
 
   const finishSession = useCallback(async (finalScore: number, finalMisses: number, finalFalseAlarms: number) => {
     clearAllTimers();
@@ -124,7 +129,7 @@ export default function ImpulseControlGame() {
     const duration = (Date.now() - sessionStartTime.current) / 1000;
     const totalPossible = TOTAL_ROUNDS;
     const correct = totalPossible - finalMisses - finalFalseAlarms;
-    const acc = totalPossible > 0 ? correct / totalPossible : 0;
+    const acc = correct / totalPossible;
     const avgRt = rtCorrectMs.current.length > 0 
       ? rtCorrectMs.current.reduce((a, b) => a + b, 0) / rtCorrectMs.current.length 
       : 800;
@@ -166,6 +171,9 @@ export default function ImpulseControlGame() {
     clearAllTimers();
     phaseRef.current = 'playing';
     roundRef.current = 0;
+    scoreRef.current = 0;
+    missesRef.current = 0;
+    falseAlarmsRef.current = 0;
     isProcessingRef.current = false;
     setPhase('playing');
     setScore(0); setMisses(0); setFalseAlarms(0); setRound(0);
@@ -173,12 +181,12 @@ export default function ImpulseControlGame() {
     sessionStartTime.current = Date.now();
     rtAllMs.current = [];
     rtCorrectMs.current = [];
-    lastStimTime.current = 0;
 
     timerRef.current = setInterval(() => {
       setTimeLeft(t => {
         if (t <= 1) {
-          finishSession(score, misses, falseAlarms);
+          // Always use refs — never stale state
+          finishSession(scoreRef.current, missesRef.current, falseAlarmsRef.current);
           return 0;
         }
         return t - 1;
@@ -186,29 +194,31 @@ export default function ImpulseControlGame() {
     }, 1000);
 
     nextRef.current = setTimeout(() => showNext(0), 500);
-  }, [showNext, clearAllTimers, score, misses, falseAlarms, finishSession]);
+  }, [showNext, clearAllTimers]);
 
   const handleTap = useCallback(() => {
     // BUG FIX: Prevent double-tap processing
     if (isProcessingRef.current || !current || phaseRef.current !== 'playing') return;
     isProcessingRef.current = true;
 
-    // Reset auto-expire
+    // Cancel the auto-expire timer
     if (stimRef.current) { clearTimeout(stimRef.current); stimRef.current = null; }
 
-    const rt = Date.now() - lastStimTime.current;
-
     if (current.tap) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-      setScore(s => s + 10);
+      const rt = Date.now() - stimStartTime.current; // real reaction time
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      scoreRef.current += 10;
+      setScore(scoreRef.current);
       setFeedback('correct');
       rtCorrectMs.current.push(rt);
       rtAllMs.current.push(rt);
       scale.value = withSequence(withSpring(1.12), withSpring(1));
     } else {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
-      setFalseAlarms(f => f + 1);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      falseAlarmsRef.current++;
+      setFalseAlarms(falseAlarmsRef.current);
       setFeedback('wrong');
+      const rt = Date.now() - stimStartTime.current;
       rtAllMs.current.push(rt);
       scale.value = withSequence(withTiming(0.92, { duration: 80 }), withSpring(1));
     }
@@ -218,59 +228,60 @@ export default function ImpulseControlGame() {
     roundRef.current = nextRound;
     setRound(nextRound);
     nextRef.current = setTimeout(() => showNext(nextRound), GAP_MS);
-  }, [current, showNext, scale]);
+  }, [current, showNext]);
 
   const inhibitionScore = Math.max(0, 100 - falseAlarms * 15 - misses * 5);
   const grade = inhibitionScore >= 85
-    ? { label: t('eliteControl'),  color: Colors.mentra.success }
+    ? { label: 'Elite Control',  color: C.success }
     : inhibitionScore >= 65
-    ? { label: t('goodControl'),   color: '#6366F1' }
-    : { label: t('keepTraining'),  color: '#F59E0B' };
+    ? { label: 'Good Control',   color: '#6366F1' }
+    : { label: 'Keep Training',  color: '#F59E0B' };
 
+  // ── Intro ──────────────────────────────────────────────────────────────────
   if (phase === 'intro') return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
       <Stack.Screen options={{ headerShown: false }} />
-      <StatusBar style="dark" />
-      <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.closeBtn}><X size={22} color={Colors.mentra.text} /></Pressable>
+      <StatusBar style={C.statusBar} />
+      <Pressable onPress={() => router.back()} style={styles.closeBtn}><X size={22} color={C.text} /></Pressable>
       <Animated.View entering={FadeIn.springify()} style={styles.introBox}>
         <View style={styles.introIconBox}><Text style={{ fontSize: 48 }}>🛑</Text></View>
-        <Text style={styles.introTitle}>{t('gameImpulseControl')}</Text>
+        <Text style={styles.introTitle}>Impulse Control</Text>
         
         <View style={{ width: '100%', gap: 12, marginVertical: 20 }}>
           <View style={styles.instructionsBox}>
             <View style={styles.sectionHeader}>
-              <Play size={14} color={Colors.mentra.brandPrimary} />
-              <ThemedText style={styles.sectionLabel}>{t('howToPlay')}</ThemedText>
+              <Play size={14} color={C.brandPrimary} />
+              <ThemedText style={styles.sectionLabel}>{I18n.t('howToPlay') || 'How To Play'}</ThemedText>
             </View>
             <ThemedText style={styles.cardDesc}>
-              {t('icIntroHow') || 'Tap brain stimuli, ignore social media bait.'}
+              {I18n.t('icIntroHow') || 'Tap brain stimuli, ignore social media bait.'}
             </ThemedText>
           </View>
 
           <View style={styles.scienceBox}>
             <View style={styles.sectionHeader}>
-              <BrainCircuit size={14} color={Colors.mentra.brandAccent} />
-              <ThemedText style={[styles.sectionLabel, { color: Colors.mentra.brandAccent }]}>
-                {t('scienceBehind')}
+              <BrainCircuit size={14} color={C.brandSecondary} />
+              <ThemedText style={[styles.sectionLabel, { color: C.brandSecondary }]}>
+                {I18n.t('scienceBehind')}
               </ThemedText>
             </View>
             <ThemedText style={styles.scienceWhat}>
-              {t('icIntroWhat')}
+              {I18n.t('icIntroWhat')}
             </ThemedText>
             <ThemedText style={styles.scienceWhy}>
-              {t('icIntroWhy')}
+              {I18n.t('icIntroWhy')}
             </ThemedText>
           </View>
         </View>
 
         <Pressable onPress={() => setShowWarmup(true)} style={styles.startBtn}>
-          <Text style={styles.startBtnText}>{t('exploreStart')}</Text>
+          <Text style={styles.startBtnText}>Train Impulse Control</Text>
         </Pressable>
 
         <NeuroActivationWarmup 
             visible={showWarmup} 
-            gameTitle={t('gameImpulseControl').toUpperCase()}
-            tutorialText={t('gameImpulseControlTutorial')}
+            gameTitle="IMPULSE CONTROL"
+            tutorialText={I18n.t('gameImpulseControlTutorial' as any)}
             onComplete={() => {
                 setShowWarmup(false);
                 startGame();
@@ -280,50 +291,52 @@ export default function ImpulseControlGame() {
     </View>
   );
 
+  // ── Results ────────────────────────────────────────────────────────────────
   if (phase === 'results') return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
       <Stack.Screen options={{ headerShown: false }} />
+      <StatusBar style={C.statusBar} />
       <Animated.View entering={FadeIn.springify()} style={styles.resultsBox}>
         <Text style={styles.resultsEmoji}>🧠</Text>
-        <Text style={styles.resultsTitle}>{t('sessionCompleteText')}</Text>
+        <Text style={styles.resultsTitle}>Session Complete</Text>
         <View style={[styles.gradeBox, { borderColor: grade.color + '40' }]}>
           <Text style={[styles.gradeLabel, { color: grade.color }]}>{grade.label}</Text>
           <Text style={styles.inhibScore}>{inhibitionScore}<Text style={{ fontSize: 18 }}>/100</Text></Text>
-          <Text style={styles.inhibLabel}>{t('mentraIndex')}</Text>
+          <Text style={styles.inhibLabel}>Inhibitory Control Score</Text>
         </View>
         <View style={styles.statsRow}>
-          <View style={styles.statItem}><Text style={styles.statVal}>{score}</Text><Text style={styles.statLabel}>{t('scoreLabel')}</Text></View>
-          <View style={styles.statItem}><Text style={[styles.statVal, { color: Colors.mentra.success }]}>{TOTAL_ROUNDS - misses - falseAlarms}</Text><Text style={styles.statLabel}>{t('correctLabel')}</Text></View>
-          <View style={styles.statItem}><Text style={[styles.statVal, { color: Colors.mentra.danger }]}>{falseAlarms}</Text><Text style={styles.statLabel}>{t('baitTakenText')}</Text></View>
+          <View style={styles.statItem}><Text style={styles.statVal}>{score}</Text><Text style={styles.statLabel}>Score</Text></View>
+          <View style={styles.statItem}><Text style={[styles.statVal, { color: C.success }]}>{TOTAL_ROUNDS - misses - falseAlarms}</Text><Text style={styles.statLabel}>Correct</Text></View>
+          <View style={styles.statItem}><Text style={[styles.statVal, { color: C.danger }]}>{falseAlarms}</Text><Text style={styles.statLabel}>Bait taken</Text></View>
         </View>
         <Text style={styles.resultsTip}>
           {falseAlarms > 3
-            ? t('icResultsTipLow')
-            : t('icResultsTipHigh')}
+            ? "Your impulse control needs work. Social media notifications are designed to override your prefrontal cortex. Train daily."
+            : "Good inhibitory control. Your 'stop' signal is strengthening. Keep training."}
         </Text>
-        <Pressable onPress={startGame} style={styles.startBtn}><Text style={styles.startBtnText}>{t('playAgain')}</Text></Pressable>
-        <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={styles.backLink}><Text style={styles.backLinkText}>← {t('back')}</Text></Pressable>
+        <Pressable onPress={startGame} style={styles.startBtn}><Text style={styles.startBtnText}>Play Again</Text></Pressable>
+        <Pressable onPress={() => router.back()} style={styles.backLink}><Text style={styles.backLinkText}>← Back</Text></Pressable>
       </Animated.View>
     </View>
   );
 
   // ── Playing ────────────────────────────────────────────────────────────────
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: C.bg }]}>
       <Stack.Screen options={{ headerShown: false }} />
-      <StatusBar style="dark" />
+      <StatusBar style={C.statusBar} />
       <View style={styles.gameHeader}>
-        <Pressable onPress={() => { clearAllTimers(); router.canGoBack() ? router.back() : router.replace('/'); }} style={styles.closeBtn}>
-          <X size={20} color={Colors.mentra.text} />
+        <Pressable onPress={() => { clearAllTimers(); router.back(); }} style={styles.closeBtn}>
+          <X size={20} color={C.text} />
         </Pressable>
         <View style={styles.timerBox}>
-          <Text style={[styles.timerText, timeLeft <= 10 && { color: Colors.mentra.danger }]}>{timeLeft}s</Text>
+          <Text style={[styles.timerText, timeLeft <= 10 && { color: C.danger }]}>{timeLeft}s</Text>
         </View>
         <View style={styles.scoreBadge}><Text style={styles.scoreText}>{score}</Text></View>
       </View>
 
       <Text style={styles.instruction}>
-        {current?.tap === false ? t('dontTap') : current?.tap ? t('tapIt') : ''}
+        {current?.tap === false ? "🚫 Don't tap!" : current?.tap ? '✅ Tap it!' : ''}
       </Text>
 
       <Pressable onPress={handleTap} style={styles.stimArea}>
@@ -333,19 +346,19 @@ export default function ImpulseControlGame() {
               <Text style={styles.stimEmoji}>{current.emoji}</Text>
               <Text style={[styles.stimLabel, { color: current.color }]}>{current.label}</Text>
               {!current.tap && (
-                <View style={styles.stimBaitTag}><Text style={styles.stimBaitText}>{t('socialMediaTag')}</Text></View>
+                <View style={styles.stimBaitTag}><Text style={styles.stimBaitText}>SOCIAL MEDIA</Text></View>
               )}
             </Animated.View>
           </Animated.View>
         )}
         {feedback === 'correct' && (
           <Animated.View key="fb-correct" entering={FadeIn} exiting={FadeOut} style={styles.feedbackPos}>
-            <Text style={[styles.feedbackText, { color: Colors.mentra.success }]}>+10 ✓</Text>
+            <Text style={[styles.feedbackText, { color: C.success }]}>+10 ✓</Text>
           </Animated.View>
         )}
         {feedback === 'wrong' && (
           <Animated.View key="fb-wrong" entering={FadeIn} exiting={FadeOut} style={styles.feedbackPos}>
-            <Text style={[styles.feedbackText, { color: Colors.mentra.danger }]}>{t('baitLabel')} ✗</Text>
+            <Text style={[styles.feedbackText, { color: C.danger }]}>Bait! ✗</Text>
           </Animated.View>
         )}
       </Pressable>
@@ -358,91 +371,69 @@ export default function ImpulseControlGame() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.mentra.bg },
-  closeBtn: { padding: 10, backgroundColor: Colors.mentra.surface, borderRadius: 20, borderWidth: 1, borderColor: Colors.mentra.border },
-  gameHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 12 },
-  timerBox: { backgroundColor: Colors.mentra.surface, paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: Colors.mentra.border },
-  timerText: { fontSize: 16, fontWeight: '800', color: Colors.mentra.text },
-  scoreBadge: { backgroundColor: Colors.mentra.brandPrimary + '18', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20 },
-  scoreText: { fontSize: 16, fontWeight: '800', color: Colors.mentra.brandPrimary },
-  instruction: { textAlign: 'center', fontSize: 18, fontWeight: '700', color: Colors.mentra.text, marginVertical: 8, paddingHorizontal: 20, minHeight: 28 },
-  stimArea: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  stimCard: {
-    width: width * 0.65, padding: 32, borderRadius: 28, alignItems: 'center', gap: 10, borderWidth: 2,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 8,
-  },
-  stimEmoji: { fontSize: 56 },
-  stimLabel: { fontSize: 18, fontWeight: '800', textAlign: 'center' },
-  stimBaitTag: { backgroundColor: '#EF444420', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, marginTop: 4 },
-  stimBaitText: { fontSize: 10, fontWeight: '800', color: Colors.mentra.danger, letterSpacing: 1 },
-  feedbackPos: { position: 'absolute', top: '15%' },
-  feedbackText: { fontSize: 26, fontWeight: '900' },
-  progressBar: { height: 4, backgroundColor: Colors.mentra.border, marginHorizontal: 20, borderRadius: 2, marginBottom: 6 },
-  progressFill: { height: 4, backgroundColor: Colors.mentra.brandPrimary, borderRadius: 2 },
-  roundText: { textAlign: 'center', fontSize: 12, color: Colors.mentra.textDim, marginBottom: 16 },
-  introBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32, gap: 0 },
-  introIconBox: { width: 96, height: 96, borderRadius: 28, backgroundColor: '#FEF2F2', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
-  introTitle: { fontSize: 30, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  instructionsBox: {
-    backgroundColor: Colors.mentra.surface,
-    padding: Metrics.spacing.m,
-    borderRadius: Metrics.radius.m,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: Colors.mentra.border,
-  },
-  cardDesc: {
-    fontSize: 14,
-    color: Colors.mentra.textDim,
-    lineHeight: 20,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 8,
-  },
-  sectionLabel: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: Colors.mentra.brandPrimary,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
-  scienceBox: {
-    backgroundColor: Colors.mentra.brandAccent + '08',
-    padding: Metrics.spacing.m,
-    borderRadius: Metrics.radius.m,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: Colors.mentra.brandAccent + '15',
-  },
-  scienceWhat: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: Colors.mentra.text,
-    marginBottom: 4,
-  },
-  scienceWhy: {
-    fontSize: 13,
-    color: Colors.mentra.textDim,
-    lineHeight: 18,
-  },
-  startBtn: { backgroundColor: Colors.mentra.brandPrimary, paddingVertical: 16, paddingHorizontal: 40, borderRadius: 16, marginTop: 8, shadowColor: Colors.mentra.brandPrimary, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 12, width: '100%', alignItems: 'center' },
-  startBtnText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
-  resultsBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 16 },
-  resultsEmoji: { fontSize: 60 },
-  resultsTitle: { fontSize: 28, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -0.5 },
-  gradeBox: { width: '100%', borderRadius: 20, borderWidth: 2, padding: 20, alignItems: 'center', gap: 4, backgroundColor: Colors.mentra.surface },
-  gradeLabel: { fontSize: 14, fontWeight: '800', letterSpacing: 1, textTransform: 'uppercase' },
-  inhibScore: { fontSize: 52, fontWeight: '900', color: Colors.mentra.text, letterSpacing: -2 },
-  inhibLabel: { fontSize: 12, color: Colors.mentra.textDim },
-  statsRow: { flexDirection: 'row', gap: 16 },
-  statItem: { flex: 1, alignItems: 'center', backgroundColor: Colors.mentra.surface, borderRadius: 14, padding: 14, borderWidth: 1, borderColor: Colors.mentra.border },
-  statVal: { fontSize: 24, fontWeight: '900', color: Colors.mentra.text },
-  statLabel: { fontSize: 11, color: Colors.mentra.textDim, marginTop: 2 },
-  resultsTip: { fontSize: 13, color: Colors.mentra.textDim, textAlign: 'center', lineHeight: 20 },
-  backLink: { paddingVertical: 8 },
-  backLinkText: { color: Colors.mentra.textDim, fontSize: 14, fontWeight: '600' },
-});
+function makeStyles(C: ReturnType<typeof useMentraTheme>) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: C.bg },
+    closeBtn: { padding: 10, backgroundColor: C.surface, borderRadius: 20, borderWidth: 1, borderColor: C.border },
+    gameHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 12 },
+    timerBox: { backgroundColor: C.surface, paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: C.border },
+    timerText: { fontSize: 16, fontWeight: '800', color: C.text },
+    scoreBadge: { backgroundColor: C.brandPrimary + '18', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20 },
+    scoreText: { fontSize: 16, fontWeight: '800', color: C.brandPrimary },
+    instruction: { textAlign: 'center', fontSize: 18, fontWeight: '700', color: C.text, marginVertical: 8, paddingHorizontal: 20, minHeight: 28 },
+    stimArea: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+    stimCard: {
+      width: width * 0.65, padding: 32, borderRadius: 28, alignItems: 'center', gap: 10, borderWidth: 2,
+      shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 8,
+    },
+    stimEmoji: { fontSize: 56 },
+    stimLabel: { fontSize: 18, fontWeight: '800', textAlign: 'center' },
+    stimBaitTag: { backgroundColor: '#EF444420', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, marginTop: 4 },
+    stimBaitText: { fontSize: 10, fontWeight: '800', color: C.danger, letterSpacing: 1 },
+    feedbackPos: { position: 'absolute', top: '15%' as any },
+    feedbackText: { fontSize: 26, fontWeight: '900' },
+    progressBar: { height: 4, backgroundColor: C.border, marginHorizontal: 20, borderRadius: 2, marginBottom: 6 },
+    progressFill: { height: 4, backgroundColor: C.brandPrimary, borderRadius: 2 },
+    roundText: { textAlign: 'center', fontSize: 12, color: C.textDim, marginBottom: 16 },
+    introBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32, gap: 0 },
+    introIconBox: { width: 96, height: 96, borderRadius: 28, backgroundColor: C.isDark ? 'rgba(239,68,68,0.12)' : '#FEF2F2', alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+    introTitle: { fontSize: 30, fontWeight: '900', color: C.text, letterSpacing: -0.5 },
+    instructionsBox: {
+      backgroundColor: C.surface,
+      padding: Metrics.spacing.m,
+      borderRadius: Metrics.radius.m,
+      width: '100%',
+      borderWidth: 1,
+      borderColor: C.border,
+    },
+    cardDesc: { fontSize: 14, color: C.textDim, lineHeight: 20 },
+    sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 },
+    sectionLabel: { fontSize: 11, fontWeight: '800', color: C.brandPrimary, letterSpacing: 1, textTransform: 'uppercase' },
+    scienceBox: {
+      backgroundColor: C.brandPrimary + '08',
+      padding: Metrics.spacing.m,
+      borderRadius: Metrics.radius.m,
+      width: '100%',
+      borderWidth: 1,
+      borderColor: C.brandPrimary + '15',
+    },
+    scienceWhat: { fontSize: 15, fontWeight: '700', color: C.text, marginBottom: 4 },
+    scienceWhy: { fontSize: 13, color: C.textDim, lineHeight: 18 },
+    startBtn: { backgroundColor: C.brandPrimary, paddingVertical: 16, paddingHorizontal: 40, borderRadius: 16, marginTop: 8, shadowColor: C.brandPrimary, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 12, width: '100%', alignItems: 'center' },
+    startBtnText: { color: '#FFF', fontSize: 16, fontWeight: '800' },
+    resultsBox: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 16 },
+    resultsEmoji: { fontSize: 60 },
+    resultsTitle: { fontSize: 28, fontWeight: '900', color: C.text, letterSpacing: -0.5 },
+    gradeBox: { width: '100%', borderRadius: 20, borderWidth: 2, padding: 20, alignItems: 'center', gap: 4, backgroundColor: C.surface },
+    gradeLabel: { fontSize: 14, fontWeight: '800', letterSpacing: 1, textTransform: 'uppercase' },
+    inhibScore: { fontSize: 52, fontWeight: '900', color: C.text, letterSpacing: -2 },
+    inhibLabel: { fontSize: 12, color: C.textDim },
+    statsRow: { flexDirection: 'row', gap: 16 },
+    statItem: { flex: 1, alignItems: 'center', backgroundColor: C.surface, borderRadius: 14, padding: 14, borderWidth: 1, borderColor: C.border },
+    statVal: { fontSize: 24, fontWeight: '900', color: C.text },
+    statLabel: { fontSize: 11, color: C.textDim, marginTop: 2 },
+    resultsTip: { fontSize: 13, color: C.textDim, textAlign: 'center', lineHeight: 20 },
+    backLink: { paddingVertical: 8 },
+    backLinkText: { color: C.textDim, fontSize: 14, fontWeight: '600' },
+  });
+}

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {
     View, Text, StyleSheet, ScrollView, Pressable,
-    Alert, Share
+    Alert, Share, Linking, FlatList,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,332 +9,346 @@ import { useFocusEffect, router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-    ChevronLeft, User, Shield, Database, LogOut,
-    ChevronRight, Zap, CreditCard, Bell, HelpCircle, Activity, Globe,
-    BookOpen, AlertTriangle
+    User, Shield, Database, LogOut,
+    ChevronRight, Zap, CreditCard, Bell, HelpCircle, Activity, Globe, Info,
 } from 'lucide-react-native';
 
-import { Colors } from '@/constants/Colors';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Storage, UserProfile } from '@/services/storage';
 import { getPremiumStatus, restoreFlow } from '@/services/purchases';
-import { I18n, useI18n, LANG_META, Lang } from '@/services/i18n';
-import { RamadanService } from '@/services/ramadan';
+import { I18n, Lang, LANG_LABELS } from '@/services/i18n';
 
 export default function ProfileScreen() {
     const insets = useSafeAreaInsets();
-    const { lang, t } = useI18n();
-    const [user, setUser] = useState<UserProfile | null>(null);
-    const [isPro, setIsPro] = useState(false);
+    const C = useMentraTheme();
+
+    const [user, setUser]               = useState<UserProfile | null>(null);
+    const [isPro, setIsPro]             = useState(false);
     const [isExporting, setIsExporting] = useState(false);
-    const [ramadanMode, setRamadanMode] = useState(false);
-    const [currentLang, setCurrentLang] = useState<Lang>(lang);
+    const [currentLang, setCurrentLang] = useState<Lang>(I18n.getLanguage() as Lang);
 
     useFocusEffect(
         useCallback(() => {
             Storage.getUserProfile().then(setUser);
             getPremiumStatus().then(setIsPro);
-            RamadanService.isRamadanModeActive().then(setRamadanMode);
         }, [])
     );
 
-    // ── JSON Data Export ──────────────────────────────────────────────────────
+    // ── Data Export ──────────────────────────────────────────────────────────
 
-    const handleDataExport = async () => {
-        try {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-            Alert.alert(
-                t('exportDataTitle' as any),
-                t('exportDataMsg' as any),
-                [
-                    { text: t('cancel'), style: "cancel" },
-                    { text: t('export' as any), style: "default", onPress: performExport }
-                ]
-            );
-        } catch (e) {
-            console.error(e);
-        }
+    const handleDataExport = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        Alert.alert(
+            'Export Your Data',
+            'Generate a JSON package of all your journals, scores, and routines?',
+            [
+                { text: I18n.t('cancel'), style: 'cancel' },
+                { text: 'Export', style: 'default', onPress: performExport },
+            ]
+        );
     };
 
     const performExport = async () => {
         setIsExporting(true);
         try {
-            // Aggregate all local storage data
             const keys = await AsyncStorage.getAllKeys();
             const relevantKeys = keys.filter(k => k.startsWith('mentra_'));
             const multi = await AsyncStorage.multiGet(relevantKeys);
-
             const exportData: Record<string, any> = {};
             multi.forEach(([key, value]) => {
-                try {
-                    exportData[key] = value ? JSON.parse(value) : null;
-                } catch {
-                    exportData[key] = value;
-                }
+                try { exportData[key] = value ? JSON.parse(value) : null; } catch { exportData[key] = value; }
             });
-
-            // Share Sheet
-            if (await Share.share({ message: JSON.stringify(exportData, null, 2), title: t('mentraExport' as any) })) {
-                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            }
-        } catch (e) {
-            Alert.alert(t('exportFailed' as any), t('exportErrorMsg' as any));
+            await Share.share({ message: JSON.stringify(exportData, null, 2), title: 'Mentra Export' });
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        } catch {
+            Alert.alert('Export Failed', 'There was an error generating your data package.');
         } finally {
             setIsExporting(false);
         }
     };
 
+    // ── Restore Purchases ────────────────────────────────────────────────────
+
     const handleRestore = async () => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         try {
-            const success = await restoreFlow("settings_tab");
+            const success = await restoreFlow('settings_tab');
             if (success) {
                 setIsPro(true);
-                Alert.alert(t('alertRestored'), t('alertRestoredMsg'));
+                Alert.alert(I18n.t('alertRestored'), I18n.t('alertRestoredMsg'));
             } else {
-                Alert.alert(t('alertNoPurchases'), t('alertNoPurchasesMsg'));
+                Alert.alert(I18n.t('alertNoPurchases'), I18n.t('alertNoPurchasesMsg'));
             }
-        } catch (e) {
-            Alert.alert(t('error'), t('restoreFailed'));
+        } catch {
+            Alert.alert(I18n.t('alertRestoreFailed'), '');
         }
     };
 
-    const handleLangChange = async (newLang: Lang) => {
+    // ── Language ─────────────────────────────────────────────────────────────
+
+    const handleLangChange = async (lang: Lang) => {
         Haptics.selectionAsync?.();
-        await I18n.setLanguage(newLang);
-        setCurrentLang(newLang);
+        await I18n.setLanguage(lang);
+        setCurrentLang(lang);
     };
 
-    const LANG_OPTIONS: { code: Lang; label: string; flag: string }[] = [
-        { code: 'en', label: 'EN', flag: '🇬🇧' },
-        { code: 'tr', label: 'TR', flag: '🇹🇷' },
-        { code: 'zh', label: 'ZH', flag: '🇨🇳' },
-        { code: 'ar', label: 'AR', flag: '🌍' },
-        { code: 'fr', label: 'FR', flag: '🇫🇷' },
-        { code: 'de', label: 'DE', flag: '🇩🇪' },
-        { code: 'hi', label: 'HI', flag: '🇮🇳' },
-        { code: 'es', label: 'ES', flag: '🇪🇸' },
-        { code: 'nl', label: 'NL', flag: '🇳🇱' },
-        { code: 'it', label: 'IT', flag: '🇮🇹' },
-        { code: 'ja', label: 'JA', flag: '🇯🇵' },
-        { code: 'ko', label: 'KO', flag: '🇰🇷' },
-        { code: 'fi', label: 'FI', flag: '🇫🇮' },
-        { code: 'fa', label: 'FA', flag: '🇮🇷' },
-    ];
+    // ── Sign Out ─────────────────────────────────────────────────────────────
 
-    const RowItem = ({ icon, label, subLabel, onPress, danger }: any) => (
+    const handleSignOut = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        Alert.alert(
+            'Sign Out',
+            'Are you sure? Your local data will remain on this device.',
+            [
+                { text: I18n.t('cancel'), style: 'cancel' },
+                {
+                    text: 'Sign Out',
+                    style: 'destructive',
+                    onPress: async () => {
+                        await AsyncStorage.removeItem('mentra_user_profile');
+                        router.replace('/onboarding' as any);
+                    },
+                },
+            ]
+        );
+    };
+
+    // ── Reset All Data ────────────────────────────────────────────────────────
+
+    const handleResetData = () => {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+        Alert.alert(
+            I18n.t('resetData'),
+            I18n.t('resetConfirm'),
+            [
+                { text: I18n.t('cancel'), style: 'cancel' },
+                {
+                    text: I18n.t('confirm'),
+                    style: 'destructive',
+                    onPress: async () => {
+                        const keys = await AsyncStorage.getAllKeys();
+                        const mentraKeys = keys.filter(k => k.startsWith('mentra_'));
+                        await AsyncStorage.multiRemove(mentraKeys);
+                        router.replace('/onboarding' as any);
+                    },
+                },
+            ]
+        );
+    };
+
+    const LANG_FLAGS: Record<Lang, string> = {
+        en: '🇺🇸', tr: '🇹🇷', ar: '🇸🇦', de: '🇩🇪', fr: '🇫🇷', hi: '🇮🇳', zh: '🇨🇳',
+    };
+    const LANG_OPTIONS = I18n.getSupportedLangs().map(code => ({
+        code,
+        label: code.toUpperCase(),
+        flag: LANG_FLAGS[code],
+    }));
+
+    // ── Row Item component ────────────────────────────────────────────────────
+
+    const RowItem = ({
+        icon, label, subLabel, onPress, danger,
+    }: { icon: React.ReactNode; label: string; subLabel?: string; onPress?: () => void; danger?: boolean }) => (
         <Pressable
             onPress={onPress}
-            style={({ pressed }) => [styles.rowItem, { backgroundColor: pressed ? Colors.mentra.surface2 : Colors.mentra.surface }]}
+            style={({ pressed }) => [{
+                flexDirection: 'row' as const, alignItems: 'center' as const,
+                padding: 16, gap: 16,
+                backgroundColor: pressed ? C.surface2 : C.surface,
+            }]}
         >
-            <View style={[styles.rowIcon, { backgroundColor: danger ? Colors.mentra.danger + '15' : Colors.mentra.surface2 }]}>
+            <View style={[styles.rowIcon, { backgroundColor: danger ? C.danger + '15' : C.surface2 }]}>
                 {icon}
             </View>
             <View style={{ flex: 1 }}>
-                <Text style={[styles.rowLabel, danger && { color: Colors.mentra.danger }]}>{label}</Text>
-                {subLabel && <Text style={styles.rowSubLabel}>{subLabel}</Text>}
+                <Text style={[styles.rowLabel, { color: danger ? C.danger : C.text }]}>{label}</Text>
+                {subLabel ? <Text style={[styles.rowSubLabel, { color: C.textDim }]}>{subLabel}</Text> : null}
             </View>
-            <ChevronRight size={20} color={Colors.mentra.muted} />
+            <ChevronRight size={20} color={C.muted} />
         </Pressable>
     );
 
     return (
-        <View style={[styles.container, { paddingTop: insets.top }]}>
-            <StatusBar style="dark" />
+        <View style={[styles.container, { backgroundColor: C.bg, paddingTop: insets.top }]}>
+            <StatusBar style={C.statusBar} />
 
             <View style={styles.header}>
-                <Pressable
-                    onPress={() => router.back()}
-                    style={({ pressed }) => [styles.backBtn, pressed && { opacity: 0.7 }]}
-                >
-                    <ChevronLeft size={28} color={Colors.mentra.text} />
-                </Pressable>
-                <Text style={styles.headerTitle}>{t('profSettings')}</Text>
+                <Text style={[styles.headerTitle, { color: C.text }]}>{I18n.t('settingsTitle')}</Text>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
 
-                {/* Profile Card */}
-                <View style={[styles.section, { marginBottom: 32 }]}>
-                    <View style={styles.profileCard}>
-                        <View style={styles.avatar}>
-                            <Text style={styles.avatarText}>{user?.name?.charAt(0) || 'U'}</Text>
+                {/* ── Profile Card ── */}
+                <View style={{ marginBottom: 32 }}>
+                    <View style={[styles.profileCard, {
+                        backgroundColor: C.surface, borderColor: C.border, shadowColor: C.brandPrimary,
+                    }]}>
+                        <View style={[styles.avatar, { backgroundColor: C.brandPrimary }]}>
+                            <Text style={styles.avatarText}>{user?.name?.charAt(0)?.toUpperCase() || 'U'}</Text>
                         </View>
-                        <View style={styles.profileInfo}>
-                            <Text style={styles.profileName}>{user?.name || t('user' as any)}</Text>
-                            <Text style={styles.profileEmail}>{isPro ? t('proActive') : t('freeTier' as any)}</Text>
+                        <View style={{ flex: 1 }}>
+                            <Text style={[styles.profileName, { color: C.text }]}>{user?.name || 'User'}</Text>
+                            <Text style={[styles.profileEmail, { color: C.textDim }]}>
+                                {isPro ? 'Mentra Pro Member' : 'Free Tier'}
+                            </Text>
                         </View>
                         {!isPro && (
-                            <Pressable style={styles.proBtn} onPress={() => router.push('/paywall/onboarding' as any)}>
-                                <Zap size={14} color={Colors.mentra.brandPrimary} />
-                                <Text style={styles.proBtnText}>{t('profUpgrade')}</Text>
+                            <Pressable
+                                style={[styles.proBtn, { backgroundColor: C.brandPrimary + '20' }]}
+                                onPress={() => router.push('/paywall/onboarding' as any)}
+                            >
+                                <Zap size={14} color={C.brandPrimary} />
+                                <Text style={[styles.proBtnText, { color: C.brandPrimary }]}>Upgrade</Text>
                             </Pressable>
                         )}
                     </View>
                 </View>
 
-                {/* Account & Billing */}
-                <Text style={styles.sectionTitle}>{t('profAccount')}</Text>
-                <View style={styles.group}>
+                {/* ── Account ── */}
+                <Text style={[styles.sectionTitle, { color: C.textDim }]}>Account</Text>
+                <View style={[styles.group, { backgroundColor: C.surface, borderColor: C.border }]}>
                     <RowItem
-                        icon={<User size={20} color={Colors.mentra.textDim} />}
-                        label={t('personalInfo' as any)}
+                        icon={<User size={20} color={C.textDim} />}
+                        label="Personal Information"
+                        subLabel={user?.name || ''}
+                        onPress={() => Alert.alert('Coming Soon', 'Profile editing will be available in the next update.')}
                     />
-                    <View style={styles.divider} />
+                    <View style={[styles.divider, { backgroundColor: C.border }]} />
                     <RowItem
-                        icon={<CreditCard size={20} color={Colors.mentra.textDim} />}
-                        label={t('subscriptionLabel')}
-                        subLabel={isPro ? t('proActiveYearly') : t('freeTier')}
-                        onPress={() => isPro ? null : router.push('/paywall/onboarding' as any)}
+                        icon={<CreditCard size={20} color={C.textDim} />}
+                        label="Subscription"
+                        subLabel={isPro ? 'Active · Mentra Pro Yearly' : 'Free Tier'}
+                        onPress={() => !isPro && router.push('/paywall/onboarding' as any)}
                     />
-                    <View style={styles.divider} />
+                    <View style={[styles.divider, { backgroundColor: C.border }]} />
                     <RowItem
-                        icon={<Activity size={20} color={Colors.mentra.textDim} />}
-                        label={t('paywallRestore')}
+                        icon={<Activity size={20} color={C.textDim} />}
+                        label="Restore Purchases"
                         onPress={handleRestore}
                     />
                 </View>
 
-                {/* Data & Privacy */}
-                <Text style={styles.sectionTitle}>{t('profPrivacy')}</Text>
-                <View style={styles.group}>
+                {/* ── Data & Privacy ── */}
+                <Text style={[styles.sectionTitle, { color: C.textDim }]}>Data & Privacy</Text>
+                <View style={[styles.group, { backgroundColor: C.surface, borderColor: C.border }]}>
                     <RowItem
-                        icon={<Database size={20} color={Colors.mentra.textDim} />}
-                        label={t('exportDataBtn' as any)}
-                        subLabel={isExporting ? t('processing') : t('exportDataDesc' as any)}
+                        icon={<Database size={20} color={C.textDim} />}
+                        label="Export Data (JSON)"
+                        subLabel={isExporting ? 'Generating...' : 'Download all your journals and stats'}
                         onPress={handleDataExport}
                     />
-                    <View style={styles.divider} />
+                    <View style={[styles.divider, { backgroundColor: C.border }]} />
                     <RowItem
-                        icon={<Shield size={20} color={Colors.mentra.textDim} />}
-                        label={t('legalPrivacy')}
+                        icon={<Shield size={20} color={C.textDim} />}
+                        label={I18n.t('privacy')}
                         onPress={() => router.push('/legal/privacy' as any)}
                     />
-                    <View style={styles.divider} />
+                </View>
+
+                {/* ── App Preferences ── */}
+                <Text style={[styles.sectionTitle, { color: C.textDim }]}>App Preferences</Text>
+                <View style={[styles.group, { backgroundColor: C.surface, borderColor: C.border }]}>
+
+                    {/* Language Switcher */}
+                    <View style={[styles.langRow, { backgroundColor: C.surface }]}>
+                        <View style={[styles.rowIcon, { backgroundColor: C.surface2 }]}>
+                            <Globe size={20} color={C.textDim} />
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <Text style={[styles.rowLabel, { color: C.text }]}>{I18n.t('language')}</Text>
+                            <Text style={[styles.rowSubLabel, { color: C.textDim }]}>Interface language</Text>
+                        </View>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.langSwitcher} contentContainerStyle={{ gap: 6 }}>
+                            {LANG_OPTIONS.map(opt => (
+                                <Pressable
+                                    key={opt.code}
+                                    onPress={() => handleLangChange(opt.code)}
+                                    style={[styles.langBtn, {
+                                        borderColor: currentLang === opt.code ? C.brandPrimary : C.border,
+                                        backgroundColor: currentLang === opt.code ? C.brandPrimary + '15' : C.bg,
+                                    }]}
+                                >
+                                    <Text style={styles.langFlag}>{opt.flag}</Text>
+                                    <Text style={[styles.langBtnText, {
+                                        color: currentLang === opt.code ? C.brandPrimary : C.textDim,
+                                    }]}>{opt.label}</Text>
+                                </Pressable>
+                            ))}
+                        </ScrollView>
+                    </View>
+
+                    <View style={[styles.divider, { backgroundColor: C.border }]} />
                     <RowItem
-                        icon={<BookOpen size={20} color={Colors.mentra.textDim} />}
-                        label={t('legalTerms')}
-                        onPress={() => router.push('/legal/terms' as any)}
+                        icon={<Bell size={20} color={C.textDim} />}
+                        label="Push Notifications"
+                        subLabel="Daily streak and check-in reminders"
+                        onPress={() => { Haptics.selectionAsync?.(); Linking.openSettings(); }}
                     />
-                    <View style={styles.divider} />
+                    <View style={[styles.divider, { backgroundColor: C.border }]} />
                     <RowItem
-                        icon={<AlertTriangle size={20} color={Colors.mentra.textDim} />}
-                        label={t('legalDisclaimer')}
+                        icon={<HelpCircle size={20} color={C.textDim} />}
+                        label="Help & Support"
+                        subLabel="Contact us or report a bug"
+                        onPress={() => Linking.openURL('mailto:support@mentra.app?subject=Mentra%20Support')}
+                    />
+                    <View style={[styles.divider, { backgroundColor: C.border }]} />
+                    <RowItem
+                        icon={<Info size={20} color={C.textDim} />}
+                        label="About Mentra"
+                        subLabel={I18n.t('footerBrand')}
                         onPress={() => router.push('/legal/disclaimer' as any)}
                     />
                 </View>
 
-                {/* Preferences */}
-                <Text style={styles.sectionTitle}>{t('profAppPref')}</Text>
-                <View style={styles.group}>
-                    {/* Language Switcher */}
-                    <View style={styles.rowItemScrollable}>
-                        <View style={styles.langHeader}>
-                            <View style={[styles.rowIcon, { backgroundColor: Colors.mentra.surface2 }]}>
-                                <Globe size={20} color={Colors.mentra.textDim} />
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <Text style={styles.rowLabel}>{t('profLanguage')}</Text>
-                                <Text style={styles.rowSubLabel}>{t('profInterfaceLang')}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.langSwitcher}>
-                            {LANG_OPTIONS.map((opt) => (
-                                <Pressable
-                                    key={opt.code}
-                                    onPress={() => handleLangChange(opt.code)}
-                                    style={[styles.langBtn, currentLang === opt.code && styles.langBtnActive]}
-                                >
-                                    <Text style={styles.langFlag}>{opt.flag}</Text>
-                                    <Text style={[styles.langBtnText, currentLang === opt.code && styles.langBtnTextActive]}>{opt.label}</Text>
-                                </Pressable>
-                            ))}
-                        </View>
-                    </View>
-                    <View style={styles.divider} />
+                {/* ── Danger Zone ── */}
+                <View style={[styles.group, { marginTop: 8, backgroundColor: C.surface, borderColor: C.border }]}>
                     <RowItem
-                        icon={<Text style={{ fontSize: 18 }}>🌙</Text>}
-                        label={t('ramadanMode')}
-                        subLabel={ramadanMode ? t('ramadanActive') : t('ramadanAutoDetect')}
-                        onPress={async () => {
-                            const next = !ramadanMode;
-                            await RamadanService.setRamadanMode(next);
-                            setRamadanMode(next);
-                        }}
+                        icon={<Database size={20} color={C.danger} />}
+                        label={I18n.t('resetData')}
+                        subLabel="Permanently delete all local data"
+                        onPress={handleResetData}
+                        danger
                     />
-                    <View style={styles.divider} />
+                    <View style={[styles.divider, { backgroundColor: C.border }]} />
                     <RowItem
-                        icon={<Bell size={20} color={Colors.mentra.textDim} />}
-                        label={t('pushNotifications')}
-                        subLabel={t('pushNotificationsDesc')}
-                    />
-                    <View style={styles.divider} />
-                    <RowItem
-                        icon={<HelpCircle size={20} color={Colors.mentra.textDim} />}
-                        label={t('supportTitle')}
-                        subLabel="support@tevertechnology.com"
-                        onPress={() => {
-                            const { Linking } = require('react-native');
-                            Linking.openURL('mailto:support@tevertechnology.com');
-                        }}
-                    />
-                </View>
-
-                {/* Actions */}
-                <View style={[styles.group, { marginTop: 24, marginBottom: 120 }]}>
-                    <RowItem
-                        icon={<LogOut size={20} color={Colors.mentra.danger} />}
-                        label={t('signOut' as any)}
+                        icon={<LogOut size={20} color={C.danger} />}
+                        label="Sign Out"
+                        onPress={handleSignOut}
                         danger
                     />
                 </View>
 
+                <View style={{ height: 80 }} />
             </ScrollView>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: Colors.mentra.bg },
-    header: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 20, paddingTop: 12, paddingBottom: 16 },
-    backBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', marginLeft: -8 },
-    headerTitle: { fontSize: 28, fontWeight: '800', color: Colors.mentra.text, letterSpacing: -0.5 },
+    container: { flex: 1 },
+    header: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 16 },
+    headerTitle: { fontSize: 32, fontWeight: '800', letterSpacing: -0.5 },
     scroll: { paddingHorizontal: 20 },
-
-    section: { marginBottom: 24 },
-    sectionTitle: { fontSize: 13, fontWeight: '700', color: Colors.mentra.textDim, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8, marginLeft: 4 },
-
-    group: { backgroundColor: Colors.mentra.surface, borderRadius: 16, borderWidth: 1, borderColor: Colors.mentra.border, overflow: 'hidden', marginBottom: 24 },
-    divider: { height: 1, backgroundColor: Colors.mentra.border, marginLeft: 56 },
-
-    // Profile Card
+    sectionTitle: { fontSize: 13, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8, marginLeft: 4 },
+    group: { borderRadius: 16, borderWidth: 1, overflow: 'hidden', marginBottom: 24 },
+    divider: { height: 1, marginLeft: 56 },
     profileCard: {
-        backgroundColor: Colors.mentra.surface, borderRadius: 20, padding: 20,
-        flexDirection: 'row', alignItems: 'center', gap: 16,
-        borderWidth: 1, borderColor: Colors.mentra.border,
-        shadowColor: Colors.mentra.brandPrimary, shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.05, shadowRadius: 12, elevation: 3,
+        borderRadius: 20, padding: 20, flexDirection: 'row', alignItems: 'center', gap: 16, borderWidth: 1,
+        shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12, elevation: 3,
     },
-    avatar: { width: 56, height: 56, borderRadius: 28, backgroundColor: Colors.mentra.brandPrimary, alignItems: 'center', justifyContent: 'center' },
+    avatar: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center' },
     avatarText: { fontSize: 24, fontWeight: '800', color: '#FFF' },
-    profileInfo: { flex: 1, gap: 2 },
-    profileName: { fontSize: 18, fontWeight: '700', color: Colors.mentra.text },
-    profileEmail: { fontSize: 13, color: Colors.mentra.textDim },
-    proBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: Colors.mentra.brandSecondary + '20', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20 },
-    proBtnText: { fontSize: 12, fontWeight: '700', color: Colors.mentra.brandPrimary },
-
-    // Row Item
-    rowItem: { flexDirection: 'row', alignItems: 'center', padding: 16, gap: 16 },
-    rowItemScrollable: { padding: 16, gap: 12 },
-    langHeader: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+    profileName: { fontSize: 18, fontWeight: '700' },
+    profileEmail: { fontSize: 13 },
+    proBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20 },
+    proBtnText: { fontSize: 12, fontWeight: '700' },
     rowIcon: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-    rowLabel: { fontSize: 16, fontWeight: '600', color: Colors.mentra.text },
-    rowSubLabel: { fontSize: 13, color: Colors.mentra.textDim, marginTop: 2 },
-
-    // Language Switcher
-    langSwitcher: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 },
-    langBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 12, borderWidth: 1, borderColor: Colors.mentra.border, backgroundColor: Colors.mentra.bg, minWidth: 60, justifyContent: 'center' },
-    langBtnActive: { borderColor: Colors.mentra.brandPrimary, backgroundColor: Colors.mentra.brandPrimary + '15' },
-    langFlag: { fontSize: 16 },
-    langBtnText: { fontSize: 12, fontWeight: '700', color: Colors.mentra.textDim },
-    langBtnTextActive: { color: Colors.mentra.brandPrimary },
+    rowLabel: { fontSize: 16, fontWeight: '600' },
+    rowSubLabel: { fontSize: 13, marginTop: 2 },
+    langRow: { flexDirection: 'row', alignItems: 'center', padding: 16, gap: 16 },
+    langSwitcher: { flexDirection: 'row', gap: 6 },
+    langBtn: { flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: 8, paddingVertical: 6, borderRadius: 10, borderWidth: 1 },
+    langFlag: { fontSize: 14 },
+    langBtnText: { fontSize: 11, fontWeight: '700' },
 });

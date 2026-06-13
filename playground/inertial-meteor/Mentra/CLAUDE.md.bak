@@ -1,0 +1,133 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Commands
+
+```bash
+# Start dev server (Expo Go / simulator)
+npx expo start
+
+# Platform-specific
+npx expo start --ios
+npx expo start --android
+
+# Lint
+npm run lint
+
+# Production build (EAS)
+eas build --platform ios --profile production
+eas build --platform android --profile production
+
+# Submit to App Store
+eas submit --platform ios
+```
+
+No test suite is configured — no `npm test` command exists.
+
+## Environment Variables
+
+Copy `.env.example` to `.env.local`:
+```env
+EXPO_PUBLIC_REVENUECAT_APPLE_KEY=appl_xxxxx
+EXPO_PUBLIC_REVENUECAT_GOOGLE_KEY=...
+EXPO_PUBLIC_GEMINI_KEY=...
+```
+
+For production, set these as EAS Secrets (not in the repo).
+
+## App Overview
+Cognitive training app with 6 games: Grid Focus, Speed Match, Memory Grid, Impulse Control, Deep Focus, Dopamine Reset.
+
+## Tech Stack
+Expo ~54 + React Native, expo-router v6, Reanimated, AsyncStorage, i18n (15 languages), RevenueCat
+
+## Architecture
+
+**Routing** — File-based via `expo-router`. Root layout at `app/_layout.tsx` initializes I18n and checks consent before rendering. The app gate sequence is: consent check → onboarding → tabs.
+
+**Tabs** (`app/(tabs)/`) — Five main screens: Home (`index.tsx`), Training (`training.tsx`), Explore (`explore.tsx`), Activity (`activity.tsx`), Profile (`profile.tsx`). Coach (`coach.tsx`) and Journal (`journal.tsx`) are also tabs.
+
+**Games** (`app/game/`) — Six cognitive exercises: `speed-match`, `memory-grid`, `grid-focus`, `deep-focus`, `dopamine-reset`, `impulse-control`. All are full-screen (no header). After a game session, results are saved via `Storage.saveSession()` then `AnalysisEngine.updateProfile()` updates the cognitive profile.
+
+**Paywall** (`app/paywall/`) — Multiple entry points: `feature-gate.tsx` (mid-flow gate), `interstitial.tsx`, `onboarding.tsx`, `discount-offer.tsx`. All delegate to `services/purchases.ts` (RevenueCat). Entitlement ID is `"Mentra Pro"`.
+
+**Services layer** (`services/`):
+- `i18n.ts` — Singleton `I18n` object. Call `I18n.t('key')` for translations. Supports EN/TR/AR/FR/DE/HI/ZH/PT-BR/ES/NL/IT/JA/KO/FI/FA. Arabic and Farsi are RTL; `I18n.isRTL()` drives layout flips. Always init via `I18n.init()` before rendering.
+- `storage.ts` — Singleton `Storage` wrapping AsyncStorage. Keys are prefixed `mentra_*`. Stores `UserProfile`, `CognitiveProfile`, game stats, and session history (capped at 50). `getPercentileRank(gameId, score)` returns 0–100 or -1 if < 4 sessions for that game.
+- `purchases.ts` — RevenueCat wrapper. `getPremiumStatus()` is the single source of truth for pro checks. On web, always returns `true`.
+- `aiCoach.ts` — Calls Gemini 1.5 Flash API (`EXPO_PUBLIC_GEMINI_KEY`). Free tier: 10 messages/day. History capped at 40 messages.
+- `engine/AnalysisEngine.ts` — Pure functions that score sessions and update `CognitiveProfile` via EWMA (alpha=0.2). Scores: memory, focus, speed, flexibility, problem_solving, plus meta-metrics: stabilityOffset, fatigueIndex, impulseFactor.
+- `streak.ts` — Streak tracking. `analytics.ts` — event tracking. `notifications.ts` — push. `ramadan.ts` — Ramadan-aware training schedule.
+
+**Localization** (`locales/`) — 15 JSON files (en, tr, ar, fr, de, hi, zh, pt-BR, es, nl, it, ja, ko, fi, fa). All keys must exist in all files. Add new keys to every locale file simultaneously.
+
+**Constants** — `constants/Colors.ts` and `constants/Theme.ts` define the design system. Brand primary is `Colors.mentra.brandPrimary`.
+
+**Data flow for a game session:**
+1. Game screen records `RawGameSession` with `events[]`, `rtAllMs[]`, `rtCorrectMs[]`
+2. On game over → `Storage.saveSession(session)`
+3. Load current `CognitiveProfile` → `AnalysisEngine.updateProfile(profile, session)` → `Storage.saveCognitiveProfile(updated)`
+4. `Storage.getPercentileRank(gameId, score)` → shown on results screen if ≥ 4 sessions exist
+
+## Key Patterns
+
+- Path alias `@/` maps to the repo root (configured in `tsconfig.json`).
+- All screens use `useFocusEffect` (not `useEffect`) to reload data when a tab regains focus.
+- AsyncStorage keys: always prefixed `mentra_`. Consent key: `mentra_consent`. Language key: `mentra_lang`.
+- RTL support: Arabic/Farsi require `I18nManager.forceRTL(true)` — handled in `i18n.ts`. Game screens use `isRTL` from `useI18n()` hook. Pure components use `I18nManager.isRTL` directly. Apply `transform: [{ scaleX: isRTL ? -1 : 1 }]` to progress bar containers (not fills). Use `flexDirection: isRTL ? 'row-reverse' : 'row'` on semantic rows.
+- Premium gating: check `getPremiumStatus()` from `services/purchases.ts`, not the cached `UserProfile.isPro` field (which can be stale).
+- Timer pattern: use a single `useRef` interval + `isPausedRef`/`isFinishedRef` refs readable inside the interval — never recreate the interval on state change (see `useGridFocusDomain.ts`).
+- Percentile + sharing: all 6 results screens call `Storage.getPercentileRank` and show `percentileResult` i18n key + a `Share.share()` button when ≥ 4 sessions exist.
+
+## Completed Work (recent)
+- All P0–P2 game stability bugs fixed
+- PT-BR locale added (677 keys)
+- RTL layout fixes applied to all game screens, components (Progress, ProgressTimeline, ListRow), and activity tab
+- Percentile ranking + social sharing added to all 6 results screens
+- `useCallback` performance fixes in `useSpeedMatchGame` and `useMemoryGridGame`
+- `d3-shape` dependency removed
+- Social Media Detox module: 7th onboarding challenge, home screen prioritization (DetoxSection repositioned, GrowthEdgeCard detox card, QUICK_GAMES detox-first order)
+- Language-based game ordering: `config/gameOrder.ts` maps 10 language codes to preferred game display order; QUICK_GAMES sorted via `getGameOrder(lang)` on every language change
+- ProgressionEngine `@ts-ignore` cleanup: `DomainLevel`, `domain?`, and `levels?` added to `services/engine/types.ts`; all 4 suppression comments and one `as any` cast removed
+- Tutorial key `as any` cast cleanup: stale casts removed from `dopamine-reset.tsx`, `speed-match.tsx`, `memory-grid.tsx`
+
+## Next Tasks
+1. Full app test on device (Expo Go)
+2. App Store preparation (icons, screenshots, metadata)
+3. Android build (deferred)
+
+---
+
+## Known Bugs to Fix
+- All previously listed bugs have been resolved.
+- `consent.tsx`: `useI18n()` hook outside component → fixed (uses `I18n` directly, no hook needed).
+- `config/difficultyConfig.ts`: bad import → fixed (no I18n import needed; function returns labels directly).
+- All 6 game files: `router.back()` on exit → replaced with `router.replace('/(tabs)/explore')` throughout.
+
+## Architecture Notes
+
+### Navigation
+- Tab Router: `app/(tabs)/index.tsx` (Home), `app/(tabs)/explore.tsx` (Games), `app/(tabs)/activity.tsx` (Stats)
+- Game screens: `app/game/*.tsx`
+- Always use `router.replace('/(tabs)/explore')` on game exit — never `router.back()` (causes blank screen on web)
+
+### Localization
+- `services/i18n.ts` → `I18n.t('key')` or hook: `const { t } = useI18n()`
+- All keys must exist in `locales/en.json` and all 14 other locale files
+- When adding new keys, add to all 15 locales: ar, de, en, es, fa, fi, fr, hi, it, ja, ko, nl, pt-BR, tr, zh
+
+### Cognitive Profile & Scoring
+- `services/engine/AnalysisEngine.ts` → EWMA alpha=0.05 (kept low to reduce volatility)
+- `services/storage.ts` → AsyncStorage wrapper
+- `services/progression.ts` → XP, level, tier system
+
+## App Store Context
+- App is being prepared for App Store submission. Framing must be "scientific, not medical".
+- Tone: "Mentra is a gym for your brain, not a hospital." — maintain this throughout.
+- Always run `npx tsc --noEmit` before committing any new feature.
+- Web testing: `npx expo start --web --port 8083`
+
+## Git
+- Branch: `main`
+- Origin: https://github.com/eymentever/mentra-ios.git

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
     View, Text, ScrollView, TextInput, Pressable,
     StyleSheet, KeyboardAvoidingView, Platform,
@@ -9,16 +9,30 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BookOpen, Save, Smile, Meh, Frown, Sun, Cloud, Calendar } from 'lucide-react-native';
+import { BookOpen, Save, Tag as TagIcon, Smile, Meh, Frown, Sun, Cloud, Calendar } from 'lucide-react-native';
 
-import { Colors } from '@/constants/Colors';
-import { I18n, useI18n } from '@/services/i18n';
+import { Metrics } from '@/constants/Theme';
+import { I18n } from '@/services/i18n';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 
+// ─── Mood Options ─────────────────────────────────────────────────────────────
+
+const getMoods = () => [
+    { label: I18n.t('moodLabelGreat'), icon: <Sun size={22} color="#F59E0B" />, value: 5 },
+    { label: I18n.t('moodLabelGood'), icon: <Smile size={22} color="#10B981" />, value: 4 },
+    { label: I18n.t('moodLabelOkay'), icon: <Meh size={22} color="#6366F1" />, value: 3 },
+    { label: I18n.t('moodLabelLow'), icon: <Cloud size={22} color="#3B82F6" />, value: 2 },
+    { label: I18n.t('moodLabelRough'), icon: <Frown size={22} color="#EF4444" />, value: 1 },
+];
+
+const getTags = () => [I18n.t('tagProductive'), I18n.t('tagAnxious'), I18n.t('tagMotivated'), I18n.t('tagTired'), I18n.t('tagFocused'), I18n.t('tagGrateful'), I18n.t('tagStressed'), I18n.t('tagCreative')];
 
 // ─── Calendar Strip ───────────────────────────────────────────────────────────
 
-function CalendarStrip({ days }: { days: string[] }) {
+function CalendarStrip() {
+    const C = useMentraTheme();
     const [selectedDay, setSelectedDay] = useState(new Date().getDay());
+    const days = [I18n.t('calS1'), I18n.t('calM'), I18n.t('calT1'), I18n.t('calW'), I18n.t('calT2'), I18n.t('calF'), I18n.t('calS2')];
     const today = new Date().getDay();
 
     return (
@@ -29,12 +43,16 @@ function CalendarStrip({ days }: { days: string[] }) {
                     onPress={() => setSelectedDay(i)}
                     style={[
                         styles.dayChip,
-                        i === selectedDay && styles.dayChipActive,
-                        i === today && i !== selectedDay && styles.dayChipToday,
+                        {
+                            backgroundColor: C.surface,
+                            borderColor: i === selectedDay ? C.brandPrimary : C.border,
+                        },
+                        i === selectedDay && { backgroundColor: C.brandPrimary },
+                        i === today && i !== selectedDay && { borderColor: C.brandPrimary },
                     ]}
                 >
-                    <Text style={[styles.dayText, i === selectedDay && styles.dayTextActive]}>{d}</Text>
-                    {i === today && <View style={styles.todayDot} />}
+                    <Text style={[styles.dayText, { color: i === selectedDay ? '#FFF' : C.textDim }]}>{d}</Text>
+                    {i === today && <View style={[styles.todayDot, { backgroundColor: C.brandPrimary }]} />}
                 </Pressable>
             ))}
         </View>
@@ -44,31 +62,17 @@ function CalendarStrip({ days }: { days: string[] }) {
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 export default function JournalScreen() {
+    const C = useMentraTheme();
     const insets = useSafeAreaInsets();
-    const { lang, t } = useI18n();
-
-    const MOODS = React.useMemo(() => [
-        { label: t('moodLabelGreat'), icon: <Sun size={22} color="#F59E0B" />, value: 5 },
-        { label: t('moodLabelGood'), icon: <Smile size={22} color="#10B981" />, value: 4 },
-        { label: t('moodLabelOkay'), icon: <Meh size={22} color="#6366F1" />, value: 3 },
-        { label: t('moodLabelLow'), icon: <Cloud size={22} color="#3B82F6" />, value: 2 },
-        { label: t('moodLabelRough'), icon: <Frown size={22} color="#EF4444" />, value: 1 },
-    ], [lang]);
-
-    const tags = React.useMemo(() => [
-        t('tagProductive'), t('tagAnxious'), t('tagMotivated'), t('tagTired'),
-        t('tagFocused'), t('tagGrateful'), t('tagStressed'), t('tagCreative')
-    ], [lang]);
-
-    const calendarDays = React.useMemo(() => [
-        t('calS1'), t('calM'), t('calT1'), t('calW'), t('calT2'), t('calF'), t('calS2')
-    ], [lang]);
-
     const [selectedMood, setSelectedMood] = useState<number | null>(null);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [noteText, setNoteText] = useState('');
     const [saved, setSaved] = useState(false);
     const [pastEntries, setPastEntries] = useState<any[]>([]);
+    const [, forceUpdate] = useState(0);
+
+    // Re-render on language change
+    useEffect(() => I18n.subscribe(() => forceUpdate(n => n + 1)), []);
 
     useFocusEffect(
         useCallback(() => {
@@ -113,9 +117,9 @@ export default function JournalScreen() {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={{ flex: 1, backgroundColor: Colors.mentra.bg }}
+            style={{ flex: 1, backgroundColor: C.bg }}
         >
-            <StatusBar style="dark" />
+            <StatusBar style={C.statusBar} />
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 8 }]}
@@ -124,27 +128,33 @@ export default function JournalScreen() {
                 {/* ── Header ── */}
                 <Animated.View entering={FadeInDown.springify()} style={styles.header}>
                     <View>
-                        <Text style={styles.screenTitle}>{t('journalTitle')}</Text>
-                        <Text style={styles.screenSub}>{new Date().toLocaleDateString(I18n.getDateLocale(), { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
+                        <Text style={[styles.screenTitle, { color: C.text }]}>{I18n.t('journalTitle')}</Text>
+                        <Text style={[styles.screenSub, { color: C.textDim }]}>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
                     </View>
-                    <BookOpen size={24} color={Colors.mentra.brandPrimary} />
+                    <BookOpen size={24} color={C.brandPrimary} />
                 </Animated.View>
 
                 {/* ── Calendar ── */}
-                <CalendarStrip days={calendarDays} />
+                <CalendarStrip />
 
                 {/* ── Mood ── */}
                 <Animated.View entering={FadeInDown.delay(80).springify()} style={styles.section}>
-                    <Text style={styles.sectionLabel}>{t('journalFeelPrompt')}</Text>
+                    <Text style={[styles.sectionLabel, { color: C.text }]}>{I18n.t('journalFeelPrompt')}</Text>
                     <View style={styles.moodRow}>
-                        {MOODS.map(m => (
+                        {getMoods().map(m => (
                             <Pressable
                                 key={m.value}
                                 onPress={() => { Haptics.selectionAsync(); setSelectedMood(m.value); }}
-                                style={[styles.moodBtn, selectedMood === m.value && styles.moodBtnActive]}
+                                style={[
+                                    styles.moodBtn,
+                                    {
+                                        backgroundColor: selectedMood === m.value ? C.brandPrimary + '20' : C.surface,
+                                        borderColor: selectedMood === m.value ? C.brandPrimary : C.border,
+                                    },
+                                ]}
                             >
                                 {m.icon}
-                                <Text style={[styles.moodLabel, selectedMood === m.value && styles.moodLabelActive]}>{m.label}</Text>
+                                <Text style={[styles.moodLabel, { color: selectedMood === m.value ? C.brandPrimary : C.textDim }]}>{m.label}</Text>
                             </Pressable>
                         ))}
                     </View>
@@ -152,15 +162,21 @@ export default function JournalScreen() {
 
                 {/* ── Tags ── */}
                 <Animated.View entering={FadeInDown.delay(140).springify()} style={styles.section}>
-                    <Text style={styles.sectionLabel}>{t('journalTagsLabel')}</Text>
+                    <Text style={[styles.sectionLabel, { color: C.text }]}>{I18n.t('journalTagsLabel')}</Text>
                     <View style={styles.tagsWrap}>
-                        {tags.map(tag => (
+                        {getTags().map(tag => (
                             <Pressable
                                 key={tag}
                                 onPress={() => toggleTag(tag)}
-                                style={[styles.tag, selectedTags.includes(tag) && styles.tagActive]}
+                                style={[
+                                    styles.tag,
+                                    {
+                                        backgroundColor: selectedTags.includes(tag) ? C.brandPrimary : C.surface,
+                                        borderColor: selectedTags.includes(tag) ? C.brandPrimary : C.border,
+                                    },
+                                ]}
                             >
-                                <Text style={[styles.tagText, selectedTags.includes(tag) && styles.tagTextActive]}>
+                                <Text style={[styles.tagText, { color: selectedTags.includes(tag) ? '#FFF' : C.textDim }]}>
                                     {tag}
                                 </Text>
                             </Pressable>
@@ -170,11 +186,11 @@ export default function JournalScreen() {
 
                 {/* ── Note ── */}
                 <Animated.View entering={FadeInDown.delay(200).springify()} style={styles.section}>
-                    <Text style={styles.sectionLabel}>{t('journalNoteLabel')}</Text>
+                    <Text style={[styles.sectionLabel, { color: C.text }]}>{I18n.t('journalNoteLabel')}</Text>
                     <TextInput
-                        style={styles.noteInput}
-                        placeholder={t('journalPlaceholder')}
-                        placeholderTextColor={Colors.mentra.muted}
+                        style={[styles.noteInput, { backgroundColor: C.surface, borderColor: C.border, color: C.text }]}
+                        placeholder={I18n.t('journalPlaceholder')}
+                        placeholderTextColor={C.muted}
                         value={noteText}
                         onChangeText={setNoteText}
                         multiline
@@ -187,42 +203,42 @@ export default function JournalScreen() {
                     onPress={handleSave}
                     style={({ pressed }) => [
                         styles.saveBtn,
-                        { opacity: pressed ? 0.85 : 1, backgroundColor: saved ? Colors.mentra.success : Colors.mentra.brandPrimary },
+                        { opacity: pressed ? 0.85 : 1, backgroundColor: saved ? C.success : C.brandPrimary },
                     ]}
                 >
                     <Save size={18} color="#FFF" />
-                    <Text style={styles.saveBtnText}>{saved ? t('journalSaved') : t('journalSave')}</Text>
+                    <Text style={styles.saveBtnText}>{saved ? I18n.t('journalSaved') : I18n.t('journalSave')}</Text>
                 </Pressable>
 
                 {/* ── Past Entries ── */}
                 {pastEntries.length > 0 && (
-                    <Animated.View entering={FadeInDown.delay(300).springify()} style={styles.historySection}>
-                        <Text style={styles.historyTitle}>{t('journalPastLabel')}</Text>
+                    <Animated.View entering={FadeInDown.delay(300).springify()} style={[styles.historySection, { borderTopColor: C.border }]}>
+                        <Text style={[styles.historyTitle, { color: C.text }]}>{I18n.t('journalPastLabel')}</Text>
                         {pastEntries.map((item, idx) => {
                             const dateObj = new Date(item.date);
-                            const moodObj = MOODS.find(m => m.value === item.mood);
+                            const moodObj = getMoods().find(m => m.value === item.mood);
                             return (
-                                <View key={idx} style={styles.entryCard}>
+                                <View key={idx} style={[styles.entryCard, { backgroundColor: C.surface, borderColor: C.border }]}>
                                     <View style={styles.entryHeader}>
                                         <View style={styles.entryDateRow}>
-                                            <Calendar size={14} color={Colors.mentra.textDim} />
-                                            <Text style={styles.entryDate}>{dateObj.toLocaleDateString(I18n.getDateLocale(), { month: 'short', day: 'numeric', year: 'numeric' })}</Text>
+                                            <Calendar size={14} color={C.textDim} />
+                                            <Text style={[styles.entryDate, { color: C.textDim }]}>{dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</Text>
                                         </View>
                                         {moodObj && (
-                                            <View style={styles.entryMoodPill}>
+                                            <View style={[styles.entryMoodPill, { backgroundColor: C.surface2 }]}>
                                                 {moodObj.icon}
-                                                <Text style={styles.entryMoodText}>{moodObj.label}</Text>
+                                                <Text style={[styles.entryMoodText, { color: C.text }]}>{moodObj.label}</Text>
                                             </View>
                                         )}
                                     </View>
 
-                                    {item.note ? <Text style={styles.entryNote}>{item.note}</Text> : null}
+                                    {item.note ? <Text style={[styles.entryNote, { color: C.text }]}>{item.note}</Text> : null}
 
                                     {item.tags && item.tags.length > 0 && (
                                         <View style={styles.entryTagsRow}>
                                             {item.tags.map((t: string) => (
-                                                <View key={t} style={styles.entryMiniTag}>
-                                                    <Text style={styles.entryMiniTagText}>{t}</Text>
+                                                <View key={t} style={[styles.entryMiniTag, { backgroundColor: C.surface2 }]}>
+                                                    <Text style={[styles.entryMiniTagText, { color: C.textDim }]}>{t}</Text>
                                                 </View>
                                             ))}
                                         </View>
@@ -244,49 +260,41 @@ const styles = StyleSheet.create({
     scroll: { paddingHorizontal: 20, paddingBottom: 120 },
 
     header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
-    screenTitle: { fontSize: 28, fontWeight: '800', color: Colors.mentra.text, letterSpacing: -0.5 },
-    screenSub: { fontSize: 13, color: Colors.mentra.textDim, marginTop: 2 },
+    screenTitle: { fontSize: 28, fontWeight: '800', letterSpacing: -0.5 },
+    screenSub: { fontSize: 13, marginTop: 2 },
 
     calendarRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 },
     dayChip: {
         width: 40, height: 48, borderRadius: 12, alignItems: 'center', justifyContent: 'center',
-        backgroundColor: Colors.mentra.surface, borderWidth: 1, borderColor: Colors.mentra.border,
+        borderWidth: 1,
         gap: 4,
     },
-    dayChipActive: { backgroundColor: Colors.mentra.brandPrimary, borderColor: Colors.mentra.brandPrimary },
-    dayChipToday: { borderColor: Colors.mentra.brandPrimary },
-    dayText: { fontSize: 13, fontWeight: '600', color: Colors.mentra.textDim },
-    dayTextActive: { color: '#FFF' },
-    todayDot: { width: 4, height: 4, borderRadius: 2, backgroundColor: Colors.mentra.brandPrimary },
+    dayText: { fontSize: 13, fontWeight: '600' },
+    todayDot: { width: 4, height: 4, borderRadius: 2 },
 
     section: { marginBottom: 24 },
-    sectionLabel: { fontSize: 14, fontWeight: '700', color: Colors.mentra.text, marginBottom: 12 },
+    sectionLabel: { fontSize: 14, fontWeight: '700', marginBottom: 12 },
 
     moodRow: { flexDirection: 'row', justifyContent: 'space-between' },
     moodBtn: {
         flex: 1, alignItems: 'center', gap: 6,
         paddingVertical: 12, borderRadius: 12,
-        backgroundColor: Colors.mentra.surface, borderWidth: 1, borderColor: Colors.mentra.border,
+        borderWidth: 1,
         marginHorizontal: 3,
     },
-    moodBtnActive: { backgroundColor: Colors.mentra.brandPrimary + '20', borderColor: Colors.mentra.brandPrimary },
-    moodLabel: { fontSize: 10, fontWeight: '600', color: Colors.mentra.textDim },
-    moodLabelActive: { color: Colors.mentra.brandPrimary },
+    moodLabel: { fontSize: 10, fontWeight: '600' },
 
     tagsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
     tag: {
         paddingHorizontal: 12, paddingVertical: 7, borderRadius: 20,
-        borderWidth: 1, borderColor: Colors.mentra.border,
-        backgroundColor: Colors.mentra.surface,
+        borderWidth: 1,
     },
-    tagActive: { backgroundColor: Colors.mentra.brandPrimary, borderColor: Colors.mentra.brandPrimary },
-    tagText: { fontSize: 13, fontWeight: '600', color: Colors.mentra.textDim },
-    tagTextActive: { color: '#FFF' },
+    tagText: { fontSize: 13, fontWeight: '600' },
 
     noteInput: {
-        backgroundColor: Colors.mentra.surface, borderRadius: 14,
-        borderWidth: 1, borderColor: Colors.mentra.border,
-        padding: 14, minHeight: 140, fontSize: 15, color: Colors.mentra.text, lineHeight: 22,
+        borderRadius: 14,
+        borderWidth: 1,
+        padding: 14, minHeight: 140, fontSize: 15, lineHeight: 22,
     },
 
     saveBtn: {
@@ -296,16 +304,16 @@ const styles = StyleSheet.create({
     saveBtnText: { fontSize: 16, fontWeight: '700', color: '#FFF' },
 
     // History
-    historySection: { marginTop: 10, borderTopWidth: 1, borderTopColor: Colors.mentra.border, paddingTop: 32 },
-    historyTitle: { fontSize: 18, fontWeight: '800', color: Colors.mentra.text, marginBottom: 16 },
-    entryCard: { backgroundColor: Colors.mentra.surface, borderRadius: 16, padding: 16, marginBottom: 16, borderWidth: 1, borderColor: Colors.mentra.border },
+    historySection: { marginTop: 10, borderTopWidth: 1, paddingTop: 32 },
+    historyTitle: { fontSize: 18, fontWeight: '800', marginBottom: 16 },
+    entryCard: { borderRadius: 16, padding: 16, marginBottom: 16, borderWidth: 1 },
     entryHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
     entryDateRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-    entryDate: { fontSize: 13, fontWeight: '600', color: Colors.mentra.textDim },
-    entryMoodPill: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: Colors.mentra.surface2, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12 },
-    entryMoodText: { fontSize: 11, fontWeight: '700', color: Colors.mentra.text },
-    entryNote: { fontSize: 14, color: Colors.mentra.text, lineHeight: 22, marginBottom: 12 },
+    entryDate: { fontSize: 13, fontWeight: '600' },
+    entryMoodPill: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12 },
+    entryMoodText: { fontSize: 11, fontWeight: '700' },
+    entryNote: { fontSize: 14, lineHeight: 22, marginBottom: 12 },
     entryTagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-    entryMiniTag: { backgroundColor: Colors.mentra.surface2, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
-    entryMiniTagText: { fontSize: 10, fontWeight: '600', color: Colors.mentra.textDim },
+    entryMiniTag: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
+    entryMiniTagText: { fontSize: 10, fontWeight: '600' },
 });

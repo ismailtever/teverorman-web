@@ -3,7 +3,7 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import Svg, { Polygon, Line, Circle, Text as SvgText, G } from 'react-native-svg';
 import Animated, { useSharedValue, useAnimatedProps, withTiming, Easing } from 'react-native-reanimated';
 
-import { Colors } from '@/constants/Colors';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { ThemedText } from './themed-text';
 import { CognitiveProfile } from '@/services/engine/types';
 
@@ -17,6 +17,7 @@ interface CognitiveRadarProps {
 const AXIS_LABELS = ['Memory', 'Focus', 'Speed', 'Flexibility', 'Problem']; // 5 axes
 
 export function CognitiveRadar({ data, size = 300 }: CognitiveRadarProps) {
+    const C = useMentraTheme();
     const center = size / 2;
     const radius = (size / 2) - 40; // Padding for labels
 
@@ -54,7 +55,10 @@ export function CognitiveRadar({ data, size = 300 }: CognitiveRadarProps) {
             return (
                 <Polygon
                     key={lvlIndex}
-                    {...({ points: points, stroke: "rgba(255,255,255,0.1)", strokeWidth: "1", fill: "none" } as any)}
+                    points={points}
+                    stroke="rgba(255,255,255,0.1)"
+                    strokeWidth="1"
+                    fill="none"
                 />
             );
         });
@@ -74,10 +78,20 @@ export function CognitiveRadar({ data, size = 300 }: CognitiveRadarProps) {
             return (
                 <G key={i}>
                     <Line
-                        {...({ x1: center, y1: center, x2: x, y2: y, stroke: "rgba(255,255,255,0.1)", strokeWidth: "1" } as any)}
+                        x1={center}
+                        y1={center}
+                        x2={x}
+                        y2={y}
+                        stroke="rgba(255,255,255,0.1)"
+                        strokeWidth="1"
                     />
                     <SvgText
-                        {...({ x: labelX, y: labelY, fill: "rgba(255,255,255,0.6)", fontSize: "10", textAnchor: "middle", alignmentBaseline: "middle" } as any)}
+                        x={labelX}
+                        y={labelY}
+                        fill="rgba(255,255,255,0.6)"
+                        fontSize="10"
+                        textAnchor="middle"
+                        alignmentBaseline="middle"
                     >
                         {AXIS_LABELS[i].toUpperCase()}
                     </SvgText>
@@ -99,7 +113,11 @@ export function CognitiveRadar({ data, size = 300 }: CognitiveRadarProps) {
 
                 {/* Data Polygon */}
                 <Polygon
-                    {...({ points: points, fill: Colors.mentra.brandPrimary, fillOpacity: "0.4", stroke: Colors.mentra.brandPrimary, strokeWidth: "2" } as any)}
+                    points={points}
+                    fill={C.brandPrimary}
+                    fillOpacity="0.4"
+                    stroke={C.brandPrimary}
+                    strokeWidth="2"
                 />
 
                 {/* Comparison/Mock Average (Gray) if needed */}

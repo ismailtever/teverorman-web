@@ -70,12 +70,18 @@ export default function RootLayout() {
           <Stack.Screen name="legal/terms" options={{ presentation: 'modal' }} />
           <Stack.Screen name="legal/disclaimer" options={{ presentation: 'modal' }} />
           {/* Game Routes */}
-          <Stack.Screen name="game/deep-focus" options={{ headerShown: false }} />
-          <Stack.Screen name="game/dopamine-reset" options={{ headerShown: false }} />
           <Stack.Screen name="game/grid-focus" options={{ headerShown: false }} />
-          <Stack.Screen name="game/impulse-control" options={{ headerShown: false }} />
           <Stack.Screen name="game/memory-grid" options={{ headerShown: false }} />
           <Stack.Screen name="game/speed-match" options={{ headerShown: false }} />
+          <Stack.Screen name="game/deep-focus" options={{ headerShown: false }} />
+          <Stack.Screen name="game/impulse-control" options={{ headerShown: false }} />
+          <Stack.Screen name="game/dopamine-reset" options={{ headerShown: false }} />
+          {/* Training Routes */}
+          <Stack.Screen name="training/daily-session" options={{ headerShown: false }} />
+          <Stack.Screen name="training-session" options={{ headerShown: false }} />
+          {/* Onboarding & Check-in */}
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+          <Stack.Screen name="check-in" options={{ headerShown: false }} />
           {/* Debug Route - Hidden header, logic will block access in prod */}
           <Stack.Screen name="debug/engine" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />

@@ -6,7 +6,7 @@ import { Stack, router } from 'expo-router';
 
 import { ThemedText } from '@/components/themed-text';
 import { MentraButton } from '@/components/MentraButton';
-import { Colors } from '@/constants/Colors';
+import { useMentraTheme } from '@/hooks/useMentraTheme';
 import { Storage } from '@/services/storage';
 import { AnalysisEngine, DEFAULT_COGNITIVE_PROFILE } from '@/services/engine/AnalysisEngine';
 import { RawGameSession, CognitiveProfile } from '@/services/engine/types';
@@ -15,6 +15,7 @@ import { RawGameSession, CognitiveProfile } from '@/services/engine/types';
 const IS_DEV = __DEV__;
 
 export default function DebugEngineScreen() {
+    const C = useMentraTheme();
     const [sessions, setSessions] = useState<RawGameSession[]>([]);
     const [profile, setProfile] = useState<CognitiveProfile | null>(null);
     const [useMock, setUseMock] = useState(false);
@@ -91,7 +92,7 @@ export default function DebugEngineScreen() {
             <View style={styles.controls}>
                 <View style={styles.row}>
                     <ThemedText>Use Mock Data</ThemedText>
-                    <Switch value={useMock} onValueChange={toggleMock} trackColor={{ false: '#333', true: Colors.mentra.brandAccent }} />
+                    <Switch value={useMock} onValueChange={toggleMock} trackColor={{ false: '#333', true: C.brandAccent }} />
                 </View>
                 <MentraButton title="Recompute Profile" onPress={runRecompute} style={{ marginTop: 10 }} />
                 <MentraButton title="Refresh Sessions" variant="secondary" onPress={loadData} style={{ marginTop: 10 }} />
@@ -120,5 +121,5 @@ const styles = StyleSheet.create({
     row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#111', padding: 10, borderRadius: 8 },
     scroll: { flex: 1 },
     section: { marginBottom: 20, padding: 10, backgroundColor: '#111', borderRadius: 8 },
-    mono: { fontFamily: 'monospace', color: Colors.mentra.brandSecondary, fontSize: 10 },
+    mono: { fontFamily: 'monospace', color: '#2D6A4F', fontSize: 10 },
 });
