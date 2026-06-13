@@ -776,32 +776,19 @@ function setLanguage(code) {
         }
     }
 
-    // Update all local links to preserve lang parameter
-    document.querySelectorAll('a').forEach(link => {
-        const href = link.getAttribute('href');
-        if (href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:') && !href.startsWith('#') && !href.startsWith('javascript:')) {
-            try {
-                const hashIndex = href.indexOf('#');
-                let pathAndQuery = hashIndex === -1 ? href : href.substring(0, hashIndex);
-                const hash = hashIndex === -1 ? '' : href.substring(hashIndex);
-
-                const queryIndex = pathAndQuery.indexOf('?');
-                let path = queryIndex === -1 ? pathAndQuery : pathAndQuery.substring(0, queryIndex);
-                const query = queryIndex === -1 ? '' : pathAndQuery.substring(queryIndex + 1);
-
-                const searchParams = new URLSearchParams(query);
-                searchParams.set('lang', code);
-
-                link.setAttribute('href', `${path}?${searchParams.toString()}${hash}`);
-            } catch (e) {
-                // Ignore parsing errors
-            }
-        }
-    });
-
     const langDropdown = document.getElementById('langDropdown');
     if (langDropdown) langDropdown.classList.remove('active');
 }
+
+// Re-initialize language if the page is restored from browser back-forward cache (bfcache)
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        const savedLang = localStorage.getItem('tever_lang');
+        if (savedLang) {
+            setLanguage(savedLang);
+        }
+    }
+});
 
 /* --- WhatsApp Integration --- */
 function initWhatsApp() {
