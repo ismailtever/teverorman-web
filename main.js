@@ -768,16 +768,18 @@ function setLanguage(code) {
         const href = link.getAttribute('href');
         if (href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:') && !href.startsWith('#') && !href.startsWith('javascript:')) {
             try {
-                // Parse the link relative to window location href
-                const url = new URL(href, window.location.href);
-                url.searchParams.set('lang', code);
-                
-                // Construct the path preserving absolute or relative structure
-                let newHref = url.pathname + url.search + url.hash;
-                if (!href.startsWith('/') && newHref.startsWith('/')) {
-                    newHref = newHref.substring(1);
-                }
-                link.setAttribute('href', newHref);
+                const hashIndex = href.indexOf('#');
+                let pathAndQuery = hashIndex === -1 ? href : href.substring(0, hashIndex);
+                const hash = hashIndex === -1 ? '' : href.substring(hashIndex);
+
+                const queryIndex = pathAndQuery.indexOf('?');
+                let path = queryIndex === -1 ? pathAndQuery : pathAndQuery.substring(0, queryIndex);
+                const query = queryIndex === -1 ? '' : pathAndQuery.substring(queryIndex + 1);
+
+                const searchParams = new URLSearchParams(query);
+                searchParams.set('lang', code);
+
+                link.setAttribute('href', `${path}?${searchParams.toString()}${hash}`);
             } catch (e) {
                 // Ignore parsing errors
             }
