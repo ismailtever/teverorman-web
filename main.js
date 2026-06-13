@@ -705,7 +705,17 @@ function initLanguageSystem() {
     // 3. Load Initial Language
     const params = new URLSearchParams(window.location.search);
     const savedLang = localStorage.getItem('tever_lang');
-    const initialLang = params.get('lang') || savedLang || 'en';
+    let initialLang = params.get('lang') || savedLang;
+    
+    if (!initialLang || !languages[initialLang]) {
+        // Fallback to browser language
+        const userLang = navigator.language || navigator.userLanguage || '';
+        if (userLang.toLowerCase().startsWith('tr')) {
+            initialLang = 'tr';
+        } else {
+            initialLang = 'en';
+        }
+    }
     setLanguage(initialLang);
 }
 
@@ -714,10 +724,13 @@ function setLanguage(code) {
 
     localStorage.setItem('tever_lang', code);
 
-    // Update URL
+    // Clean URL parameter so it doesn't show in the browser bar
     const url = new URL(window.location);
-    url.searchParams.set('lang', code);
-    window.history.replaceState({}, '', url);
+    if (url.searchParams.has('lang')) {
+        url.searchParams.delete('lang');
+        const newUrl = url.pathname + url.search + url.hash;
+        window.history.replaceState({}, '', newUrl);
+    }
 
     // Update HTML Tag
     const langConfig = languages[code];
@@ -762,29 +775,6 @@ function setLanguage(code) {
             metaDesc.setAttribute('content', descText);
         }
     }
-
-    // Update all local links to preserve lang parameter
-    document.querySelectorAll('a').forEach(link => {
-        const href = link.getAttribute('href');
-        if (href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('tel:') && !href.startsWith('#') && !href.startsWith('javascript:')) {
-            try {
-                const hashIndex = href.indexOf('#');
-                let pathAndQuery = hashIndex === -1 ? href : href.substring(0, hashIndex);
-                const hash = hashIndex === -1 ? '' : href.substring(hashIndex);
-
-                const queryIndex = pathAndQuery.indexOf('?');
-                let path = queryIndex === -1 ? pathAndQuery : pathAndQuery.substring(0, queryIndex);
-                const query = queryIndex === -1 ? '' : pathAndQuery.substring(queryIndex + 1);
-
-                const searchParams = new URLSearchParams(query);
-                searchParams.set('lang', code);
-
-                link.setAttribute('href', `${path}?${searchParams.toString()}${hash}`);
-            } catch (e) {
-                // Ignore parsing errors
-            }
-        }
-    });
 
     const langDropdown = document.getElementById('langDropdown');
     if (langDropdown) langDropdown.classList.remove('active');
