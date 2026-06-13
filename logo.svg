@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" width="260" height="60">
-  <!-- 1. TEVER BLOCK (Solid green background, white text) -->
-  <rect x="0" y="0" width="130" height="60" fill="#0a3323"/>
-  <text x="65" y="41" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">TEVER</text>
+  <!-- 1. TEVER BLOCK (White background, green border, green text) -->
+  <rect x="1.5" y="1.5" width="127" height="57" stroke="#1f5038" stroke-width="3" fill="#FFFFFF"/>
+  <text x="65" y="41" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="900" fill="#1f5038" text-anchor="middle" letter-spacing="1">TEVER</text>
 
-  <!-- 2. ORMAN BLOCK (White background, green border, green text, touching TEVER with no gap) -->
-  <rect x="130" y="1.5" width="128.5" height="57" stroke="#0a3323" stroke-width="3" fill="#FFFFFF"/>
-  <text x="195" y="41" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="900" fill="#0a3323" text-anchor="middle" letter-spacing="1">ORMAN</text>
+  <!-- 2. ORMAN BLOCK (Solid green background, white text) -->
+  <rect x="130" y="0" width="130" height="60" fill="#1f5038"/>
+  <text x="195" y="41" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">ORMAN</text>
 </svg>
